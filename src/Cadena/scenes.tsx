@@ -122,13 +122,20 @@ export const BrainBadge: React.FC = () => {
 };
 
 const CAGE = { x0: 298, x1: 782, y0: 642, y1: 1110 };
+/**
+ * The chain hangs slack: it drops out of the cage, swings left and loops
+ * back along the bottom to the ball. Link positions and angles are taken
+ * off the reference.
+ */
 const CHAIN = [
-  { x: 399, y: 1167 },
-  { x: 441, y: 1152 },
-  { x: 480, y: 1140 },
-  { x: 520, y: 1128 },
+  { x: 470, y: 1102, rot: 80 },
+  { x: 506, y: 1131, rot: 150 },
+  { x: 441, y: 1146, rot: 168 },
+  { x: 402, y: 1177, rot: 75 },
+  { x: 446, y: 1202, rot: 2 },
+  { x: 505, y: 1202, rot: 0 },
 ];
-const BALL = { x: 592, y: 1176, r: 54 };
+const BALL = { x: 592, y: 1191, r: 53 };
 
 /** Scene 3 — the caged brain, which then crumbles into dust. */
 export const Cage: React.FC = () => {
@@ -157,6 +164,11 @@ export const Cage: React.FC = () => {
           const rr = random(`r${i}`) * BALL.r;
           x = BALL.x + Math.cos(a) * rr;
           y = BALL.y + Math.sin(a) * rr;
+          if (random(`k${i}`) < 0.4) {
+            const l = CHAIN[Math.floor(random(`kl${i}`) * CHAIN.length)];
+            x = l.x + (random(`kx${i}`) - 0.5) * 40;
+            y = l.y + (random(`ky${i}`) - 0.5) * 34;
+          }
         }
 
         return {
@@ -205,20 +217,34 @@ export const Cage: React.FC = () => {
       </g>
 
       <g opacity={solid * chain}>
+        <g stroke="white" strokeWidth={4} strokeLinecap="round">
+          {CHAIN.slice(1).map((l, i) => (
+            <line
+              key={i}
+              x1={CHAIN[i].x}
+              y1={CHAIN[i].y}
+              x2={l.x}
+              y2={l.y}
+            />
+          ))}
+          <line
+            x1={CHAIN[CHAIN.length - 1].x}
+            y1={CHAIN[CHAIN.length - 1].y}
+            x2={BALL.x - BALL.r + 6}
+            y2={BALL.y}
+          />
+        </g>
         {CHAIN.map((l, i) => (
-          <g
-            key={i}
-            transform={`translate(${l.x} ${l.y}) rotate(${-18 + i * 2})`}
-          >
+          <g key={i} transform={`translate(${l.x} ${l.y}) rotate(${l.rot})`}>
             <rect
-              x={-21}
-              y={-13}
-              width={42}
-              height={26}
-              rx={13}
-              fill="none"
+              x={-19}
+              y={-15}
+              width={38}
+              height={30}
+              rx={14}
+              fill="#000"
               stroke="white"
-              strokeWidth={4}
+              strokeWidth={4.5}
             />
           </g>
         ))}
