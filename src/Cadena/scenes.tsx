@@ -141,9 +141,9 @@ const BALL = { x: 592, y: 1191, r: 53 };
 export const Cage: React.FC = () => {
   const t = useT();
 
-  const bars = interpolate(t, [0.05, 0.5], [0, 1], clamp);
-  const chain = interpolate(t, [0.15, 0.6], [0, 1], clamp);
-  const brain = interpolate(t, [0.65, 1.25], [0, 1], clamp);
+  const bars = interpolate(t, [0, 0.45], [0, 1], clamp);
+  const chain = interpolate(t, [0.05, 0.4], [0, 1], clamp);
+  const brain = interpolate(t, [0.5, 1.1], [0, 1], clamp);
   // From about a third of the way in, everything starts coming apart.
   const dust = interpolate(t, [1.7, 2.75], [0, 1], clamp);
   const solid = 1 - dust;

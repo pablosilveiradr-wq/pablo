@@ -206,19 +206,30 @@ export const GlossDisc: React.FC<{
 );
 
 /**
+ * Every cut passes through this one point, so the white dot is a single
+ * unbroken thread from the first scene to the last instead of jumping up
+ * and down between them.
+ */
+export const HANDOFF = { x: 540, y: 1060 };
+
+/**
  * The transition every scene shares: it grows out of a white dot and
  * collapses back into one.
  */
 export const Scene: React.FC<{
   durationInFrames: number;
   /** Where the scene pinches down to. */
-  origin?: { x: number; y: number };
+  /** Where this scene grows out of — the previous scene's pinch point. */
+  inOrigin?: { x: number; y: number };
+  /** Where it collapses to — the next scene's growth point. */
+  outOrigin?: { x: number; y: number };
   inDur?: number;
   outDur?: number;
   children: React.ReactNode;
 }> = ({
   durationInFrames,
-  origin = { x: 540, y: 1020 },
+  inOrigin = HANDOFF,
+  outOrigin = HANDOFF,
   inDur = 0.5,
   outDur = 0.33,
   children,
@@ -246,10 +257,13 @@ export const Scene: React.FC<{
     interpolate(grow, [0, 0.2], [0, 1], clamp) *
     interpolate(collapse, [0, 0.3], [0, 1], clamp);
 
-  const dot = Math.max(
-    interpolate(grow, [0, 0.45], [1, 0], clamp),
-    interpolate(collapse, [0, 0.5], [1, 0], clamp),
-  );
+  const growing = grow < 0.5;
+  const origin = growing ? inOrigin : outOrigin;
+
+  // Tie the dot to the scale, not to the timing: it is bright exactly
+  // while the artwork is too small to read, in both directions, so the
+  // thread never breaks at a cut.
+  const dot = interpolate(scale, [0.04, 0.8], [1, 0], clamp);
 
   return (
     <AbsoluteFill>
@@ -261,7 +275,9 @@ export const Scene: React.FC<{
           width: W,
           height: H,
           opacity,
-          transformOrigin: `${origin.x}px ${origin.y}px`,
+          transformOrigin: `${growing ? inOrigin.x : outOrigin.x}px ${
+            growing ? inOrigin.y : outOrigin.y
+          }px`,
           transform: `scale(${scale})`,
         }}
       >
@@ -278,10 +294,16 @@ export const Scene: React.FC<{
             id="pinch-glow"
             cx={origin.x}
             cy={origin.y}
-            r={64 * dot}
+            r={40 + 70 * dot}
             opacity={dot}
           />
-          <circle cx={origin.x} cy={origin.y} r={13 * dot} fill="white" />
+          <circle
+            cx={origin.x}
+            cy={origin.y}
+            r={6 + 12 * dot}
+            fill="white"
+            opacity={Math.min(1, dot * 1.8)}
+          />
         </svg>
       ) : null}
     </AbsoluteFill>
