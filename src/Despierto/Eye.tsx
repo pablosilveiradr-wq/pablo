@@ -19,18 +19,15 @@ const almond = (top: number, bottom: number) =>
     "Z",
   ].join(" ");
 
-export const Eye: React.FC<{ durationInFrames: number }> = ({
-  durationInFrames,
-}) => {
+export const Eye: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
-  const end = durationInFrames / fps;
 
   // Lid: opens, holds, blinks once, then shuts for good.
   const open = interpolate(
     t,
-    [0, 0.45, 2.55, 2.72, 2.92, end - 1.0, end - 0.7],
+    [0, 0.5, 3.3, 3.47, 3.7, 4.0, 4.15],
     [0, 1, 1, 0.06, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
@@ -50,8 +47,12 @@ export const Eye: React.FC<{ durationInFrames: number }> = ({
   const irisR = 54;
 
   // Once the lid is shut, only the highlight is left — it becomes the dot
-  // the next scene grows out of.
-  const dot = interpolate(t, [end - 0.72, end - 0.55], [0, 1], {
+  // the next scene grows out of, settling to its resting size.
+  const dot = interpolate(t, [4.1, 4.2], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const dotR = interpolate(t, [4.2, 4.5], [34, 24], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -69,7 +70,7 @@ export const Eye: React.FC<{ durationInFrames: number }> = ({
           <circle cx={irisX} cy={CY - 2} r={irisR} fill="black" />
           <circle cx={irisX - 15} cy={CY - 16} r={7.5} fill="white" />
         </g>
-        <circle cx={CX} cy={CY} r={16 * dot} fill="white" opacity={dot} />
+        <circle cx={CX} cy={CY} r={dotR * dot} fill="white" opacity={dot} />
       </svg>
     </AbsoluteFill>
   );

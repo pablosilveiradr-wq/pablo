@@ -71,18 +71,26 @@ export const DotSphere: React.FC<{ durationInFrames: number }> = ({
     config: { damping: 200 },
   });
 
+  // Collapse to the size of the ring the next scene starts from, so the
+  // hand-off is a single object shrinking rather than a cut.
   const shrink = interpolate(
     frame,
-    [durationInFrames - Math.round(fps * 0.45), durationInFrames - 2],
+    [durationInFrames - Math.round(fps * 0.35), durationInFrames - 1],
     [1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const scale = interpolate(grow, [0, 1], [0.04, 1]) * interpolate(shrink, [0, 1], [0.04, 1]);
-  const opacity = interpolate(grow, [0, 0.25], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const scale =
+    interpolate(grow, [0, 1], [0.04, 1]) * interpolate(shrink, [0, 1], [0.34, 1]);
+  const opacity =
+    interpolate(grow, [0, 0.25], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    }) *
+    interpolate(shrink, [0, 0.35], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
 
   const rot = (frame / fps) * 0.3;
   const pole = project(0, 0, rot);

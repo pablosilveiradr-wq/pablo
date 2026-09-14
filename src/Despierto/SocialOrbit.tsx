@@ -9,53 +9,55 @@ import {
 import { SOCIAL, SocialIcon } from "./socialIcons";
 
 /**
- * Scene 4 — social icons circling the ring, spinning up until they smear,
- * then bursting into a field of particles. The ring survives the blast and
- * carries on into the next scene.
+ * Scene 4 — the icons are thrown out of the ring, circle it while it
+ * spins up until they smear, then disintegrate into an expanding cloud of
+ * dust. The ring itself survives and carries on into the next scene.
  */
 
+const RING_R = 80;
 const ORBIT_R = 268;
 const ICON = 104;
 const GHOSTS = 14;
 /** Shutter angle: how much of the frame interval the smear covers. */
 const SHUTTER = 1.7;
+const PARTICLES = 620;
+/** Seconds into the scene when the icons come apart. */
+const BURST = 3.5;
 
 /** Total rotation in degrees at time t (seconds) — starts slow, runs away. */
-const rotationAt = (t: number) => 40 * t + 14.5 * t ** 4.23;
+const rotationAt = (t: number) => 40 * t + 17.5 * t ** 3.54;
 
-const PARTICLES = 170;
-
-export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
-  durationInFrames,
-}) => {
+export const SocialOrbit: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
 
-  const burstAt = 2.75;
-
   const speed = (rotationAt(t) - rotationAt(Math.max(0, t - 1 / fps))) * fps;
+
+  // The icons are flung out of the ring at the start of the scene.
+  const spread = interpolate(t, [0.05, 0.5], [RING_R, ORBIT_R], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   const iconsOpacity = interpolate(
     t,
-    [0, 0.25, burstAt - 0.06, burstAt + 0.05],
+    [0.05, 0.3, BURST - 0.06, BURST + 0.05],
     [0, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
+
+  const iconScale = interpolate(t, [0.05, 0.5], [0.25, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   const blur = interpolate(speed, [90, 1500], [0, 5], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const ringOpacity = interpolate(t, [0, 0.3], [0, 0.9], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  // The ring shrinks at the end so it lands as the centre cell of the grid.
-  const end = durationInFrames / fps;
-  const ringR = interpolate(t, [end - 0.65, end - 0.08], [80, 22], {
+  const ringOpacity = interpolate(t, [0, 0.12], [0, 0.9], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -64,15 +66,16 @@ export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
     () =>
       new Array(PARTICLES).fill(0).map((_, i) => ({
         angle: random(`a${i}`) * Math.PI * 2,
-        speed: 420 + random(`s${i}`) * 900,
-        size: 2 + random(`z${i}`) * 3.4,
-        delay: random(`d${i}`) * 0.12,
-        life: 0.9 + random(`l${i}`) * 0.9,
+        start: ORBIT_R - 32 + random(`r${i}`) * 64,
+        speed: 150 + random(`s${i}`) * 680,
+        size: 1.4 + random(`z${i}`) * 2.6,
+        delay: random(`d${i}`) * 0.1,
+        life: 0.6 + random(`l${i}`) * 0.42,
       })),
     [],
   );
 
-  const sinceBurst = t - burstAt;
+  const sinceBurst = t - BURST;
 
   return (
     <AbsoluteFill>
@@ -81,7 +84,7 @@ export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
           <circle
             cx={110}
             cy={110}
-            r={ringR}
+            r={RING_R}
             fill="none"
             stroke="white"
             strokeWidth={2.6}
@@ -116,9 +119,9 @@ export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
                     key={i}
                     style={{
                       position: "absolute",
-                      transform: `rotate(${deg}deg) translate(${ORBIT_R}px) rotate(${
+                      transform: `rotate(${deg}deg) translate(${spread}px) rotate(${
                         -deg - sampleRot
-                      }deg) translate(-50%, -50%)`,
+                      }deg) scale(${iconScale}) translate(-50%, -50%)`,
                     }}
                   >
                     <SocialIcon index={i} size={ICON} />
@@ -139,8 +142,8 @@ export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
                 return null;
               }
 
-              const eased = 1 - Math.pow(1 - age / p.life, 2.4);
-              const dist = ORBIT_R * 0.7 + p.speed * eased;
+              const eased = Math.pow(age / p.life, 0.85);
+              const dist = p.start + p.speed * eased;
 
               return (
                 <circle
@@ -151,8 +154,8 @@ export const SocialOrbit: React.FC<{ durationInFrames: number }> = ({
                   fill="white"
                   opacity={interpolate(
                     age / p.life,
-                    [0, 0.15, 0.7, 1],
-                    [0, 1, 0.85, 0],
+                    [0, 0.1, 0.65, 1],
+                    [0, 1, 0.8, 0],
                   )}
                 />
               );

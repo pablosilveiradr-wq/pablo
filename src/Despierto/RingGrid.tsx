@@ -35,7 +35,7 @@ export const RingGrid: React.FC = () => {
           x: 540 + (c - cx) * PITCH,
           y: 960 + (r - cy) * PITCH,
           // Cells wake up in a scattered order over three seconds.
-          at: 0.2 + random(`cell${r}-${c}`) * 3.1,
+          at: 0.45 + random(`cell${r}-${c}`) * 3.1,
           center,
         });
       }
@@ -44,12 +44,18 @@ export const RingGrid: React.FC = () => {
     return out;
   }, []);
 
-  // The centre ring fills in near the end and stays lit.
-  const fill = interpolate(t, [5.4, 5.9], [0, 1], {
+  // The ring handed over by the previous scene settles into a grid cell.
+  const centreR = interpolate(t, [0.15, 1.2], [80, 30], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const pulse = 1 + Math.sin(Math.max(0, t - 5.9) * 2.4) * 0.05;
+
+  // The centre ring fills in near the end and stays lit.
+  const fill = interpolate(t, [5.4, 5.95], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const pulse = 1 + Math.sin(Math.max(0, t - 5.95) * 2.4) * 0.05;
 
   return (
     <AbsoluteFill>
@@ -91,13 +97,13 @@ export const RingGrid: React.FC = () => {
         <circle
           cx={540}
           cy={960}
-          r={22 * pulse}
+          r={centreR * pulse}
           fill="none"
           stroke="white"
           strokeWidth={3}
           opacity={0.95}
         />
-        <circle cx={540} cy={960} r={19 * fill * pulse} fill="white" />
+        <circle cx={540} cy={960} r={centreR * 0.86 * fill * pulse} fill="white" />
       </svg>
     </AbsoluteFill>
   );

@@ -13,25 +13,25 @@ import { SocialOrbit } from "./SocialOrbit";
 
 export const DESPIERTO_DURATION = 828; // 27.6s at 30fps
 
-const ROAD = { from: 0, duration: 75 };
-const EYE = { from: 72, duration: 135 };
-const SPHERE = { from: 205, duration: 195 };
-const ORBIT = { from: 396, duration: 114 };
-const GRID = { from: 508, duration: DESPIERTO_DURATION - 508 };
+const ROAD = { from: 0, duration: 80 };
+const EYE = { from: 75, duration: 134 };
+const SPHERE = { from: 207, duration: 162 };
+const ORBIT = { from: 364, duration: 143 };
+const GRID = { from: 505, duration: DESPIERTO_DURATION - 505 };
 
 export const Despierto: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: "black" }}>
     <Sequence from={ROAD.from} durationInFrames={ROAD.duration}>
-      <Road durationInFrames={ROAD.duration} />
+      <Road />
     </Sequence>
     <Sequence from={EYE.from} durationInFrames={EYE.duration}>
-      <Eye durationInFrames={EYE.duration} />
+      <Eye />
     </Sequence>
     <Sequence from={SPHERE.from} durationInFrames={SPHERE.duration}>
       <DotSphere durationInFrames={SPHERE.duration} />
     </Sequence>
     <Sequence from={ORBIT.from} durationInFrames={ORBIT.duration}>
-      <SocialOrbit durationInFrames={ORBIT.duration} />
+      <SocialOrbit />
     </Sequence>
     <Sequence from={GRID.from} durationInFrames={GRID.duration}>
       <RingGrid />
