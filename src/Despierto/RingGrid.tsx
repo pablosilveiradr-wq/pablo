@@ -103,7 +103,12 @@ export const RingGrid: React.FC = () => {
           strokeWidth={3}
           opacity={0.95}
         />
-        <circle cx={540} cy={960} r={centreR * 0.86 * fill * pulse} fill="white" />
+        <circle
+          cx={540}
+          cy={960}
+          r={centreR * 0.86 * fill * pulse}
+          fill="white"
+        />
       </svg>
     </AbsoluteFill>
   );

@@ -42,6 +42,15 @@ const usePoints = (): Point[] =>
     return out;
   }, []);
 
+/**
+ * Where the lit pole lands on screen. It sits on the rotation axis, so it
+ * never moves — the eye collapses onto it and the sphere grows out of it.
+ */
+export const SPHERE_POLE = {
+  x: 540 + Math.cos(ALPHA) * Math.sin(BETA) * RADIUS,
+  y: 960 + Math.sin(ALPHA) * RADIUS,
+};
+
 const project = (theta: number, phi: number, rot: number) => {
   const sin = Math.sin(theta);
   const x = sin * Math.cos(phi + rot);
@@ -67,7 +76,7 @@ export const DotSphere: React.FC<{ durationInFrames: number }> = ({
   const grow = spring({
     frame,
     fps,
-    durationInFrames: Math.round(fps * 1.1),
+    durationInFrames: Math.round(fps * 1.15),
     config: { damping: 200 },
   });
 
@@ -80,8 +89,8 @@ export const DotSphere: React.FC<{ durationInFrames: number }> = ({
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const scale =
-    interpolate(grow, [0, 1], [0.04, 1]) * interpolate(shrink, [0, 1], [0.34, 1]);
+  const grow01 = interpolate(grow, [0, 1], [0.02, 1]);
+  const shrink01 = interpolate(shrink, [0, 1], [0.34, 1]);
   const opacity =
     interpolate(grow, [0, 0.25], [0, 1], {
       extrapolateLeft: "clamp",
@@ -98,53 +107,69 @@ export const DotSphere: React.FC<{ durationInFrames: number }> = ({
   const poleY = 960 - pole.y * RADIUS;
 
   return (
-    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
+    <AbsoluteFill>
       <div
         style={{
-          transform: `scale(${scale})`,
-          opacity,
+          position: "absolute",
+          left: 0,
+          top: 0,
           width: 1080,
           height: 1920,
-          position: "absolute",
+          opacity,
+          // Grows out of the pole, collapses towards the middle.
+          transformOrigin: `${SPHERE_POLE.x}px ${SPHERE_POLE.y}px`,
+          transform: `scale(${grow01})`,
         }}
       >
-        <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-          <defs>
-            <radialGradient id="core-glow">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
-              <stop offset="22%" stopColor="rgba(255,255,255,0.35)" />
-              <stop offset="60%" stopColor="rgba(255,255,255,0.06)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-            </radialGradient>
-          </defs>
-          {points.map((p, i) => {
-            const { x, y, z } = project(p.theta, p.phi, rot);
-            if (z <= 0.04) {
-              return null;
-            }
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: 1080,
+            height: 1920,
+            transformOrigin: "540px 960px",
+            transform: `scale(${shrink01})`,
+          }}
+        >
+          <svg width={1080} height={1920} viewBox="0 0 1080 1920">
+            <defs>
+              <radialGradient id="core-glow">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="22%" stopColor="rgba(255,255,255,0.35)" />
+                <stop offset="60%" stopColor="rgba(255,255,255,0.06)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+              </radialGradient>
+            </defs>
+            {points.map((p, i) => {
+              const { x, y, z } = project(p.theta, p.phi, rot);
+              if (z <= 0.04) {
+                return null;
+              }
 
-            return (
-              <circle
-                key={i}
-                cx={540 + x * RADIUS}
-                cy={960 - y * RADIUS}
-                r={2.7}
-                fill="white"
-                opacity={0.35 + 0.6 * z}
-              />
-            );
-          })}
-          <circle cx={poleX} cy={poleY} r={104} fill="url(#core-glow)" />
-          <circle
-            cx={poleX}
-            cy={poleY}
-            r={19}
-            fill="none"
-            stroke="rgba(255,255,255,0.55)"
-            strokeWidth={2}
-          />
-          <circle cx={poleX} cy={poleY} r={7} fill="white" />
-        </svg>
+              return (
+                <circle
+                  key={i}
+                  cx={540 + x * RADIUS}
+                  cy={960 - y * RADIUS}
+                  r={2.7}
+                  fill="white"
+                  opacity={0.35 + 0.6 * z}
+                />
+              );
+            })}
+            <circle cx={poleX} cy={poleY} r={104} fill="url(#core-glow)" />
+            <circle
+              cx={poleX}
+              cy={poleY}
+              r={19}
+              fill="none"
+              stroke="rgba(255,255,255,0.55)"
+              strokeWidth={2}
+            />
+            <circle cx={poleX} cy={poleY} r={7} fill="white" />
+          </svg>
+        </div>
       </div>
     </AbsoluteFill>
   );

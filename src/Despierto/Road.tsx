@@ -27,8 +27,8 @@ const nUp = { x: dir.y, y: -dir.x };
 // Where the track ends up when it morphs into the eye's closed lid.
 const MID = { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 };
 const ANGLE = -(Math.atan2(dy, dx) * 180) / Math.PI;
-const END_SCALE = 264 / len;
-const SHIFT = { x: 540 - MID.x, y: 900 - MID.y };
+const END_SCALE = 220 / len;
+const SHIFT = { x: 533 - MID.x, y: 903 - MID.y };
 
 const onTrack = (s: number, radius: number) => ({
   x: A.x + dir.x * len * s + nUp.x * radius,

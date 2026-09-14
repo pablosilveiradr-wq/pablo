@@ -93,7 +93,7 @@ export const SocialOrbit: React.FC = () => {
         </svg>
       </AbsoluteFill>
 
-      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
+      <AbsoluteFill>
         {new Array(GHOSTS).fill(0).map((_, g) => {
           // Sample the rotation across the frame's exposure and screen the
           // samples together — that is what makes a real motion smear.
@@ -104,24 +104,32 @@ export const SocialOrbit: React.FC = () => {
             <div
               key={g}
               style={{
+                // A zero-sized box pinned to the exact centre of the frame:
+                // everything below rotates about this point, not about its
+                // own box, which is what threw the orbit off centre.
                 position: "absolute",
+                left: "50%",
+                top: "50%",
+                width: 0,
+                height: 0,
                 opacity: (iconsOpacity * 1.9) / GHOSTS,
                 mixBlendMode: "screen",
                 filter: blur > 0.3 ? `blur(${blur}px)` : undefined,
-                transform: `rotate(${sampleRot}deg)`,
               }}
             >
               {SOCIAL.map((_icon, i) => {
-                const deg = (i / SOCIAL.length) * 360;
+                const deg = (i / SOCIAL.length) * 360 + sampleRot;
 
                 return (
                   <div
                     key={i}
                     style={{
                       position: "absolute",
-                      transform: `rotate(${deg}deg) translate(${spread}px) rotate(${
-                        -deg - sampleRot
-                      }deg) scale(${iconScale}) translate(-50%, -50%)`,
+                      left: -ICON / 2,
+                      top: -ICON / 2,
+                      width: ICON,
+                      height: ICON,
+                      transform: `rotate(${deg}deg) translate(${spread}px) rotate(${-deg}deg) scale(${iconScale})`,
                     }}
                   >
                     <SocialIcon index={i} size={ICON} />

@@ -14,8 +14,8 @@ import { SocialOrbit } from "./SocialOrbit";
 export const DESPIERTO_DURATION = 828; // 27.6s at 30fps
 
 const ROAD = { from: 0, duration: 80 };
-const EYE = { from: 75, duration: 134 };
-const SPHERE = { from: 207, duration: 162 };
+const EYE = { from: 75, duration: 155 };
+const SPHERE = { from: 212, duration: 157 };
 const ORBIT = { from: 364, duration: 143 };
 const GRID = { from: 505, duration: DESPIERTO_DURATION - 505 };
 
