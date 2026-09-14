@@ -5,6 +5,7 @@ import {
   calculateCaptionedVideoMetadata,
   captionedVideoSchema,
 } from "./CaptionedVideo";
+import { CADENA_DURATION, Cadena } from "./Cadena";
 import { DESPIERTO_DURATION, Despierto } from "./Despierto";
 import {
   Metafora,
@@ -18,6 +19,14 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Cadena"
+        component={Cadena}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={CADENA_DURATION}
+      />
       <Composition
         id="Despierto"
         component={Despierto}
