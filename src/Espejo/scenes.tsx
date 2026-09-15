@@ -7,7 +7,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { clamp, DottedRing, Glow, H, Sunburst, W } from "../Cadena/common";
-import { FigureBack, FigureFront, Heart, MirrorFrame, Walker } from "./art";
+import { Heart, HollowBall, MirrorFrame, SolidBall } from "./art";
 
 const Svg: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <AbsoluteFill>
@@ -23,14 +23,10 @@ const useT = () => {
   return frame / fps;
 };
 
-/** Places a 200x200 drawing with its feet on (x, y). */
-const stand = (x: number, y: number, s: number) =>
-  `translate(${x - 100 * s} ${y - 200 * s}) scale(${s})`;
-
-/** The trail the crowd walks away along. */
-const A = { x: 600, y: 1350 };
-const C = { x: 380, y: 1292 };
-const B = { x: 130, y: 1012 };
+/** The trail the others roll away along. */
+const A = { x: 620, y: 1330 };
+const C = { x: 390, y: 1276 };
+const B = { x: 132, y: 1010 };
 
 const onTrail = (p: number) => ({
   x: (1 - p) ** 2 * A.x + 2 * (1 - p) * p * C.x + p ** 2 * B.x,
@@ -39,24 +35,28 @@ const onTrail = (p: number) => ({
 
 const trailPath = `M ${A.x} ${A.y} Q ${C.x} ${C.y} ${B.x} ${B.y}`;
 
-/** Scene 1 — people walking off and coming apart. One stays. */
+/** Scene 1 — the others roll off and come apart. You stay. */
 export const Leaving: React.FC = () => {
   const t = useT();
 
   const trail = interpolate(t, [0.1, 0.8], [0, 1], clamp);
-  const you = interpolate(t, [0.25, 0.8], [0, 1], clamp);
+  const you = interpolate(t, [0.2, 0.7], [0, 1], clamp);
 
   const motes = useMemo(
     () =>
       new Array(4).fill(0).map((_, w) =>
-        new Array(60).fill(0).map((_, i) => ({
-          ox: (random(`x${w}-${i}`) - 0.5) * 110,
-          oy: (random(`y${w}-${i}`) - 0.5) * 180,
-          dx: -40 - random(`dx${w}-${i}`) * 90,
-          dy: (random(`dy${w}-${i}`) - 0.5) * 70 - 20,
-          size: 2 + random(`s${w}-${i}`) * 3,
-          delay: random(`t${w}-${i}`) * 0.3,
-        })),
+        new Array(54).fill(0).map((_, i) => {
+          const a = random(`a${w}-${i}`) * Math.PI * 2;
+          const rr = Math.sqrt(random(`r${w}-${i}`));
+          return {
+            ox: Math.cos(a) * rr,
+            oy: Math.sin(a) * rr,
+            dx: -50 - random(`dx${w}-${i}`) * 110,
+            dy: (random(`dy${w}-${i}`) - 0.5) * 90 - 30,
+            size: 1.8 + random(`s${w}-${i}`) * 2.8,
+            delay: random(`t${w}-${i}`) * 0.32,
+          };
+        }),
       ),
     [],
   );
@@ -66,7 +66,7 @@ export const Leaving: React.FC = () => {
       <path
         d={trailPath}
         fill="none"
-        stroke="rgba(255,255,255,0.32)"
+        stroke="rgba(255,255,255,0.3)"
         strokeWidth={4}
         strokeLinecap="round"
         pathLength={1}
@@ -75,28 +75,32 @@ export const Leaving: React.FC = () => {
       />
 
       {[0, 1, 2, 3].map((i) => {
-        const p = interpolate(t, [0, 2.4], [0.18 + i * 0.185, 0.4 + i * 0.185], clamp);
+        const p = interpolate(t, [0, 2.4], [0.16 + i * 0.19, 0.38 + i * 0.19], clamp);
         const pos = onTrail(Math.min(p, 1));
-        const s = 0.95 - 0.53 * p;
-        const goneAt = 0.85 + i * 0.28;
+        const r = 58 - 30 * p;
+        const goneAt = 0.8 + i * 0.28;
         const gone = interpolate(t, [goneAt, goneAt + 0.5], [0, 1], clamp);
 
         return (
           <g key={i}>
-            <g opacity={1 - gone} transform={stand(pos.x, pos.y, s)}>
-              <Walker phase={t * 7 + i * 1.4} />
-            </g>
+            <HollowBall
+              cx={pos.x}
+              cy={pos.y}
+              r={r}
+              width={5 - 1.6 * p}
+              opacity={1 - gone}
+            />
             {gone > 0
               ? motes[i].map((m, j) => {
                   const q = interpolate(gone, [m.delay, 1], [0, 1], clamp);
                   return (
                     <circle
                       key={j}
-                      cx={pos.x + m.ox * s + m.dx * q}
-                      cy={pos.y - 100 * s + m.oy * s + m.dy * q}
+                      cx={pos.x + m.ox * r + m.dx * q}
+                      cy={pos.y + m.oy * r + m.dy * q}
                       r={m.size}
                       fill="white"
-                      opacity={interpolate(q, [0, 0.2, 0.7, 1], [0, 0.8, 0.5, 0])}
+                      opacity={interpolate(q, [0, 0.2, 0.7, 1], [0, 0.85, 0.5, 0])}
                     />
                   );
                 })
@@ -105,75 +109,70 @@ export const Leaving: React.FC = () => {
         );
       })}
 
-      <g opacity={you} transform={stand(688, 1368, 2.05)}>
-        <FigureBack />
-      </g>
+      <SolidBall id="you-1" cx={722} cy={1274} r={78} opacity={you} glow={you} />
     </Svg>
   );
 };
 
-/** Scene 2 — the mirror gives the whole self back. */
+/** Scene 2 — the mirror hands you back whole. */
 export const MirrorScene: React.FC = () => {
   const t = useT();
 
   const frameIn = interpolate(t, [0.1, 0.6], [0, 1], clamp);
-  const reveal = interpolate(t, [0.55, 1.6], [0, 1], clamp);
-  const heart = interpolate(t, [1.6, 1.95], [0, 1], clamp);
-  const beat = 1 + Math.sin(Math.max(0, t - 1.9) * 6) * 0.07;
+  const reveal = interpolate(t, [0.6, 1.5], [0, 1], clamp);
+  const heart = interpolate(t, [1.55, 1.9], [0, 1], clamp);
+  const beat = 1 + Math.sin(Math.max(0, t - 1.9) * 6) * 0.08;
 
   const MX = 716;
   const MY = 1128;
   const MS = 2.65;
   const top = MY - 86 * MS;
-  const height = 172 * MS;
 
   return (
     <Svg>
       <defs>
         <clipPath id="mirror-reveal">
-          <rect x={MX - 200} y={top} width={400} height={height * reveal} />
+          <rect
+            x={MX - 220}
+            y={top}
+            width={440}
+            height={172 * MS * reveal}
+          />
         </clipPath>
       </defs>
 
-      <Glow id="mirror-glow" cx={MX} cy={MY} r={410} opacity={0.3 * frameIn} core={0.4} />
-      <DottedRing
-        cx={MX}
-        cy={MY}
-        r={322}
-        rotation={t * 12}
-        opacity={0.3 * frameIn}
-      />
+      <Glow id="mirror-glow" cx={MX} cy={MY} r={410} opacity={0.26 * frameIn} core={0.34} />
+      <DottedRing cx={MX} cy={MY} r={322} rotation={t * 12} opacity={0.28 * frameIn} />
 
-      <g opacity={frameIn} transform={`translate(${MX - 100 * MS} ${MY - 88 * MS}) scale(${MS})`}>
+      <g
+        opacity={frameIn}
+        transform={`translate(${MX - 100 * MS} ${MY - 88 * MS}) scale(${MS})`}
+      >
         <MirrorFrame />
       </g>
 
       <g clipPath="url(#mirror-reveal)">
-        <g transform={stand(MX, 1292, 1.6)}>
-          <FigureFront />
-        </g>
+        <SolidBall id="you-mirror" cx={MX} cy={MY} r={74} />
       </g>
 
       <g
         opacity={heart}
-        transform={`translate(${MX + 122} ${1006}) scale(${0.46 * beat}) translate(-100 -100)`}
+        transform={`translate(${MX + 128} ${966}) scale(${0.44 * beat}) translate(-100 -100)`}
       >
         <Heart filled />
       </g>
 
-      <g transform={stand(302, 1476, 2.26)}>
-        <FigureBack />
-      </g>
+      <SolidBall id="you-2" cx={296} cy={1186} r={74} glow={0.75} />
     </Svg>
   );
 };
 
-/** Scene 3 — the ring closes and the self is still whole. */
+/** Scene 3 — the ring closes and you are still whole. */
 export const Intact: React.FC = () => {
   const t = useT();
 
-  const ring = interpolate(t, [0.15, 1.25], [0, 1], clamp);
-  const burst = interpolate(t, [1.2, 1.7], [0, 1], clamp);
+  const ring = interpolate(t, [0.15, 1.2], [0, 1], clamp);
+  const burst = interpolate(t, [1.15, 1.65], [0, 1], clamp);
   const beat = 1 + Math.sin(Math.max(0, t - 0.6) * 5.5) * 0.09;
 
   const CX = 540;
@@ -181,11 +180,11 @@ export const Intact: React.FC = () => {
 
   const drift = useMemo(
     () =>
-      new Array(60).fill(0).map((_, i) => ({
-        y: 780 + random(`dy${i}`) * 740,
-        start: -120 - random(`ds${i}`) * 900,
-        speed: 260 + random(`dv${i}`) * 300,
-        size: 1.6 + random(`dz${i}`) * 2.4,
+      new Array(70).fill(0).map((_, i) => ({
+        y: 700 + random(`dy${i}`) * 880,
+        start: -140 - random(`ds${i}`) * 1000,
+        speed: 280 + random(`dv${i}`) * 320,
+        size: 1.7 + random(`dz${i}`) * 2.5,
       })),
     [],
   );
@@ -206,9 +205,8 @@ export const Intact: React.FC = () => {
 
       {drift.map((d, i) => {
         const x = d.start + d.speed * t;
-        // The dust sweeps past outside the ring — it never reaches the figure.
-        const dist = Math.hypot(x - CX, d.y - CY);
-        if (dist < 382) {
+        // The dust sweeps past outside the ring — it never reaches you.
+        if (Math.hypot(x - CX, d.y - CY) < 372) {
           return null;
         }
 
@@ -219,13 +217,12 @@ export const Intact: React.FC = () => {
             cy={d.y}
             r={d.size}
             fill="white"
-            opacity={interpolate(x, [-100, 60, 1000, 1180], [0, 0.5, 0.5, 0], clamp)}
+            opacity={interpolate(x, [-120, 60, 1000, 1200], [0, 0.5, 0.5, 0], clamp)}
           />
         );
       })}
 
-      <DottedRing cx={CX} cy={CY} r={392} rotation={-t * 14} opacity={0.35 * ring} />
-      <Glow id="intact-glow" cx={CX} cy={CY} r={366} opacity={0.34 * ring} core={0.3} />
+      <DottedRing cx={CX} cy={CY} r={392} rotation={-t * 14} opacity={0.32 * ring} />
       <circle
         cx={CX}
         cy={CY}
@@ -239,11 +236,9 @@ export const Intact: React.FC = () => {
         transform={`rotate(-90 ${CX} ${CY})`}
       />
 
-      <g transform={stand(CX, 1424, 2.3)}>
-        <FigureFront />
-      </g>
+      <SolidBall id="you-3" cx={CX} cy={CY} r={94} glow={0.6 + 0.4 * ring} />
       <g
-        transform={`translate(${CX + 146} ${994}) scale(${0.44 * beat}) translate(-100 -100)`}
+        transform={`translate(${CX + 176} ${982}) scale(${0.44 * beat}) translate(-100 -100)`}
       >
         <Heart filled />
       </g>
