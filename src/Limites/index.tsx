@@ -27,23 +27,27 @@ type Accuser = {
   /** Where the shout sits relative to the one shouting it. */
   wx?: number;
   wy?: number;
+  anchor?: "start" | "middle" | "end";
   at: number;
 };
 
+/**
+ * The top of the ring is left clear so nothing crowds the sign, and each
+ * shout is anchored away from its own ball so the two never overlap.
+ */
 const ACCUSERS: Accuser[] = [
-  { angle: -138, word: "EGOÍSTA", wx: -44, wy: -72, at: 0.7 },
-  { angle: -168, word: "DEMASIADO", wx: -8, wy: -78, at: 1.15 },
-  { angle: -110, at: 1.5 },
-  { angle: -70, word: "GROSERO", wx: 152, wy: -100, at: 1.0 },
-  { angle: -42, word: "MALO", wx: 62, wy: -72, at: 1.35 },
-  { angle: -12, word: "FRÍO", wx: 22, wy: -70, at: 1.9 },
-  { angle: 25, at: 2.2 },
-  { angle: 90, at: 2.45 },
-  { angle: 152, word: "RARO", wx: -34, wy: 74, at: 2.7 },
+  { angle: -150, word: "DEMASIADO", wx: 0, wy: -56, anchor: "middle", at: 1.15 },
+  { angle: 180, word: "EGOÍSTA", wx: -54, wy: 12, anchor: "end", at: 0.7 },
+  { angle: 150, word: "RARO", wx: 0, wy: 60, anchor: "middle", at: 2.7 },
+  { angle: 112, at: 2.45 },
+  { angle: 78, at: 2.2 },
+  { angle: 44, word: "FRÍO", wx: 54, wy: 12, anchor: "start", at: 1.9 },
+  { angle: 10, word: "MALO", wx: 54, wy: 12, anchor: "start", at: 1.35 },
+  { angle: -22, word: "GROSERO", wx: 54, wy: 12, anchor: "start", at: 1.0 },
 ];
 
-const AX = 320;
-const AY = 230;
+const AX = 270;
+const AY = 240;
 
 const place = (angle: number, rx = AX, ry = AY) => {
   const a = (angle * Math.PI) / 180;
@@ -225,11 +229,11 @@ export const Limites: React.FC = () => {
                   <text
                     x={p.x + (acc.wx ?? 0)}
                     y={p.y + (acc.wy ?? -70)}
-                    textAnchor="middle"
+                    textAnchor={acc.anchor ?? "middle"}
                     fill="white"
                     fontFamily={JOST}
                     fontWeight={500}
-                    fontSize={42}
+                    fontSize={40}
                     letterSpacing={1.5}
                   >
                     {acc.word}
