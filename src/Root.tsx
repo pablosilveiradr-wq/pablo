@@ -7,6 +7,7 @@ import {
 } from "./CaptionedVideo";
 import { CADENA_DURATION, Cadena } from "./Cadena";
 import { ESPEJO_DURATION, Espejo } from "./Espejo";
+import { LIMITES_DURATION, Limites } from "./Limites";
 import { DESPIERTO_DURATION, Despierto } from "./Despierto";
 import {
   Metafora,
@@ -20,6 +21,14 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Limites"
+        component={Limites}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={LIMITES_DURATION}
+      />
       <Composition
         id="Espejo"
         component={Espejo}
