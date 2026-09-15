@@ -6,6 +6,7 @@ import {
   captionedVideoSchema,
 } from "./CaptionedVideo";
 import { CADENA_DURATION, Cadena } from "./Cadena";
+import { ESPEJO_DURATION, Espejo } from "./Espejo";
 import { DESPIERTO_DURATION, Despierto } from "./Despierto";
 import {
   Metafora,
@@ -19,6 +20,14 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Espejo"
+        component={Espejo}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={ESPEJO_DURATION}
+      />
       <Composition
         id="Cadena"
         component={Cadena}
