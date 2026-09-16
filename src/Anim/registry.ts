@@ -14,6 +14,14 @@ import {
 } from "./icons";
 import { ZenMonkPray } from "./icons-detail";
 import {
+  BottleGlass,
+  PodiumStep,
+  SadPerson,
+  ScatterDots,
+  VideoWindow,
+  WakeEarly,
+} from "./icons-ref";
+import {
   AtomProof,
   BedUnfinished,
   CrowdRow,
@@ -49,6 +57,12 @@ export const ICONS = {
   feelWorse: FeelWorse,
   whereIsPeace: WhereIsPeace,
   notElsewhere: NotElsewhere,
+  sadPerson: SadPerson,
+  scatterDots: ScatterDots,
+  bottleGlass: BottleGlass,
+  wakeEarly: WakeEarly,
+  videoWindow: VideoWindow,
+  podiumStep: PodiumStep,
 } satisfies Record<string, React.FC<IconProps>>;
 
 export type IconName = keyof typeof ICONS;

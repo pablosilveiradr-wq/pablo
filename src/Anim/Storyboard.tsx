@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, Sequence, useCurrentFrame, useVideoConfig } 
 import { z } from "zod";
 import { ICONS, IconName } from "./registry";
 import { Canvas } from "./primitives";
+import { Caption } from "./Caption";
 import { BG, CROSSFADE } from "./theme";
 
 export const beatSchema = z.object({
@@ -14,6 +15,8 @@ export const beatSchema = z.object({
   end: z.number(),
   /** The spoken line this beat represents. Never rendered — it is the brief. */
   note: z.string().optional(),
+  /** Subtitle burned under the icon, the way the references caption every line. */
+  text: z.string().optional(),
 });
 
 export type Beat = z.infer<typeof beatSchema>;
@@ -23,7 +26,10 @@ export const storyboardSchema = z.object({
 });
 
 /** One metaphor, cross-dissolved in and out like the references. */
-const BeatLayer: React.FC<{ readonly icon: IconName }> = ({ icon }) => {
+const BeatLayer: React.FC<{
+  readonly icon: IconName;
+  readonly text?: string;
+}> = ({ icon, text }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const Icon = ICONS[icon];
@@ -45,6 +51,7 @@ const BeatLayer: React.FC<{ readonly icon: IconName }> = ({ icon }) => {
       <Canvas>
         <Icon />
       </Canvas>
+      {text ? <Caption text={text} /> : null}
     </AbsoluteFill>
   );
 };
@@ -70,7 +77,7 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
         }
         return (
           <Sequence key={i} from={from} durationInFrames={duration}>
-            <BeatLayer icon={icon} />
+            <BeatLayer icon={icon} text={beat.text} />
           </Sequence>
         );
       })}

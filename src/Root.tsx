@@ -7,6 +7,7 @@ import {
 } from "./CaptionedVideo";
 import { DEMO_BEATS } from "./Anim/demo-storyboard";
 import { ZEN_BEATS } from "./Anim/zen-storyboard";
+import { REF_BEATS } from "./Anim/ref-storyboard";
 import {
   Storyboard,
   storyboardDuration,
@@ -57,6 +58,19 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         durationInFrames={storyboardDuration(ZEN_BEATS, FPS)}
         defaultProps={{ beats: ZEN_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Ref"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={storyboardDuration(REF_BEATS, FPS)}
+        defaultProps={{ beats: REF_BEATS }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}
