@@ -106,13 +106,21 @@ npx remotion render src/index.ts Storyboard out/v.mp4
 npx remotion render src/index.ts Storyboard-9x16 out/v-reel.mp4
 ```
 
-### Importar dibujos hechos afuera (Gemini, Midjourney, a mano)
+### Importar dibujos hechos afuera (vectores de stock, generadores, escaneos)
 
-Si el ícono viene como imagen en vez de escrito en código, se vectoriza y se
-anima igual. Tiene que ser línea clara sobre fondo oscuro, sin sombras.
+Si el dibujo viene de afuera en vez de escrito en código, se importa y se anima
+igual. Hay dos caminos:
+
+**SVG (preferido).** Un vector de stock o un export de Illustrator ya es
+geometría: se importa directo, sin rasterizar, sin pérdida, y conserva la línea
+real — así puede usar el dibujado auténtico con `stroke-dashoffset`.
+
+**PNG/JPG.** Se vectoriza con potrace. Tiene que ser línea clara sobre fondo
+oscuro, sin sombras. El resultado son contornos rellenos, no líneas, así que el
+revelado va por máscara en vez de trazo.
 
 ```console
-# dejar los PNG en assets/import/ y correr:
+# dejar los SVG o PNG en assets/import/ y correr:
 node scripts/trace.mjs
 ```
 
@@ -126,8 +134,9 @@ arte generado afuera no salta de escena a escena aunque venga corrido.
 
 Después se anima con `<TracedIcon art={nombre} mode="wipe" />`, que revela el
 dibujo progresivamente con una máscara — el equivalente al trazo que se dibuja
-solo. Modos: `wipe` (barrido), `radial` (desde el centro), `stagger` (trazo por
-trazo) y `fade`.
+solo. Modos: `draw` (el trazo se dibuja de punta a punta, sólo para SVG con
+línea real), `wipe` (barrido), `radial` (desde el centro), `stagger` (figura por
+figura) y `fade`.
 
 **Resolución:** para arte con detalle fino, la fuente tiene que ser grande.
 Los trazos de menos de ~2px se pierden al binarizar. Mínimo 2048×2048; el

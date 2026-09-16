@@ -144,6 +144,120 @@ const camel = (s) =>
     .replace(/^[0-9]+/, "")
     .replace(/^./, (c) => c.toLowerCase());
 
+
+// --- Import directo de SVG ------------------------------------------------
+// Un vector descargado (Vecteezy, Freepik, un export de Illustrator) ya es
+// geometria: no hay que rasterizar ni trazar nada. Solo hay que sacar las
+// figuras, aplanar los transform de los grupos y reencuadrar.
+
+const ptsToPath = (pts, close) => {
+  const n = (pts.match(NUM) ?? []).map(Number);
+  let d = "";
+  for (let i = 0; i + 1 < n.length; i += 2) d += `${i ? "L" : "M"} ${n[i]} ${n[i + 1]} `;
+  return d + (close ? "Z" : "");
+};
+
+const ellipseToPath = (cx, cy, rx, ry) =>
+  `M ${cx - rx} ${cy} A ${rx} ${ry} 0 0 1 ${cx + rx} ${cy} A ${rx} ${ry} 0 0 1 ${cx - rx} ${cy} Z`;
+
+const rectToPath = (x, y, w, h, rx) =>
+  rx > 0
+    ? `M ${x + rx} ${y} L ${x + w - rx} ${y} A ${rx} ${rx} 0 0 1 ${x + w} ${y + rx} ` +
+      `L ${x + w} ${y + h - rx} A ${rx} ${rx} 0 0 1 ${x + w - rx} ${y + h} ` +
+      `L ${x + rx} ${y + h} A ${rx} ${rx} 0 0 1 ${x} ${y + h - rx} ` +
+      `L ${x} ${y + rx} A ${rx} ${rx} 0 0 1 ${x + rx} ${y} Z`
+    : `M ${x} ${y} L ${x + w} ${y} L ${x + w} ${y + h} L ${x} ${y + h} Z`;
+
+const mulMat = (m, n) => [
+  m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1],
+  m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3],
+  m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5],
+];
+
+const matToStr = (m) => `matrix(${m.map((v) => Number(v.toFixed(6))).join(" ")})`;
+
+const att = (tag, name) => {
+  const m = tag.match(new RegExp(`\\b${name}\\s*=\\s*"([^"]*)"`));
+  return m ? m[1] : null;
+};
+const num = (tag, name, dflt = 0) => {
+  const v = att(tag, name);
+  return v === null ? dflt : parseFloat(v) || 0;
+};
+
+/** Devuelve [{ d, transform }] con los transform de grupo ya aplanados. */
+const readSvgShapes = (xml) => {
+  const out = [];
+  const stack = [[1, 0, 0, 1, 0, 0]];
+  const tagRe = /<\s*(\/?)\s*([a-zA-Z][\w:-]*)([^>]*?)(\/?)>/g;
+  for (const [, closing, name, attrs, selfClose] of xml.matchAll(tagRe)) {
+    const top = stack[stack.length - 1];
+    if (name === "g") {
+      if (closing) { if (stack.length > 1) stack.pop(); continue; }
+      const t = att(attrs, "transform");
+      const m = t ? mulMat(top, parseTransform(t)) : top;
+      if (!selfClose) stack.push(m);
+      continue;
+    }
+    if (closing) continue;
+    const t = att(attrs, "transform");
+    const m = t ? mulMat(top, parseTransform(t)) : top;
+    let d = null;
+    switch (name) {
+      case "path": d = att(attrs, "d"); break;
+      case "circle": {
+        const r = num(attrs, "r");
+        if (r > 0) d = ellipseToPath(num(attrs, "cx"), num(attrs, "cy"), r, r);
+        break;
+      }
+      case "ellipse": d = ellipseToPath(num(attrs, "cx"), num(attrs, "cy"), num(attrs, "rx"), num(attrs, "ry")); break;
+      case "rect": d = rectToPath(num(attrs, "x"), num(attrs, "y"), num(attrs, "width"), num(attrs, "height"), num(attrs, "rx")); break;
+      case "line": d = `M ${num(attrs, "x1")} ${num(attrs, "y1")} L ${num(attrs, "x2")} ${num(attrs, "y2")}`; break;
+      case "polygon": d = ptsToPath(att(attrs, "points") ?? "", true); break;
+      case "polyline": d = ptsToPath(att(attrs, "points") ?? "", false); break;
+    }
+    if (d && d.trim()) out.push({ d: d.trim(), m });
+  }
+  return out;
+};
+
+const importSvg = (file) => {
+  const name = camel(basename(file, extname(file)));
+  const xml = readFileSync(file, "utf8");
+  const shapes = readSvgShapes(xml);
+  if (shapes.length === 0) throw new Error(`${file}: no se encontro ninguna figura.`);
+
+  // Cada figura lleva su propia matriz, asi que el encuadre se calcula sobre
+  // todas juntas y se antepone como un transform del grupo.
+  const SIZE = 1080;
+  const boxes = shapes.map((s) => pathBBox(s.d, s.m));
+  const minX = Math.min(...boxes.map((b) => b.minX));
+  const minY = Math.min(...boxes.map((b) => b.minY));
+  const maxX = Math.max(...boxes.map((b) => b.maxX));
+  const maxY = Math.max(...boxes.map((b) => b.maxY));
+  const w = maxX - minX;
+  const h = maxY - minY;
+  const sc = (SIZE * FILL) / Math.max(w, h);
+  const frame =
+    `translate(${SIZE / 2} ${SIZE / 2}) scale(${sc.toFixed(5)}) ` +
+    `translate(${(-(minX + w / 2)).toFixed(2)} ${(-(minY + h / 2)).toFixed(2)})`;
+
+  const ts =
+    `// Generado por scripts/trace.mjs desde ${basename(file)}. No editar a mano.\n` +
+    `export const ${name} = {\n` +
+    `  paint: "stroke",\n` +
+    `  strokeWidth: ${(3.1 / sc).toFixed(4)},\n` +
+    `  viewBox: "0 0 ${SIZE} ${SIZE}",\n` +
+    `  transform: ${JSON.stringify(frame)},\n` +
+    `  paths: [\n` +
+    shapes.map((s) => `    ${JSON.stringify(`${matToStr(s.m)}|${s.d}`)},`).join("\n") +
+    `\n  ],\n} as const;\n`;
+
+  writeFileSync(join(OUT_DIR, `${name}.ts`), ts);
+  console.log(`  ${basename(file)} -> ${name}.ts (${shapes.length} figuras, vector directo sin trazar)`);
+  return name;
+};
+
 const trace = (file) => {
   const name = camel(basename(file, extname(file)));
   const pbm = join(TMP, `${name}.pbm`);
@@ -175,6 +289,7 @@ const trace = (file) => {
   const ts =
     `// Generado por scripts/trace.mjs desde ${basename(file)}. No editar a mano.\n` +
     `export const ${name} = {\n` +
+    `  paint: "fill",\n` +
     `  viewBox: ${JSON.stringify(viewBox)},\n` +
     `  transform: ${JSON.stringify(framed.transform)},\n` +
     `  paths: [\n${paths.map((d) => `    ${JSON.stringify(d)},`).join("\n")}\n  ],\n` +
@@ -193,18 +308,18 @@ const arg = process.argv[2];
 const files = arg
   ? [arg]
   : existsSync(IN_DIR)
-    ? readdirSync(IN_DIR).filter((f) => /\.(png|jpe?g)$/i.test(f)).map((f) => join(IN_DIR, f))
+    ? readdirSync(IN_DIR).filter((f) => /\.(png|jpe?g|svg)$/i.test(f)).map((f) => join(IN_DIR, f))
     : [];
 
 if (files.length === 0) {
-  console.log(`Nada para trazar. Deja los PNG en ${IN_DIR}/`);
+  console.log(`Nada para trazar. Deja los PNG o SVG en ${IN_DIR}/`);
   process.exit(0);
 }
 
 mkdirSync(TMP, { recursive: true });
 mkdirSync(OUT_DIR, { recursive: true });
 console.log(`Trazando ${files.length} imagen(es):`);
-const names = files.map(trace);
+const names = files.map((f) => (/\.svg$/i.test(f) ? importSvg(f) : trace(f)));
 rmSync(TMP, { recursive: true, force: true });
 
 writeFileSync(

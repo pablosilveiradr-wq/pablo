@@ -10,7 +10,7 @@ import { BG } from "./theme";
 export const TracedPreview: React.FC<{
   readonly art: Traced;
   readonly mode?: RevealMode;
-}> = ({ art, mode = "wipe" }) => (
+}> = ({ art, mode = "draw" }) => (
   <AbsoluteFill style={{ backgroundColor: BG }}>
     <svg
       viewBox={art.viewBox}

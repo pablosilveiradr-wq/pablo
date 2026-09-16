@@ -14,6 +14,7 @@ import {
 } from "./Anim/Storyboard";
 import { FPS } from "./Anim/theme";
 import { TracedPreview } from "./Anim/TracedPreview";
+import { IconPreview, iconPreviewSchema } from "./Anim/IconPreview";
 import { CATALOG } from "./Anim/traced/catalog";
 
 // Each <Composition> is an entry in the sidebar!
@@ -60,6 +61,16 @@ export const RemotionRoot: React.FC = () => {
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}
       />
+      <Composition
+        id="IconPreview"
+        component={IconPreview}
+        schema={iconPreviewSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={330}
+        defaultProps={{ icon: "zenMonk" }}
+      />
       {CATALOG.map(({ name, art }) => (
         <Composition
           key={name}
@@ -69,7 +80,7 @@ export const RemotionRoot: React.FC = () => {
           height={1080}
           fps={FPS}
           durationInFrames={90}
-          defaultProps={{ art, mode: "wipe" as const }}
+          defaultProps={{ art, mode: "draw" as const }}
         />
       ))}
       <Composition

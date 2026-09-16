@@ -12,6 +12,7 @@ import {
   ThoughtCloud,
   TimelineTicks,
 } from "./icons";
+import { ZenMonkPray } from "./icons-detail";
 import {
   AtomProof,
   BedUnfinished,
@@ -38,6 +39,7 @@ export const ICONS = {
   heartSettle: HeartSettle,
   screenPair: ScreenPair,
   zenAsked: ZenAsked,
+  zenMonk: ZenMonkPray,
   eatWalk: EatWalk,
   crowdRow: CrowdRow,
   eatingElsewhere: EatingElsewhere,
