@@ -116,8 +116,19 @@ anima igual. Tiene que ser línea clara sobre fondo oscuro, sin sombras.
 node scripts/trace.mjs
 ```
 
-Eso genera `src/Anim/traced/<nombre>.ts` con los trazos ya en vectores. Después
-se anima con `<TracedIcon art={nombre} mode="wipe" />`, que revela el dibujo
-progresivamente con una máscara — el equivalente al trazo que se dibuja solo.
-Modos: `wipe` (barrido), `radial` (desde el centro), `stagger` (trazo por
+Eso genera `src/Anim/traced/<nombre>.ts` con los trazos ya en vectores, más un
+`catalog.ts` que hace que cada pieza aparezca en Remotion Studio como una
+composición `art-<nombre>` para revisarla sola antes de meterla en un guion.
+
+El trazador **reencuadra solo**: mide la caja real del dibujo, lo centra y lo
+lleva siempre a la misma proporción del cuadro (`FILL` en `trace.mjs`), así el
+arte generado afuera no salta de escena a escena aunque venga corrido.
+
+Después se anima con `<TracedIcon art={nombre} mode="wipe" />`, que revela el
+dibujo progresivamente con una máscara — el equivalente al trazo que se dibuja
+solo. Modos: `wipe` (barrido), `radial` (desde el centro), `stagger` (trazo por
 trazo) y `fade`.
+
+**Resolución:** para arte con detalle fino, la fuente tiene que ser grande.
+Los trazos de menos de ~2px se pierden al binarizar. Mínimo 2048×2048; el
+trazador avisa si la imagen entra por debajo de 1400px.

@@ -10,6 +10,5 @@ whisper.cpp
 # Remotion bundle output (npm run build)
 build
 
-# Arte vectorizado generado por scripts/trace.mjs
-src/Anim/traced
+# Temporales del trazador
 .trace-tmp
