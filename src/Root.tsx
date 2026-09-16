@@ -7,6 +7,7 @@ import {
 } from "./CaptionedVideo";
 import { CADENA_DURATION, Cadena } from "./Cadena";
 import { ESPEJO_DURATION, Espejo } from "./Espejo";
+import { LAZO_DURATION, Lazo } from "./Lazo";
 import { LIMITES_DURATION, Limites } from "./Limites";
 import { DESPIERTO_DURATION, Despierto } from "./Despierto";
 import {
@@ -21,6 +22,14 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Lazo"
+        component={Lazo}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={LAZO_DURATION}
+      />
       <Composition
         id="Limites"
         component={Limites}
