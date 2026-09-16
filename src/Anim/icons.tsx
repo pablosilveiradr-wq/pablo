@@ -7,32 +7,16 @@ import {
   DashedRing,
   Dot,
   DrawPath,
+  IconProps,
   Person,
   Ticks,
   useBreath,
   Waves,
 } from "./primitives";
+import { cloudPath } from "./shapes";
 import { CENTER, STROKE_THIN } from "./theme";
 
-export type IconProps = { readonly delay?: number };
-
 const C = CENTER;
-
-/** Scalloped blob used for thought bubbles. */
-const cloudPath = (cx: number, cy: number, rx: number, ry: number, lobes = 11) => {
-  const pts = new Array(lobes).fill(0).map((_, i) => {
-    const a = (i / lobes) * Math.PI * 2 - Math.PI / 2;
-    return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry] as const;
-  });
-  let d = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i <= lobes; i++) {
-    const [px, py] = pts[i % lobes];
-    const [qx, qy] = pts[i - 1];
-    const r = Math.hypot(px - qx, py - qy) * 0.75;
-    d += ` A ${r} ${r} 0 0 1 ${px} ${py}`;
-  }
-  return d;
-};
 
 /** Anchoring: a still centre held by everything converging on it. */
 export const AnchorBreath: React.FC<IconProps> = ({ delay = 0 }) => {
@@ -321,18 +305,3 @@ export const ScreenPair: React.FC<IconProps> = ({ delay = 0 }) => {
     </g>
   );
 };
-
-export const ICONS = {
-  anchorBreath: AnchorBreath,
-  phoneFeed: PhoneFeed,
-  thoughtCloud: ThoughtCloud,
-  eyeOpen: EyeOpen,
-  bellRing: BellRing,
-  feetGround: FeetGround,
-  timelineTicks: TimelineTicks,
-  pressureKnot: PressureKnot,
-  heartSettle: HeartSettle,
-  screenPair: ScreenPair,
-} satisfies Record<string, React.FC<IconProps>>;
-
-export type IconName = keyof typeof ICONS;

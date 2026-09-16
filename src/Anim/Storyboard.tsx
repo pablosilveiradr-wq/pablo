@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { z } from "zod";
-import { ICONS, IconName } from "./icons";
+import { ICONS, IconName } from "./registry";
 import { Canvas } from "./primitives";
 import { BG, CROSSFADE } from "./theme";
 

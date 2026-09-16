@@ -4,6 +4,9 @@ import { CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
 
 const EASE = Easing.inOut(Easing.cubic);
 
+/** Every icon takes the same prop: when, in frames, it starts building. */
+export type IconProps = { readonly delay?: number };
+
 /** 0 -> 1 reveal ramp, clamped on both ends. */
 export const useReveal = (delay = 0, duration = 22) => {
   const frame = useCurrentFrame();
