@@ -105,3 +105,19 @@ npm run dev                                          # preview en Remotion Studi
 npx remotion render src/index.ts Storyboard out/v.mp4
 npx remotion render src/index.ts Storyboard-9x16 out/v-reel.mp4
 ```
+
+### Importar dibujos hechos afuera (Gemini, Midjourney, a mano)
+
+Si el ícono viene como imagen en vez de escrito en código, se vectoriza y se
+anima igual. Tiene que ser línea clara sobre fondo oscuro, sin sombras.
+
+```console
+# dejar los PNG en assets/import/ y correr:
+node scripts/trace.mjs
+```
+
+Eso genera `src/Anim/traced/<nombre>.ts` con los trazos ya en vectores. Después
+se anima con `<TracedIcon art={nombre} mode="wipe" />`, que revela el dibujo
+progresivamente con una máscara — el equivalente al trazo que se dibuja solo.
+Modos: `wipe` (barrido), `radial` (desde el centro), `stagger` (trazo por
+trazo) y `fade`.
