@@ -69,9 +69,9 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
           return null;
         }
         const from = Math.round(beat.start * fps);
-        // Overrun by one crossfade so consecutive beats dissolve into each other.
-        const duration =
-          Math.round((beat.end - beat.start) * fps) + CROSSFADE;
+        // Beats never overlap: each one dips out before the next draws on, so
+        // two sets of line work can never share the frame.
+        const duration = Math.round((beat.end - beat.start) * fps);
         if (duration <= 0) {
           return null;
         }
@@ -87,4 +87,4 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
 
 /** Total length of a storyboard, in frames. */
 export const storyboardDuration = (beats: Beat[], fps: number) =>
-  Math.round(Math.max(...beats.map((b) => b.end)) * fps) + CROSSFADE;
+  Math.round(Math.max(...beats.map((b) => b.end)) * fps);

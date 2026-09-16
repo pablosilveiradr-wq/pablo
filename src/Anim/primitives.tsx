@@ -1,6 +1,6 @@
 import React from "react";
 import { Easing, interpolate, useCurrentFrame } from "remotion";
-import { CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
+import { BG, CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
 
 const EASE = Easing.inOut(Easing.cubic);
 
@@ -56,20 +56,39 @@ export const DrawPath: React.FC<{
   readonly duration?: number;
   readonly strokeWidth?: number;
   readonly opacity?: number;
-}> = ({ d, delay = 0, duration = 26, strokeWidth = STROKE, opacity = 1 }) => {
+  /** Paint the background through the shape first, so lines behind it stop. */
+  readonly occlude?: boolean;
+}> = ({
+  d,
+  delay = 0,
+  duration = 26,
+  strokeWidth = STROKE,
+  opacity = 1,
+  occlude = false,
+}) => {
   const p = useReveal(delay, duration);
   if (p <= 0) {
     return null;
   }
   return (
-    <path
-      d={d}
-      pathLength={1}
-      strokeWidth={strokeWidth}
-      strokeDasharray={1}
-      strokeDashoffset={1 - p}
-      opacity={opacity}
-    />
+    <>
+      {occlude ? (
+        <path
+          d={d}
+          fill={BG}
+          stroke="none"
+          opacity={Math.min(1, p / 0.35) * opacity}
+        />
+      ) : null}
+      <path
+        d={d}
+        pathLength={1}
+        strokeWidth={strokeWidth}
+        strokeDasharray={1}
+        strokeDashoffset={1 - p}
+        opacity={opacity}
+      />
+    </>
   );
 };
 

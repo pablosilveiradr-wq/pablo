@@ -57,33 +57,43 @@ export const ScatterDots: React.FC<IconProps> = ({ delay = 0 }) => {
     { x: 540, y: 716, r: 26, a: 1.6, len: 200, o: 0.45 },
     { x: 664, y: 706, r: 26, a: 1.0, len: 200, o: 0.45 },
   ];
+  const grown = seeds.map((d, i) => ({
+    d,
+    t: interpolate(frame - delay - i * 4, [0, 24], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    }),
+  }));
   return (
     <g>
-      {seeds.map((d, i) => {
-        const t = interpolate(frame - delay - i * 4, [0, 24], [0, 1], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        });
-        if (t <= 0) {
-          return null;
-        }
-        const ex = d.x + Math.cos(d.a) * d.len;
-        const ey = d.y + Math.sin(d.a) * d.len;
-        const cx = d.x + Math.cos(d.a - 0.9) * d.len * 0.62;
-        const cy = d.y + Math.sin(d.a - 0.9) * d.len * 0.62;
-        return (
-          <g key={i} opacity={d.o}>
-            <path
-              d={`M ${d.x} ${d.y} Q ${cx} ${cy} ${ex} ${ey}`}
-              pathLength={1}
-              strokeDasharray={1}
-              strokeDashoffset={1 - t}
-              strokeWidth={STROKE_THIN}
-            />
-            <circle cx={d.x} cy={d.y} r={d.r * t} fill={INK} stroke="none" />
-          </g>
-        );
-      })}
+      {grown.map(({ d, t }, i) =>
+        t <= 0 ? null : (
+          <path
+            key={i}
+            d={`M ${d.x} ${d.y} Q ${d.x + Math.cos(d.a - 0.9) * d.len * 0.62} ${
+              d.y + Math.sin(d.a - 0.9) * d.len * 0.62
+            } ${d.x + Math.cos(d.a) * d.len} ${d.y + Math.sin(d.a) * d.len}`}
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={1 - t}
+            strokeWidth={STROKE_THIN}
+            opacity={d.o}
+          />
+        ),
+      )}
+      {grown.map(({ d, t }, i) =>
+        t <= 0 ? null : (
+          <circle
+            key={i}
+            cx={d.x}
+            cy={d.y}
+            r={d.r * t}
+            fill={INK}
+            stroke="none"
+            opacity={d.o}
+          />
+        ),
+      )}
     </g>
   );
 };
@@ -142,6 +152,7 @@ export const WakeEarly: React.FC<IconProps> = ({ delay = 0 }) => {
           delay={delay + 28}
           duration={20}
           strokeWidth={STROKE_THIN}
+          occlude
         />
       </g>
       <DrawPath
