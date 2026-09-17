@@ -64,7 +64,7 @@ export const HandKey: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const bob = Math.sin((frame / 118) * Math.PI * 2) * 8;
   return (
-    <Frame scale={1.21} dy={56}>
+    <Frame scale={0.97} dy={56}>
       <g transform={`translate(0 ${bob})`}>
         <DrawPath d={circlePath(540, 384, 96)} delay={delay} duration={34} />
         <DrawPath
@@ -95,7 +95,7 @@ export const HandKey: React.FC<IconProps> = ({ delay = 0 }) => {
 
 /** A phone holding somebody else's post — the thing that sets the beat off. */
 export const PhotoPost: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.17} dy={70} breath={0.01}>
+  <Frame scale={0.94} dy={70} breath={0.01}>
     <DrawPath
       d="M 404 296 A 30 30 0 0 1 434 266 L 646 266 A 30 30 0 0 1 676 296 L 676 664 A 30 30 0 0 1 646 694 L 434 694 A 30 30 0 0 1 404 664 Z"
       delay={delay}
@@ -148,7 +148,7 @@ export const PhotoPost: React.FC<IconProps> = ({ delay = 0 }) => (
 
 /** A heart with a fracture running through it — "nunca le importaste". */
 export const HeartCrack: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.9} dy={157} breath={0.016}>
+  <Frame scale={1.52} dy={157} breath={0.016}>
     <DrawPath d={heartPath(540, 458, 260)} delay={delay} duration={40} />
     <DrawPath
       d="M 540 382 L 504 434 L 566 472 L 520 514 L 540 566"
@@ -160,7 +160,7 @@ export const HeartCrack: React.FC<IconProps> = ({ delay = 0 }) => (
 
 /** A pause held over the frame — stop before you conclude. */
 export const PauseThink: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.67} dy={67} breath={0.012}>
+  <Frame scale={1.34} dy={67} breath={0.012}>
     <DrawPath d={circlePath(540, 500, 150)} delay={delay} duration={44} />
     <DrawPath
       d="M 490 448 A 13 13 0 0 1 516 448 L 516 552 A 13 13 0 0 1 490 552 Z"
@@ -177,7 +177,7 @@ export const PauseThink: React.FC<IconProps> = ({ delay = 0 }) => (
 
 /** The photo put under a lens, with a question where the answer should be. */
 export const PhotoLens: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.18} dx={-14} dy={34}>
+  <Frame scale={0.94} dx={-14} dy={34}>
     <g>
       <DrawPath
         d="M 340 320 L 700 320 L 700 566 L 340 566 Z"
@@ -218,7 +218,7 @@ export const ThoughtSupposing: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const drift = Math.sin((frame / 136) * Math.PI * 2) * 7;
   return (
-    <Frame scale={1.02} dx={-6} dy={58}>
+    <Frame scale={0.82} dx={-6} dy={58}>
       <g>
         <DrawPath d={circlePath(410, 532, 80)} delay={delay} duration={30} />
         <DrawPath
@@ -257,7 +257,7 @@ export const ThoughtSupposing: React.FC<IconProps> = ({ delay = 0 }) => {
 
 /** One lit frame between two you never get to see. */
 export const OneFrame: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={0.96} dy={12}>
+  <Frame scale={0.77} dy={12}>
     <g>
       <DrawPath
         d="M 248 418 L 428 418 L 428 570 L 248 570 Z"
@@ -303,7 +303,7 @@ export const Iceberg: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const bob = Math.sin((frame / 150) * Math.PI * 2) * 5;
   return (
-    <Frame scale={0.92} dy={37}>
+    <Frame scale={0.74} dy={37}>
       <g transform={`translate(0 ${bob})`}>
         <DrawPath
           d="M 452 470 L 540 320 L 628 470 Z"
@@ -337,7 +337,7 @@ export const Iceberg: React.FC<IconProps> = ({ delay = 0 }) => {
 
 /** Two people and the part of the thread between them you never held. */
 export const LinkPair: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.01} dy={64}>
+  <Frame scale={0.81} dy={64}>
     <g>
       <DrawPath d={circlePath(348, 542, 58)} delay={delay} duration={24} />
       <DrawPath
@@ -380,7 +380,7 @@ export const SpeechFit: React.FC<IconProps> = ({ delay = 0 }) => {
     extrapolateRight: "clamp",
   });
   return (
-    <Frame scale={1.19} dy={71}>
+    <Frame scale={0.95} dy={71}>
       <g>
         <DrawPath
           d="M 408 388 A 40 40 0 0 1 448 348 L 632 348 A 40 40 0 0 1 672 388 L 672 512 A 40 40 0 0 1 632 552 L 528 552 L 476 612 L 476 552 L 448 552 A 40 40 0 0 1 408 512 Z"
@@ -430,7 +430,7 @@ export const PhotoGap: React.FC<IconProps> = ({ delay = 0 }) => {
     { x: 690, y: 504, r: 4, o: 0.2 },
   ];
   return (
-    <Frame scale={1.49} dy={60}>
+    <Frame scale={1.19} dy={60}>
       <g>
         <DrawPath
           d="M 372 336 L 708 336 L 708 592 L 372 592 Z"
@@ -470,7 +470,7 @@ export const PhotoGap: React.FC<IconProps> = ({ delay = 0 }) => {
 export const ClipboardCheck: React.FC<IconProps> = ({ delay = 0 }) => {
   const rows = [0, 1, 2];
   return (
-    <Frame scale={1.15} dy={79} breath={0.01}>
+    <Frame scale={0.92} dy={79} breath={0.01}>
       <DrawPath
         d="M 396 316 A 24 24 0 0 1 420 292 L 660 292 A 24 24 0 0 1 684 316 L 684 664 A 24 24 0 0 1 660 688 L 420 688 A 24 24 0 0 1 396 664 Z"
         delay={delay}
@@ -514,7 +514,7 @@ export const ClipboardCheck: React.FC<IconProps> = ({ delay = 0 }) => {
 export const ForkPaths: React.FC<IconProps> = ({ delay = 0 }) => {
   const spark = useReveal(delay + 78, 18);
   return (
-    <Frame scale={1.25} dx={-13} dy={-11}>
+    <Frame scale={1.0} dx={-13} dy={-11}>
       <g>
         <Dot cx={540} cy={676} r={11} delay={delay} />
         <DrawPath
@@ -570,7 +570,7 @@ export const HeartHold: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const pulse = 1 + Math.sin((frame / 64) * Math.PI * 2) * 0.03;
   return (
-    <Frame scale={1.36} dy={46}>
+    <Frame scale={1.09} dy={46}>
       <g>
         <g
           style={{
@@ -609,7 +609,7 @@ export const CloseWave: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const wave = Math.sin((frame / 26) * Math.PI * 2) * 6;
   return (
-    <Frame scale={1.02} dx={-60} dy={23}>
+    <Frame scale={0.82} dx={-60} dy={23}>
       <g>
         <DrawPath d={circlePath(500, 424, 78)} delay={delay} duration={30} />
         <DrawPath
