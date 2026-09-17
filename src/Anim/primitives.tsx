@@ -69,7 +69,9 @@ export const Canvas: React.FC<{
   readonly children: React.ReactNode;
   /** Ride higher, for when a caption is claiming the bottom band. */
   readonly lifted?: boolean;
-}> = ({ children, lifted = false }) => {
+  /** Per-reel multiplier on the shared icon size. */
+  readonly scale?: number;
+}> = ({ children, lifted = false, scale = 1 }) => {
   const { width, height } = useVideoConfig();
   const lift = lifted && height / width < 1.2 ? -55 : 0;
   return (
@@ -91,7 +93,7 @@ export const Canvas: React.FC<{
       </defs>
       <g
         style={{
-          transform: `translateY(${lift}px) scale(${ICON_SCALE})`,
+          transform: `translateY(${lift}px) scale(${ICON_SCALE * scale})`,
           transformOrigin: `${CENTER}px ${CENTER}px`,
           transformBox: "view-box",
         }}

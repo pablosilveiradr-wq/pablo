@@ -23,13 +23,16 @@ export type Beat = z.infer<typeof beatSchema>;
 
 export const storyboardSchema = z.object({
   beats: z.array(beatSchema),
+  /** Multiplier on the shared icon size, when a reel wants to sit smaller. */
+  scale: z.number().optional(),
 });
 
 /** One metaphor, cross-dissolved in and out like the references. */
 const BeatLayer: React.FC<{
   readonly icon: IconName;
   readonly text?: string;
-}> = ({ icon, text }) => {
+  readonly scale?: number;
+}> = ({ icon, text, scale = 1 }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const Icon = ICONS[icon];
@@ -60,7 +63,7 @@ const BeatLayer: React.FC<{
     <AbsoluteFill style={{ opacity }}>
       <AbsoluteFill style={{ transform: `scale(${push})` }}>
         <DrawSpeed value={speed}>
-          <Canvas lifted={Boolean(text)}>
+          <Canvas lifted={Boolean(text)} scale={scale}>
             <Icon />
           </Canvas>
         </DrawSpeed>
@@ -72,6 +75,7 @@ const BeatLayer: React.FC<{
 
 export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
   beats,
+  scale,
 }) => {
   const { fps } = useVideoConfig();
 
@@ -92,7 +96,7 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
         }
         return (
           <Sequence key={i} from={from} durationInFrames={duration}>
-            <BeatLayer icon={icon} text={beat.text} />
+            <BeatLayer icon={icon} text={beat.text} scale={scale} />
           </Sequence>
         );
       })}

@@ -124,7 +124,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={storyboardDuration(FLECHA_BEATS, FPS)}
-        defaultProps={{ beats: FLECHA_BEATS }}
+        defaultProps={{ beats: FLECHA_BEATS, scale: 0.88 }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}
