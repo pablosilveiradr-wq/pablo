@@ -21,7 +21,7 @@ export const FOTO_BEATS: Beat[] = [
     end: 6.3,
   },
   {
-    icon: "handStop",
+    icon: "pauseThink",
     start: 6.3,
     end: 8.8,
   },

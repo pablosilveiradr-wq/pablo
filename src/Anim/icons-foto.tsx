@@ -158,37 +158,19 @@ export const HeartCrack: React.FC<IconProps> = ({ delay = 0 }) => (
   </Frame>
 );
 
-/** An open palm held up — stop before you conclude. */
-export const HandStop: React.FC<IconProps> = ({ delay = 0 }) => (
-  <Frame scale={1.3} dx={51} dy={56} breath={0.012}>
+/** A pause held over the frame — stop before you conclude. */
+export const PauseThink: React.FC<IconProps> = ({ delay = 0 }) => (
+  <Frame scale={1.67} dy={67} breath={0.012}>
+    <DrawPath d={circlePath(540, 500, 150)} delay={delay} duration={44} />
     <DrawPath
-      d={[
-        // One closed outline: fingers left to right, then the palm heel
-        // sweeping straight into the thumb, then a single V for the web —
-        // the closing Z is the index finger's whole left edge.
-        "M 476 356",
-        "A 21 21 0 0 1 518 356",
-        "L 518 470",
-        "L 526 470",
-        "L 526 326",
-        "A 21 21 0 0 1 568 326",
-        "L 568 470",
-        "L 576 470",
-        "L 576 344",
-        "A 21 21 0 0 1 618 344",
-        "L 618 478",
-        "L 620 478",
-        "L 620 398",
-        "A 21 21 0 0 1 662 398",
-        "L 662 620",
-        "C 662 700 490 706 470 612",
-        "C 448 600 396 602 368 578",
-        "C 340 552 356 512 392 506",
-        "C 426 496 454 510 476 542",
-        "Z",
-      ].join(" ")}
-      delay={delay}
-      duration={80}
+      d="M 490 448 A 13 13 0 0 1 516 448 L 516 552 A 13 13 0 0 1 490 552 Z"
+      delay={delay + 38}
+      duration={26}
+    />
+    <DrawPath
+      d="M 564 448 A 13 13 0 0 1 590 448 L 590 552 A 13 13 0 0 1 564 552 Z"
+      delay={delay + 50}
+      duration={26}
     />
   </Frame>
 );
