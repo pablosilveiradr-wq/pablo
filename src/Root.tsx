@@ -9,6 +9,7 @@ import { DEMO_BEATS } from "./Anim/demo-storyboard";
 import { ZEN_BEATS } from "./Anim/zen-storyboard";
 import { REF_BEATS } from "./Anim/ref-storyboard";
 import { FOTO_BEATS } from "./Anim/foto-storyboard";
+import { FLECHA_BEATS } from "./Anim/flecha-storyboard";
 import {
   Storyboard,
   storyboardDuration,
@@ -111,6 +112,32 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         durationInFrames={storyboardDuration(FOTO_BEATS, FPS)}
         defaultProps={{ beats: FOTO_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Flecha"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={storyboardDuration(FLECHA_BEATS, FPS)}
+        defaultProps={{ beats: FLECHA_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Flecha-9x16"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={storyboardDuration(FLECHA_BEATS, FPS)}
+        defaultProps={{ beats: FLECHA_BEATS }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}

@@ -221,7 +221,7 @@ export const PressureKnot: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const squeeze = interpolate(Math.sin((frame / 80) * Math.PI * 2), [-1, 1], [0, 26]);
   return (
-    <g>
+    <Frame scale={0.75}>
       {[0, 60, 120].map((rot, i) => (
         <Appear key={i} delay={delay + i * 10} duration={20}>
           <ellipse
@@ -250,7 +250,7 @@ export const PressureKnot: React.FC<IconProps> = ({ delay = 0 }) => {
           </Appear>
         </g>
       ))}
-    </g>
+    </Frame>
   );
 };
 

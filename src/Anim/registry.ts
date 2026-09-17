@@ -39,6 +39,16 @@ import {
   ThoughtSupposing,
 } from "./icons-foto";
 import {
+  ArrowBody,
+  BuddhaTells,
+  FirstArrow,
+  ProblemOver,
+  SecondArrow,
+  StressBody,
+  TwoArrows,
+  WorryLoop,
+} from "./icons-flecha";
+import {
   AtomProof,
   BedUnfinished,
   CrowdRow,
@@ -86,6 +96,14 @@ export const ICONS = {
   walkNow: WalkNow,
   saidNo: SaidNo,
   undoneList: UndoneList,
+  buddhaTells: BuddhaTells,
+  twoArrows: TwoArrows,
+  firstArrow: FirstArrow,
+  secondArrow: SecondArrow,
+  arrowBody: ArrowBody,
+  worryLoop: WorryLoop,
+  stressBody: StressBody,
+  problemOver: ProblemOver,
   sadPerson: SadPerson,
   scatterDots: ScatterDots,
   bottleGlass: BottleGlass,
