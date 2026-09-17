@@ -8,6 +8,7 @@ import {
 import { DEMO_BEATS } from "./Anim/demo-storyboard";
 import { ZEN_BEATS } from "./Anim/zen-storyboard";
 import { REF_BEATS } from "./Anim/ref-storyboard";
+import { FOTO_BEATS } from "./Anim/foto-storyboard";
 import {
   Storyboard,
   storyboardDuration,
@@ -71,6 +72,32 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         durationInFrames={storyboardDuration(REF_BEATS, FPS)}
         defaultProps={{ beats: REF_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Foto"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={storyboardDuration(FOTO_BEATS, FPS)}
+        defaultProps={{ beats: FOTO_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Foto-9x16"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={storyboardDuration(FOTO_BEATS, FPS)}
+        defaultProps={{ beats: FOTO_BEATS }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}

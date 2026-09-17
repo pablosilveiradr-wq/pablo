@@ -1,15 +1,32 @@
 import React from "react";
-import { Easing, interpolate, useCurrentFrame } from "remotion";
+import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { BG, CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
 
 const EASE = Easing.inOut(Easing.cubic);
 
+/** Halo that makes the ink read as light on black rather than flat paint. */
+export const GLOW_ID = "inkGlow";
+
 /** Every icon takes the same prop: when, in frames, it starts building. */
 export type IconProps = { readonly delay?: number };
 
+/**
+ * Icons are authored against a nominal build of BUILD frames; a beat then
+ * stretches or squeezes that clock so the drawing always lands inside its own
+ * time window instead of being cut off mid-stroke.
+ */
+export const BUILD = 120;
+
+const SpeedContext = React.createContext(1);
+export const DrawSpeed = SpeedContext.Provider;
+
+/** Frame counter on the beat's build clock — idle loops keep the real one. */
+export const useDrawFrame = () =>
+  useCurrentFrame() * React.useContext(SpeedContext);
+
 /** 0 -> 1 reveal ramp, clamped on both ends. */
 export const useReveal = (delay = 0, duration = 22) => {
-  const frame = useCurrentFrame();
+  const frame = useDrawFrame();
   return interpolate(frame - delay, [0, duration], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -23,31 +40,45 @@ export const useBreath = (amount = 0.02, period = 110) => {
   return 1 + Math.sin((frame / period) * Math.PI * 2) * amount;
 };
 
-export const Canvas: React.FC<{ readonly children: React.ReactNode }> = ({
-  children,
-}) => (
-  <svg
-    viewBox={`0 0 ${CANVAS} ${CANVAS}`}
-    width="100%"
-    height="100%"
-    style={{ position: "absolute", inset: 0 }}
-    fill="none"
-    stroke={INK}
-    strokeWidth={STROKE}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <g
-      style={{
-        transform: `scale(${ICON_SCALE})`,
-        transformOrigin: `${CENTER}px ${CENTER}px`,
-        transformBox: "view-box",
-      }}
+export const Canvas: React.FC<{
+  readonly children: React.ReactNode;
+  /** Ride higher, for when a caption is claiming the bottom band. */
+  readonly lifted?: boolean;
+}> = ({ children, lifted = false }) => {
+  const { width, height } = useVideoConfig();
+  const lift = lifted && height / width < 1.2 ? -55 : 0;
+  return (
+    <svg
+      viewBox={`0 0 ${CANVAS} ${CANVAS}`}
+      width="100%"
+      height="100%"
+      style={{ position: "absolute", inset: 0 }}
+      fill="none"
+      stroke={INK}
+      strokeWidth={STROKE}
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      {children}
-    </g>
-  </svg>
-);
+      <defs>
+        <filter id={GLOW_ID} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+      </defs>
+      <g
+        style={{
+          transform: `translateY(${lift}px) scale(${ICON_SCALE})`,
+          transformOrigin: `${CENTER}px ${CENTER}px`,
+          transformBox: "view-box",
+        }}
+      >
+        <g filter={`url(#${GLOW_ID})`} opacity={0.3}>
+          {children}
+        </g>
+        {children}
+      </g>
+    </svg>
+  );
+};
 
 /** A path that draws itself on, the way every outline in the references does. */
 export const DrawPath: React.FC<{
@@ -70,6 +101,8 @@ export const DrawPath: React.FC<{
   if (p <= 0) {
     return null;
   }
+  // A short bright dash pinned to the head of the reveal: the nib doing the work.
+  const nib = 0.04;
   return (
     <>
       {occlude ? (
@@ -88,6 +121,17 @@ export const DrawPath: React.FC<{
         strokeDashoffset={1 - p}
         opacity={opacity}
       />
+      {p > nib && p < 0.99 ? (
+        <path
+          d={d}
+          pathLength={1}
+          strokeWidth={strokeWidth * 1.6}
+          strokeDasharray={`${nib} ${1 - nib}`}
+          strokeDashoffset={nib - p}
+          filter={`url(#${GLOW_ID})`}
+          opacity={opacity * 0.85}
+        />
+      ) : null}
     </>
   );
 };
@@ -162,7 +206,7 @@ export const DashedRing: React.FC<{
   duration = 34,
   opacity = 0.55,
 }) => {
-  const frame = useCurrentFrame();
+  const frame = useDrawFrame();
   const per = duration / count;
   return (
     <g opacity={opacity}>
@@ -314,6 +358,43 @@ export const Dot: React.FC<{
     return null;
   }
   return <circle cx={cx} cy={cy} r={r * p} fill={INK} stroke="none" opacity={opacity} />;
+};
+
+const hash = (i: number, salt: number) => {
+  const x = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+/** Slow drifting motes: keeps the black from reading as a dead frame. */
+export const Motes: React.FC<{ readonly count?: number }> = ({ count = 22 }) => {
+  const frame = useCurrentFrame();
+  return (
+    <svg
+      viewBox={`0 0 ${CANVAS} ${CANVAS}`}
+      preserveAspectRatio="xMidYMid slice"
+      width="100%"
+      height="100%"
+      style={{ position: "absolute", inset: 0 }}
+    >
+      {new Array(count).fill(0).map((_, i) => {
+        const speed = 0.18 + hash(i, 3) * 0.32;
+        const span = CANVAS + 160;
+        const y = ((hash(i, 1) * span - frame * speed) % span + span) % span - 80;
+        const x = hash(i, 2) * CANVAS;
+        const sway = Math.sin((frame / (150 + hash(i, 4) * 90)) * Math.PI * 2) * 14;
+        return (
+          <circle
+            key={i}
+            cx={x + sway}
+            cy={y}
+            r={1.4 + hash(i, 5) * 2.2}
+            fill={INK}
+            opacity={0.07 + hash(i, 6) * 0.11}
+          />
+        );
+      })}
+    </svg>
+  );
 };
 
 /** Minimal human glyph: head plus shoulder arc. */

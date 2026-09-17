@@ -22,6 +22,23 @@ import {
   WakeEarly,
 } from "./icons-ref";
 import {
+  ClipboardCheck,
+  CloseWave,
+  ForkPaths,
+  HandKey,
+  HandStop,
+  HeartCrack,
+  HeartHold,
+  Iceberg,
+  LinkPair,
+  OneFrame,
+  PhotoGap,
+  PhotoLens,
+  PhotoPost,
+  SpeechFit,
+  ThoughtSupposing,
+} from "./icons-foto";
+import {
   AtomProof,
   BedUnfinished,
   CrowdRow,
@@ -63,6 +80,21 @@ export const ICONS = {
   wakeEarly: WakeEarly,
   videoWindow: VideoWindow,
   podiumStep: PodiumStep,
+  handKey: HandKey,
+  photoPost: PhotoPost,
+  heartCrack: HeartCrack,
+  handStop: HandStop,
+  photoLens: PhotoLens,
+  thoughtSupposing: ThoughtSupposing,
+  oneFrame: OneFrame,
+  iceberg: Iceberg,
+  linkPair: LinkPair,
+  speechFit: SpeechFit,
+  photoGap: PhotoGap,
+  clipboardCheck: ClipboardCheck,
+  forkPaths: ForkPaths,
+  heartHold: HeartHold,
+  closeWave: CloseWave,
 } satisfies Record<string, React.FC<IconProps>>;
 
 export type IconName = keyof typeof ICONS;

@@ -29,12 +29,14 @@ export const Caption: React.FC<{
       <span
         style={{
           fontFamily: '"URW Gothic", "Century Gothic", "Futura", sans-serif',
-          fontSize: 62,
+          fontSize: 56,
           fontWeight: 400,
           letterSpacing: "0.01em",
           color: INK,
           textAlign: "center",
-          lineHeight: 1.25,
+          lineHeight: 1.3,
+          whiteSpace: "pre-line",
+          textShadow: "0 0 26px rgba(242,242,242,0.28)",
         }}
       >
         {text}

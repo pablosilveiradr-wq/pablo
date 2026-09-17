@@ -1,6 +1,13 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { Appear, DrawPath, IconProps, circlePath, useBreath } from "./primitives";
+import {
+  Appear,
+  DrawPath,
+  IconProps,
+  circlePath,
+  useBreath,
+  useDrawFrame,
+} from "./primitives";
 import { CENTER, INK, STROKE_THIN } from "./theme";
 
 /**
@@ -46,7 +53,7 @@ export const SadPerson: React.FC<IconProps> = ({ delay = 0 }) => {
 
 /** Scattered dots trailing tails — the "confusion" beat. */
 export const ScatterDots: React.FC<IconProps> = ({ delay = 0 }) => {
-  const frame = useCurrentFrame();
+  const frame = useDrawFrame();
   const seeds = [
     { x: 360, y: 400, r: 34, a: -2.5, len: 210, o: 1 },
     { x: 540, y: 368, r: 38, a: -1.8, len: 230, o: 1 },
@@ -168,8 +175,7 @@ export const WakeEarly: React.FC<IconProps> = ({ delay = 0 }) => {
 
 /** Video window with a scrub bar — the "your first video" beat. */
 export const VideoWindow: React.FC<IconProps> = ({ delay = 0 }) => {
-  const frame = useCurrentFrame();
-  const play = interpolate(frame - delay - 74, [0, 90], [0, 1], {
+  const play = interpolate(useDrawFrame() - delay - 74, [0, 90], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

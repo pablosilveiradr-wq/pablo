@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { z } from "zod";
 import { ICONS, IconName } from "./registry";
-import { Canvas } from "./primitives";
+import { BUILD, Canvas, DrawSpeed, Motes } from "./primitives";
 import { Caption } from "./Caption";
 import { BG, CROSSFADE } from "./theme";
 
@@ -46,11 +46,24 @@ const BeatLayer: React.FC<{
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
     );
 
+  // A slow push-in over the beat, so a held icon is never a frozen frame.
+  const push = interpolate(frame, [0, durationInFrames], [1, 1.045], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  // Land the drawing about two thirds in, so every beat still gets a held pose.
+  const speed = Math.min(3.2, BUILD / (durationInFrames * 0.68));
+
   return (
     <AbsoluteFill style={{ opacity }}>
-      <Canvas>
-        <Icon />
-      </Canvas>
+      <AbsoluteFill style={{ transform: `scale(${push})` }}>
+        <DrawSpeed value={speed}>
+          <Canvas lifted={Boolean(text)}>
+            <Icon />
+          </Canvas>
+        </DrawSpeed>
+      </AbsoluteFill>
       {text ? <Caption text={text} /> : null}
     </AbsoluteFill>
   );
@@ -63,6 +76,7 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
+      <Motes />
       {beats.map((beat, i) => {
         const icon = beat.icon as IconName;
         if (!ICONS[icon]) {
