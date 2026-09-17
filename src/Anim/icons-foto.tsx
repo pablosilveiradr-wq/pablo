@@ -4,13 +4,13 @@ import {
   Appear,
   DrawPath,
   Dot,
+  Frame,
   IconProps,
   circlePath,
-  useBreath,
   useDrawFrame,
   useReveal,
 } from "./primitives";
-import { CENTER, INK, STROKE_THIN } from "./theme";
+import { INK, STROKE_THIN } from "./theme";
 
 /**
  * Metaphors for the "esta foto no alcanza" reel: outline only, one centred
@@ -32,31 +32,6 @@ const heartPath = (cx: number, cy: number, w: number) => {
     `C ${X(100)} ${Y(46)} ${X(80)} ${Y(68)} ${X(50)} ${Y(88)}`,
     "Z",
   ].join(" ");
-};
-
-/**
- * Every icon is authored at whatever size its geometry wanted, then framed
- * here: scaled and recentred so all fifteen carry the same optical weight.
- */
-const Frame: React.FC<{
-  readonly scale?: number;
-  readonly dx?: number;
-  readonly dy?: number;
-  readonly breath?: number;
-  readonly children: React.ReactNode;
-}> = ({ scale = 1, dx = 0, dy = 0, breath = 0, children }) => {
-  const b = useBreath(breath);
-  return (
-    <g
-      style={{
-        transform: `translate(${dx}px, ${dy}px) scale(${scale * (breath ? b : 1)})`,
-        transformOrigin: `${CENTER}px ${CENTER}px`,
-        transformBox: "view-box",
-      }}
-    >
-      {children}
-    </g>
-  );
 };
 
 /** A key, handed over — "te doy una herramienta". */

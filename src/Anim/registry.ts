@@ -47,6 +47,8 @@ import {
   FeelWorse,
   HalfDay,
   NotElsewhere,
+  RightHere,
+  StudyPaper,
   WhereIsPeace,
   ZenAsked,
 } from "./icons-zen";
@@ -74,6 +76,8 @@ export const ICONS = {
   feelWorse: FeelWorse,
   whereIsPeace: WhereIsPeace,
   notElsewhere: NotElsewhere,
+  studyPaper: StudyPaper,
+  rightHere: RightHere,
   sadPerson: SadPerson,
   scatterDots: ScatterDots,
   bottleGlass: BottleGlass,

@@ -40,6 +40,31 @@ export const useBreath = (amount = 0.02, period = 110) => {
   return 1 + Math.sin((frame / period) * Math.PI * 2) * amount;
 };
 
+/**
+ * Every icon is authored at whatever size its geometry wanted, then framed
+ * here: scaled and recentred so all of them carry the same optical weight.
+ */
+export const Frame: React.FC<{
+  readonly scale?: number;
+  readonly dx?: number;
+  readonly dy?: number;
+  readonly breath?: number;
+  readonly children: React.ReactNode;
+}> = ({ scale = 1, dx = 0, dy = 0, breath = 0, children }) => {
+  const b = useBreath(breath);
+  return (
+    <g
+      style={{
+        transform: `translate(${dx}px, ${dy}px) scale(${scale * (breath ? b : 1)})`,
+        transformOrigin: `${CENTER}px ${CENTER}px`,
+        transformBox: "view-box",
+      }}
+    >
+      {children}
+    </g>
+  );
+};
+
 export const Canvas: React.FC<{
   readonly children: React.ReactNode;
   /** Ride higher, for when a caption is claiming the bottom band. */

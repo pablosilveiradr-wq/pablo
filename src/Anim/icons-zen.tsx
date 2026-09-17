@@ -6,9 +6,9 @@ import {
   DashedRing,
   Dot,
   DrawPath,
+  Frame,
   IconProps,
   Person,
-  useBreath,
 } from "./primitives";
 import { bowlPath, cloudPath, questionHook, roundedRect } from "./shapes";
 import { CENTER, STROKE_THIN } from "./theme";
@@ -17,12 +17,11 @@ const C = CENTER;
 
 /** The question put to someone who is already still. */
 export const ZenAsked: React.FC<IconProps> = ({ delay = 0 }) => {
-  const b = useBreath(0.012, 130);
   const fx = C - 60;
   const qx = C + 250;
   const qy = C - 120;
   return (
-    <g style={{ transform: `scale(${b})`, transformOrigin: `${C}px ${C}px`, transformBox: "view-box" }}>
+    <Frame scale={0.8} dx={8} dy={45} breath={0.012}>
       <DrawPath d={circlePath(fx, C - 186, 38)} delay={delay} duration={22} />
       <DrawPath
         d={`M ${fx - 86} ${C + 24} C ${fx - 86} ${C - 116} ${fx - 52} ${C - 144} ${fx} ${C - 144} C ${fx + 52} ${C - 144} ${fx + 86} ${C - 116} ${fx + 86} ${C + 24}`}
@@ -46,7 +45,7 @@ export const ZenAsked: React.FC<IconProps> = ({ delay = 0 }) => {
       />
       <DrawPath d={questionHook(qx, qy, 1.6)} delay={delay + 56} duration={24} />
       <Dot cx={qx} cy={qy + 82} r={10} delay={delay + 76} />
-    </g>
+    </Frame>
   );
 };
 
@@ -60,7 +59,7 @@ export const EatWalk: React.FC<IconProps> = ({ delay = 0 }) => {
     [C + 116, C + 204, -16],
   ];
   return (
-    <g>
+    <Frame scale={0.85} dx={14} dy={8}>
       <DrawPath d={bowlPath(C, C - 118, 214, 108)} delay={delay} duration={30} />
       <DrawPath d={`M ${C - 132} ${C - 118} L ${C + 132} ${C - 118}`} delay={delay + 22} duration={18} />
       {[-52, 0, 52].map((dx, i) => (
@@ -88,7 +87,7 @@ export const EatWalk: React.FC<IconProps> = ({ delay = 0 }) => {
           </g>
         </Appear>
       ))}
-    </g>
+    </Frame>
   );
 };
 
@@ -96,7 +95,7 @@ export const EatWalk: React.FC<IconProps> = ({ delay = 0 }) => {
 export const CrowdRow: React.FC<IconProps> = ({ delay = 0 }) => {
   const row = [-300, -150, 0, 150, 300];
   return (
-    <g>
+    <Frame scale={0.8}>
       {row.map((dx, i) => (
         <Person key={i} x={C + dx} y={C - 40} size={2.6} delay={delay + i * 7} opacity={dx === 0 ? 1 : 0.6} />
       ))}
@@ -110,7 +109,7 @@ export const CrowdRow: React.FC<IconProps> = ({ delay = 0 }) => {
           strokeDasharray="16 18"
         />
       </Appear>
-    </g>
+    </Frame>
   );
 };
 
@@ -121,7 +120,7 @@ export const EatingElsewhere: React.FC<IconProps> = ({ delay = 0 }) => {
   const bx = C + 132;
   const by = C - 168;
   return (
-    <g>
+    <Frame scale={0.86} dx={3} dy={30}>
       <DrawPath d={bowlPath(C - 130, C + 60, 190, 96)} delay={delay} duration={28} />
       <DrawPath d={`M ${C - 236} ${C + 60} L ${C - 24} ${C + 60}`} delay={delay + 20} duration={16} />
       <Dot cx={C - 44} cy={C - 6} r={7} delay={delay + 18} opacity={0.7} />
@@ -134,7 +133,7 @@ export const EatingElsewhere: React.FC<IconProps> = ({ delay = 0 }) => {
           <line x1={bx - 66} y1={by + 8} x2={bx + 66} y2={by + 8} strokeWidth={STROKE_THIN} />
         </Appear>
       </g>
-    </g>
+    </Frame>
   );
 };
 
@@ -145,7 +144,7 @@ export const BedUnfinished: React.FC<IconProps> = ({ delay = 0 }) => {
   const cx = C + 40;
   const cy = C - 158;
   return (
-    <g>
+    <Frame scale={0.81} dx={3} dy={9}>
       <DrawPath d={`M ${C - 250} ${C + 96} L ${C - 250} ${C + 200}`} delay={delay} duration={18} />
       <DrawPath
         d={`M ${C - 250} ${C + 128} L ${C + 216} ${C + 128} A 26 26 0 0 1 ${C + 242} ${C + 154} L ${C + 242} ${C + 200}`}
@@ -170,7 +169,7 @@ export const BedUnfinished: React.FC<IconProps> = ({ delay = 0 }) => {
           );
         })}
       </g>
-    </g>
+    </Frame>
   );
 };
 
@@ -179,7 +178,7 @@ export const AtomProof: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const spin = (frame / 6) % 360;
   return (
-    <g>
+    <Frame scale={1.06} dy={41}>
       <g style={{ transform: `rotate(${spin}deg)`, transformOrigin: `${C}px ${C - 60}px`, transformBox: "view-box" }}>
         {[0, 60, 120].map((rot, i) => (
           <Appear key={i} delay={delay + i * 10} duration={20}>
@@ -200,7 +199,7 @@ export const AtomProof: React.FC<IconProps> = ({ delay = 0 }) => {
         delay={delay + 46}
         duration={22}
       />
-    </g>
+    </Frame>
   );
 };
 
@@ -210,7 +209,7 @@ export const HalfDay: React.FC<IconProps> = ({ delay = 0 }) => {
   const cx = C - 70;
   const cy = C - 20;
   return (
-    <g>
+    <Frame scale={0.68} dx={-39} dy={26}>
       <DrawPath
         d={`M ${cx} ${cy - R} A ${R} ${R} 0 0 0 ${cx} ${cy + R}`}
         delay={delay}
@@ -227,7 +226,7 @@ export const HalfDay: React.FC<IconProps> = ({ delay = 0 }) => {
         />
       </Appear>
       <DrawPath d={cloudPath(cx + 366, cy - 170, 112, 68, 9)} delay={delay + 70} duration={28} />
-    </g>
+    </Frame>
   );
 };
 
@@ -253,7 +252,7 @@ export const FeelWorse: React.FC<IconProps> = ({ delay = 0 }) => {
     );
   };
   return (
-    <g>
+    <Frame scale={0.76} dy={-33}>
       <DrawPath d={`M ${C - 300} ${C + 186} L ${C + 300} ${C + 186}`} delay={delay} duration={22} />
       <DrawPath
         d={`M ${p0[0]} ${p0[1]} C ${p1[0]} ${p1[1]} ${p2[0]} ${p2[1]} ${p3[0]} ${p3[1]}`}
@@ -265,21 +264,18 @@ export const FeelWorse: React.FC<IconProps> = ({ delay = 0 }) => {
         <line x1={C + 250} y1={C + 152} x2={C + 250} y2={C + 166} strokeWidth={STROKE_THIN} />
         <path d={`M ${C + 238} ${C + 154} L ${C + 250} ${C + 170} L ${C + 262} ${C + 154}`} strokeWidth={STROKE_THIN} />
       </Appear>
-    </g>
+    </Frame>
   );
 };
 
 /** So where is it? */
-export const WhereIsPeace: React.FC<IconProps> = ({ delay = 0 }) => {
-  const b = useBreath(0.02, 90);
-  return (
-    <g style={{ transform: `scale(${b})`, transformOrigin: `${C}px ${C}px`, transformBox: "view-box" }}>
-      <DrawPath d={questionHook(C, C - 30, 2.5)} delay={delay} duration={34} />
-      <Dot cx={C} cy={C + 100} r={15} delay={delay + 34} />
-      <DashedRing cx={C} cy={C} r={288} count={48} delay={delay + 26} duration={34} opacity={0.45} />
-    </g>
-  );
-};
+export const WhereIsPeace: React.FC<IconProps> = ({ delay = 0 }) => (
+  <Frame scale={0.69} breath={0.02}>
+    <DrawPath d={questionHook(C, C - 30, 2.5)} delay={delay} duration={34} />
+    <Dot cx={C} cy={C + 100} r={15} delay={delay + 34} />
+    <DashedRing cx={C} cy={C} r={288} count={48} delay={delay + 26} duration={34} opacity={0.45} />
+  </Frame>
+);
 
 /** Not somewhere else. */
 export const NotElsewhere: React.FC<IconProps> = ({ delay = 0 }) => {
@@ -289,7 +285,7 @@ export const NotElsewhere: React.FC<IconProps> = ({ delay = 0 }) => {
     [C, C + 205],
   ];
   return (
-    <g>
+    <Frame scale={0.65} dy={-18}>
       <Dot cx={C} cy={C - 20} r={10} delay={delay} opacity={0.8} />
       {spots.map(([sx, sy], i) => {
         const ang = Math.atan2(sy - (C - 20), sx - C);
@@ -316,6 +312,101 @@ export const NotElsewhere: React.FC<IconProps> = ({ delay = 0 }) => {
           </g>
         );
       })}
-    </g>
+    </Frame>
+  );
+};
+
+/** The Harvard study: a paper with data, under an academic cap. */
+export const StudyPaper: React.FC<IconProps> = ({ delay = 0 }) => {
+  const bars: [number, number][] = [
+    [452, 634],
+    [512, 584],
+    [572, 544],
+  ];
+  return (
+    <Frame scale={0.9} dx={8} dy={19} breath={0.01}>
+      <DrawPath d={roundedRect(410, 404, 260, 336, 16)} delay={delay} duration={34} occlude />
+      <DrawPath
+        d="M 540 298 L 646 332 L 540 366 L 434 332 Z"
+        delay={delay + 26}
+        duration={24}
+        occlude
+      />
+      <DrawPath
+        d="M 494 350 L 494 384 C 494 400 586 400 586 384 L 586 350"
+        delay={delay + 44}
+        duration={18}
+        strokeWidth={STROKE_THIN}
+      />
+      <DrawPath d="M 646 332 L 652 392" delay={delay + 54} duration={10} strokeWidth={STROKE_THIN} />
+      <Dot cx={652} cy={400} r={7} delay={delay + 62} />
+      <DrawPath
+        d="M 440 452 L 640 452"
+        delay={delay + 52}
+        duration={14}
+        strokeWidth={STROKE_THIN}
+      />
+      <DrawPath
+        d="M 440 486 L 590 486"
+        delay={delay + 58}
+        duration={12}
+        strokeWidth={STROKE_THIN}
+      />
+      <DrawPath
+        d="M 440 694 L 640 694"
+        delay={delay + 66}
+        duration={16}
+        strokeWidth={STROKE_THIN}
+      />
+      {bars.map(([bx, top], i) => (
+        <Appear key={i} delay={delay + 76 + i * 7} duration={14} dy={22}>
+          <rect
+            x={bx}
+            y={top}
+            width={36}
+            height={694 - top}
+            strokeWidth={STROKE_THIN}
+          />
+        </Appear>
+      ))}
+    </Frame>
+  );
+};
+
+/**
+ * What is actually in front of you — the same bowl as the opening, but now
+ * with attention landing on it instead of somewhere else.
+ */
+export const RightHere: React.FC<IconProps> = ({ delay = 0 }) => {
+  const frame = useCurrentFrame();
+  const rise = Math.sin((frame / 70) * Math.PI * 2) * 6;
+  return (
+    <Frame scale={0.93} dy={-5} breath={0.014}>
+      <DrawPath d={bowlPath(540, 512, 190, 96)} delay={delay} duration={30} />
+      <DrawPath d="M 445 512 L 635 512" delay={delay + 22} duration={16} />
+      <DrawPath
+        d="M 372 648 L 708 648"
+        delay={delay + 36}
+        duration={22}
+        strokeWidth={STROKE_THIN}
+      />
+      {[-52, 0, 52].map((dx, i) => (
+        <Appear key={i} delay={delay + 44 + i * 6} duration={14} opacity={0.75}>
+          <path
+            d={`M ${540 + dx} ${478 + rise} c -16 -22 16 -34 0 -56`}
+            strokeWidth={STROKE_THIN}
+          />
+        </Appear>
+      ))}
+      <DashedRing
+        cx={540}
+        cy={545}
+        r={215}
+        count={44}
+        delay={delay + 58}
+        duration={32}
+        opacity={0.4}
+      />
+    </Frame>
   );
 };
