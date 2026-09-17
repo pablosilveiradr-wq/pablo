@@ -3,6 +3,7 @@ import { interpolate, useCurrentFrame } from "remotion";
 import {
   Appear,
   DrawPath,
+  Frame,
   IconProps,
   circlePath,
   useBreath,
@@ -29,15 +30,8 @@ const Torso: React.FC<{ readonly delay: number; readonly y?: number }> = ({
 
 /** Disappointed face — the opening beat of the first reference. */
 export const SadPerson: React.FC<IconProps> = ({ delay = 0 }) => {
-  const s = useBreath();
   return (
-    <g
-      style={{
-        transform: `scale(${s})`,
-        transformOrigin: `${CENTER}px ${CENTER}px`,
-        transformBox: "view-box",
-      }}
-    >
+    <Frame scale={1.1} dy={24} breath={0.02}>
       <DrawPath d={circlePath(540, 452, 116)} delay={delay} duration={30} />
       <DrawPath d="M 466 420 Q 492 400 518 406" delay={delay + 16} duration={12} strokeWidth={STROKE_THIN} />
       <DrawPath d="M 562 406 Q 588 400 614 420" delay={delay + 20} duration={12} strokeWidth={STROKE_THIN} />
@@ -47,7 +41,7 @@ export const SadPerson: React.FC<IconProps> = ({ delay = 0 }) => {
       </Appear>
       <DrawPath d="M 492 528 Q 540 492 588 528" delay={delay + 30} duration={14} />
       <Torso delay={delay + 34} />
-    </g>
+    </Frame>
   );
 };
 

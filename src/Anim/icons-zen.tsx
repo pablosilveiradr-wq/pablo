@@ -373,40 +373,157 @@ export const StudyPaper: React.FC<IconProps> = ({ delay = 0 }) => {
   );
 };
 
-/**
- * What is actually in front of you — the same bowl as the opening, but now
- * with attention landing on it instead of somewhere else.
- */
-export const RightHere: React.FC<IconProps> = ({ delay = 0 }) => {
+/** Steam curls rising off a rim at `y`, the sign that the meal is happening now. */
+const Steam: React.FC<{
+  readonly y: number;
+  readonly delay: number;
+  readonly spread?: number;
+}> = ({ y, delay, spread = 52 }) => {
   const frame = useCurrentFrame();
   const rise = Math.sin((frame / 70) * Math.PI * 2) * 6;
   return (
-    <Frame scale={0.93} dy={-5} breath={0.014}>
-      <DrawPath d={bowlPath(540, 512, 190, 96)} delay={delay} duration={30} />
-      <DrawPath d="M 445 512 L 635 512" delay={delay + 22} duration={16} />
-      <DrawPath
-        d="M 372 648 L 708 648"
-        delay={delay + 36}
-        duration={22}
-        strokeWidth={STROKE_THIN}
-      />
-      {[-52, 0, 52].map((dx, i) => (
-        <Appear key={i} delay={delay + 44 + i * 6} duration={14} opacity={0.75}>
+    <>
+      {[-spread, 0, spread].map((dx, i) => (
+        <Appear key={i} delay={delay + i * 6} duration={14} opacity={0.75}>
           <path
-            d={`M ${540 + dx} ${478 + rise} c -16 -22 16 -34 0 -56`}
+            d={`M ${540 + dx} ${y + rise} c -16 -22 16 -34 0 -56`}
             strokeWidth={STROKE_THIN}
           />
         </Appear>
       ))}
-      <DashedRing
-        cx={540}
-        cy={545}
-        r={215}
-        count={44}
-        delay={delay + 58}
-        duration={32}
-        opacity={0.4}
-      />
+    </>
+  );
+};
+
+/** "Cuando como, como" — the meal, and nothing else in the frame. */
+export const BowlNow: React.FC<IconProps> = ({ delay = 0 }) => (
+  <Frame scale={1} dy={5} breath={0.012}>
+    <DrawPath d={bowlPath(540, 505, 400, 200)} delay={delay} duration={34} />
+    <DrawPath d="M 340 505 L 740 505" delay={delay + 26} duration={20} />
+    <Steam y={471} delay={delay + 40} spread={80} />
+  </Frame>
+);
+
+/** "Cuando camino, camino" — one print at a time, going somewhere. */
+export const WalkNow: React.FC<IconProps> = ({ delay = 0 }) => {
+  const steps: [number, number][] = [
+    [360, 720],
+    [470, 650],
+    [580, 580],
+    [690, 510],
+  ];
+  const print = (sx: number, sy: number) =>
+    `M ${sx} ${sy - 56} ` +
+    `C ${sx + 30} ${sy - 56} ${sx + 34} ${sy - 16} ${sx + 28} ${sy + 14} ` +
+    `C ${sx + 24} ${sy + 42} ${sx + 10} ${sy + 56} ${sx} ${sy + 56} ` +
+    `C ${sx - 10} ${sy + 56} ${sx - 24} ${sy + 42} ${sx - 28} ${sy + 14} ` +
+    `C ${sx - 34} ${sy - 16} ${sx - 30} ${sy - 56} ${sx} ${sy - 56} Z`;
+  return (
+    <Frame scale={1} dx={15} dy={-75}>
+      <Appear delay={delay} duration={18} opacity={0.35}>
+        <line
+          x1={330}
+          y1={748}
+          x2={720}
+          y2={482}
+          strokeWidth={STROKE_THIN}
+          strokeDasharray="12 16"
+        />
+      </Appear>
+      {steps.map(([sx, sy], i) => (
+        <Appear
+          key={i}
+          delay={delay + 12 + i * 11}
+          duration={14}
+          scaleFrom={0.75}
+          origin={[sx, sy]}
+        >
+          <g transform={`rotate(-16 ${sx} ${sy})`}>
+            <path d={print(sx, sy)} strokeWidth={STROKE_THIN} />
+            <path
+              d={`M ${sx - 22} ${sy - 18} q 22 -14 44 0`}
+              strokeWidth={STROKE_THIN}
+              opacity={0.7}
+            />
+          </g>
+        </Appear>
+      ))}
     </Frame>
   );
 };
+
+/** "Y dijo que no" — the correction, before the reason for it. */
+export const SaidNo: React.FC<IconProps> = ({ delay = 0 }) => (
+  <Frame scale={1} breath={0.012}>
+    <DrawPath
+      d="M 380 380 L 700 380 A 40 40 0 0 1 740 420 L 740 600 A 40 40 0 0 1 700 640 L 520 640 L 468 700 L 468 640 L 380 640 A 40 40 0 0 1 340 600 L 340 420 A 40 40 0 0 1 380 380 Z"
+      delay={delay}
+      duration={44}
+      occlude
+    />
+    <DrawPath d="M 470 450 L 610 570" delay={delay + 40} duration={20} />
+    <DrawPath d="M 610 450 L 470 570" delay={delay + 52} duration={20} />
+  </Frame>
+);
+
+/** "Todo lo que no hiciste" — the list that never gets a tick. */
+export const UndoneList: React.FC<IconProps> = ({ delay = 0 }) => {
+  const rows = [0, 1, 2, 3];
+  return (
+    <Frame scale={1.05} dy={-21}>
+      {rows.map((i) => {
+        const y = 400 + i * 80;
+        const fade = 1 - i * 0.18;
+        return (
+          <g key={i}>
+            <DrawPath
+              d={`M 350 ${y - 27} L 405 ${y - 27} L 405 ${y + 28} L 350 ${y + 28} Z`}
+              delay={delay + i * 13}
+              duration={20}
+              strokeWidth={STROKE_THIN}
+              opacity={fade}
+            />
+            <DrawPath
+              d={`M 435 ${y} L ${i === 3 ? 640 : 730} ${y}`}
+              delay={delay + 10 + i * 13}
+              duration={18}
+              strokeWidth={STROKE_THIN}
+              opacity={fade}
+            />
+          </g>
+        );
+      })}
+      <Appear delay={delay + 62} duration={14} opacity={0.22}>
+        <line x1={350} y1={712} x2={405} y2={712} strokeWidth={STROKE_THIN} />
+        <line x1={435} y1={712} x2={620} y2={712} strokeWidth={STROKE_THIN} />
+      </Appear>
+    </Frame>
+  );
+};
+
+/**
+ * What is actually in front of you — the same bowl as the opening, but now
+ * with attention landing on it instead of somewhere else.
+ */
+export const RightHere: React.FC<IconProps> = ({ delay = 0 }) => (
+  <Frame scale={1} dy={-10} breath={0.014}>
+    <DrawPath d={bowlPath(540, 505, 260, 130)} delay={delay} duration={30} />
+    <DrawPath d="M 410 505 L 670 505" delay={delay + 22} duration={16} />
+    <DrawPath
+      d="M 390 690 L 690 690"
+      delay={delay + 36}
+      duration={22}
+      strokeWidth={STROKE_THIN}
+    />
+    <Steam y={471} delay={delay + 44} />
+    <DashedRing
+      cx={540}
+      cy={550}
+      r={200}
+      count={44}
+      delay={delay + 56}
+      duration={32}
+      opacity={0.4}
+    />
+  </Frame>
+);

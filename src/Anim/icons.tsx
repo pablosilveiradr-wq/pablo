@@ -7,6 +7,7 @@ import {
   DashedRing,
   Dot,
   DrawPath,
+  Frame,
   IconProps,
   Person,
   Ticks,
@@ -168,7 +169,7 @@ export const FeetGround: React.FC<IconProps> = ({ delay = 0 }) => {
   };
 
   return (
-    <g>
+    <Frame scale={0.95} dy={38}>
       {foot(C - 160, 0)}
       {foot(C + 40, 1)}
       <DrawPath d={`M ${C - 330} ${GROUND} L ${C + 330} ${GROUND}`} delay={delay + 44} duration={22} />
@@ -181,7 +182,7 @@ export const FeetGround: React.FC<IconProps> = ({ delay = 0 }) => {
           />
         </Appear>
       ))}
-    </g>
+    </Frame>
   );
 };
 
@@ -262,7 +263,7 @@ export const HeartSettle: React.FC<IconProps> = ({ delay = 0 }) => {
     extrapolateRight: "clamp",
   });
   return (
-    <g>
+    <Frame scale={1}>
       <g style={{ transform: `scale(${beat})`, transformOrigin: `${C}px ${C}px`, transformBox: "view-box" }}>
         <DrawPath
           d={`M ${C} ${C + 150} C ${C - 210} ${C + 20} ${C - 185} ${C - 145} ${C - 86} ${C - 145} C ${C - 32} ${C - 145} ${C} ${C - 96} ${C} ${C - 56} C ${C} ${C - 96} ${C + 32} ${C - 145} ${C + 86} ${C - 145} C ${C + 185} ${C - 145} ${C + 210} ${C + 20} ${C} ${C + 150} Z`}
@@ -278,7 +279,7 @@ export const HeartSettle: React.FC<IconProps> = ({ delay = 0 }) => {
         />
       </Appear>
       <Dot cx={C + 330 - travel * 300} cy={C - 40 + travel * 60} r={9} delay={delay + 44} opacity={1 - travel * 0.2} />
-    </g>
+    </Frame>
   );
 };
 

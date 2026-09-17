@@ -53,7 +53,8 @@ const BeatLayer: React.FC<{
   });
 
   // Land the drawing about two thirds in, so every beat still gets a held pose.
-  const speed = Math.min(3.2, BUILD / (durationInFrames * 0.68));
+  // The ceiling is what a one-second beat needs to finish drawing at all.
+  const speed = Math.min(4.4, BUILD / (durationInFrames * 0.68));
 
   return (
     <AbsoluteFill style={{ opacity }}>
