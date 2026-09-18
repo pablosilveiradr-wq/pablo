@@ -20,8 +20,13 @@ import { INK, STROKE_THIN } from "./theme";
 const EYE_L = 340;
 const EYE_R = 740;
 const EYE_Y = 540;
-/** Sag of the lower lid; the lid itself never moves, only the upper one lifts. */
-const SAG = 40;
+/**
+ * How far each lid bows from the corner line at full open. Keeping the lift
+ * close to the sag is what makes it read as an eye instead of a leaf: too much
+ * lift and the almond goes top-heavy and the iris looks off-centre.
+ */
+const SAG = 52;
+const LIFT = 82;
 
 /**
  * A quadratic pinned at both corners sits at EYE_Y + 2t(1-t)(cy - EYE_Y), so a
@@ -40,7 +45,7 @@ const eye = (from: number, to: number): React.FC<IconProps> => {
     const open = from + (to - from) * p;
     const iris = Math.min(1, Math.max(0, (open - 0.15) / 0.5));
     // Centre the iris in the gap the two lids actually leave at mid-span.
-    const upper = lidAt(540, EYE_Y - 232 * open);
+    const upper = lidAt(540, EYE_Y - 2 * LIFT * open);
     const lower = lidAt(540, EYE_Y + 2 * SAG);
     const irisY = (upper + lower) / 2;
     const irisR = ((lower - upper) / 2) * 0.76 * iris;
@@ -60,7 +65,7 @@ const eye = (from: number, to: number): React.FC<IconProps> => {
         />
         {open > 0.02 ? (
           <path
-            d={`M ${EYE_L} ${EYE_Y} Q 540 ${EYE_Y - 232 * open} ${EYE_R} ${EYE_Y}`}
+            d={`M ${EYE_L} ${EYE_Y} Q 540 ${EYE_Y - 2 * LIFT * open} ${EYE_R} ${EYE_Y}`}
             opacity={Math.min(1, open / 0.12)}
           />
         ) : null}
