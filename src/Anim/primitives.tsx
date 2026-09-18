@@ -387,43 +387,6 @@ export const Dot: React.FC<{
   return <circle cx={cx} cy={cy} r={r * p} fill={INK} stroke="none" opacity={opacity} />;
 };
 
-const hash = (i: number, salt: number) => {
-  const x = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453;
-  return x - Math.floor(x);
-};
-
-/** Slow drifting motes: keeps the black from reading as a dead frame. */
-export const Motes: React.FC<{ readonly count?: number }> = ({ count = 22 }) => {
-  const frame = useCurrentFrame();
-  return (
-    <svg
-      viewBox={`0 0 ${CANVAS} ${CANVAS}`}
-      preserveAspectRatio="xMidYMid slice"
-      width="100%"
-      height="100%"
-      style={{ position: "absolute", inset: 0 }}
-    >
-      {new Array(count).fill(0).map((_, i) => {
-        const speed = 0.18 + hash(i, 3) * 0.32;
-        const span = CANVAS + 160;
-        const y = ((hash(i, 1) * span - frame * speed) % span + span) % span - 80;
-        const x = hash(i, 2) * CANVAS;
-        const sway = Math.sin((frame / (150 + hash(i, 4) * 90)) * Math.PI * 2) * 14;
-        return (
-          <circle
-            key={i}
-            cx={x + sway}
-            cy={y}
-            r={1.4 + hash(i, 5) * 2.2}
-            fill={INK}
-            opacity={0.07 + hash(i, 6) * 0.11}
-          />
-        );
-      })}
-    </svg>
-  );
-};
-
 /** Minimal human glyph: head plus shoulder arc. */
 export const Person: React.FC<{
   readonly x: number;
