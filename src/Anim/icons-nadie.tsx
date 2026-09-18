@@ -6,85 +6,120 @@ import {
   Frame,
   IconProps,
   circlePath,
+  useReveal,
 } from "./primitives";
 import { heartPath } from "./shapes";
-import { STROKE_THIN } from "./theme";
+import { INK, STROKE_THIN } from "./theme";
 
 /**
  * "Nadie ve" — the refrain lands on a shut eye three times, and the close
  * opens that same eye. Everything else is what nobody got to watch.
  */
 
-/** @param open 0 shut, 1 looking straight at you. */
-const eye = (open: number): React.FC<IconProps> => {
-  const Eye: React.FC<IconProps> = ({ delay = 0 }) => (
-    <Frame scale={1.12} dy={12} breath={0.012}>
-      <DrawPath
-        d="M 372 452 Q 540 398 708 452"
-        delay={delay}
-        duration={20}
-        strokeWidth={STROKE_THIN}
-        opacity={0.45}
-      />
-      {open > 0.05 ? (
+/** Corners the lids share, so every lash and lid starts on the same curve. */
+const EYE_L = 340;
+const EYE_R = 740;
+const EYE_Y = 540;
+/** Sag of the lower lid; the lid itself never moves, only the upper one lifts. */
+const SAG = 40;
+
+/**
+ * A quadratic pinned at both corners sits at EYE_Y + 2t(1-t)(cy - EYE_Y), so a
+ * control point 2*SAG below the corners bottoms out SAG below them. Lashes and
+ * the iris are placed off this, never off the control point.
+ */
+const lidAt = (x: number, control: number) => {
+  const t = (x - EYE_L) / (EYE_R - EYE_L);
+  return EYE_Y + 2 * t * (1 - t) * (control - EYE_Y);
+};
+
+/** @param from how open the eye starts, `to` where the beat leaves it. */
+const eye = (from: number, to: number): React.FC<IconProps> => {
+  const Eye: React.FC<IconProps> = ({ delay = 0 }) => {
+    const p = useReveal(delay + 14, 46);
+    const open = from + (to - from) * p;
+    const iris = Math.min(1, Math.max(0, (open - 0.15) / 0.5));
+    // Centre the iris in the gap the two lids actually leave at mid-span.
+    const upper = lidAt(540, EYE_Y - 232 * open);
+    const lower = lidAt(540, EYE_Y + 2 * SAG);
+    const irisY = (upper + lower) / 2;
+    const irisR = ((lower - upper) / 2) * 0.76 * iris;
+    return (
+      <Frame scale={1.12} dy={12} breath={0.012}>
         <DrawPath
-          d={`M 340 540 Q 540 ${540 - 232 * open} 740 540`}
-          delay={delay + 14}
+          d="M 372 452 Q 540 398 708 452"
+          delay={delay}
+          duration={20}
+          strokeWidth={STROKE_THIN}
+          opacity={0.45}
+        />
+        <DrawPath
+          d={`M ${EYE_L} ${EYE_Y} Q 540 ${EYE_Y + 2 * SAG} ${EYE_R} ${EYE_Y}`}
+          delay={delay + 18}
           duration={30}
         />
-      ) : null}
-      <DrawPath
-        d={`M 340 540 Q 540 ${540 + 112 * (0.35 + 0.65 * open)} 740 540`}
-        delay={delay + 18}
-        duration={30}
-      />
-      {open > 0.25 ? (
-        <>
-          <DrawPath
-            d={circlePath(540, 540 + 16 * open, 62 * open)}
-            delay={delay + 46}
-            duration={22}
+        {open > 0.02 ? (
+          <path
+            d={`M ${EYE_L} ${EYE_Y} Q 540 ${EYE_Y - 232 * open} ${EYE_R} ${EYE_Y}`}
+            opacity={Math.min(1, open / 0.12)}
           />
-          <Dot cx={540} cy={540 + 16 * open} r={24 * open} delay={delay + 62} />
-        </>
-      ) : null}
-      {open < 0.3
-        ? [430, 540, 650].map((x, i) => (
-            <Appear key={i} delay={delay + 48 + i * 5} duration={12} opacity={0.6}>
-              <line
-                x1={x}
-                y1={572 + (x === 540 ? 8 : 0)}
-                x2={x - 14}
-                y2={614 + (x === 540 ? 8 : 0)}
-                strokeWidth={STROKE_THIN}
-              />
-            </Appear>
-          ))
-        : null}
-      {open > 0.8
-        ? [0, 1, 2, 3, 4, 5].map((i) => {
-            const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
-            return (
-              <Appear key={i} delay={delay + 74 + i * 3} duration={12} opacity={0.5}>
+        ) : null}
+        {irisR > 1 ? (
+          <>
+            <path d={circlePath(540, irisY, irisR)} opacity={iris} />
+            <circle
+              cx={540}
+              cy={irisY}
+              r={irisR * 0.4}
+              fill={INK}
+              stroke="none"
+              opacity={iris}
+            />
+          </>
+        ) : null}
+        {to < 0.05
+          ? [420, 540, 660].map((x, i) => {
+              const y = lidAt(x, EYE_Y + 2 * SAG);
+              const dx = (x - 540) * 0.13;
+              return (
+                <Appear key={i} delay={delay + 44 + i * 5} duration={12} opacity={0.7}>
+                  <line
+                    x1={x}
+                    y1={y}
+                    x2={x + dx}
+                    y2={y + 44}
+                    strokeWidth={STROKE_THIN}
+                  />
+                </Appear>
+              );
+            })
+          : null}
+        {open > 0.75
+          ? [0, 1, 2, 3, 4, 5].map((i) => {
+              const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+              const k = (open - 0.75) / 0.25;
+              return (
                 <line
-                  x1={540 + Math.cos(a) * 226}
-                  y1={540 + Math.sin(a) * 158}
-                  x2={540 + Math.cos(a) * 268}
-                  y2={540 + Math.sin(a) * 188}
+                  key={i}
+                  x1={540 + Math.cos(a) * 250}
+                  y1={EYE_Y + Math.sin(a) * 175}
+                  x2={540 + Math.cos(a) * (250 + 40 * k)}
+                  y2={EYE_Y + Math.sin(a) * (175 + 28 * k)}
                   strokeWidth={STROKE_THIN}
+                  opacity={k * 0.55}
                 />
-              </Appear>
-            );
-          })
-        : null}
-    </Frame>
-  );
+              );
+            })
+          : null}
+      </Frame>
+    );
+  };
   return Eye;
 };
 
-export const EyeShut = eye(0);
-export const EyeHalf = eye(0.45);
-export const EyeSeeing = eye(1);
+export const EyeShut = eye(0, 0);
+export const EyeHalf = eye(0, 0.45);
+export const EyeSeeing = eye(0.45, 1);
 
 /** Getting up anyway, on the mornings it cost something. */
 export const WakeNoWill: React.FC<IconProps> = ({ delay = 0 }) => (
@@ -107,12 +142,6 @@ export const WakeNoWill: React.FC<IconProps> = ({ delay = 0 }) => (
       delay={delay + 60}
       duration={24}
       occlude
-    />
-    <DrawPath
-      d="M 690 610 C 716 630 718 655 706 672"
-      delay={delay + 78}
-      duration={16}
-      strokeWidth={STROKE_THIN}
     />
   </Frame>
 );
@@ -141,10 +170,10 @@ export const SwallowedWords: React.FC<IconProps> = ({ delay = 0 }) => (
       strokeWidth={STROKE_THIN}
       opacity={0.5}
     />
-    <DrawPath d="M 540 604 L 540 688" delay={delay + 42} duration={22} />
+    <DrawPath d="M 540 580 L 540 690" delay={delay + 42} duration={24} />
     <DrawPath
-      d="M 512 660 L 540 690 L 568 660"
-      delay={delay + 60}
+      d="M 512 662 L 540 690 L 568 662"
+      delay={delay + 62}
       duration={14}
     />
   </Frame>
@@ -176,13 +205,6 @@ export const ClimbCost: React.FC<IconProps> = ({ delay = 0 }) => (
       delay={delay}
       duration={60}
     />
-    <Appear delay={delay + 56} duration={16} opacity={0.3}>
-      <path
-        d="M 340 676 C 470 640 600 540 740 436"
-        strokeWidth={STROKE_THIN}
-        strokeDasharray="12 16"
-      />
-    </Appear>
-    <Dot cx={740} cy={398} r={12} delay={delay + 70} />
+    <Dot cx={733} cy={408} r={12} delay={delay + 62} />
   </Frame>
 );
