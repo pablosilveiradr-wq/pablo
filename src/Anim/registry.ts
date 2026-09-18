@@ -39,6 +39,17 @@ import {
   ThoughtSupposing,
 } from "./icons-foto";
 import {
+  LeftBehind,
+  OneWord,
+  PhoneCall,
+  SandLow,
+  StartAgain,
+  StillTime1,
+  StillTime2,
+  StillTime3,
+  UseItNow,
+} from "./icons-todavia";
+import {
   ArrowBody,
   BuddhaTells,
   FirstArrow,
@@ -104,6 +115,15 @@ export const ICONS = {
   worryLoop: WorryLoop,
   stressBody: StressBody,
   problemOver: ProblemOver,
+  stillTime1: StillTime1,
+  stillTime2: StillTime2,
+  stillTime3: StillTime3,
+  sandLow: SandLow,
+  phoneCall: PhoneCall,
+  startAgain: StartAgain,
+  leftBehind: LeftBehind,
+  oneWord: OneWord,
+  useItNow: UseItNow,
   sadPerson: SadPerson,
   scatterDots: ScatterDots,
   bottleGlass: BottleGlass,

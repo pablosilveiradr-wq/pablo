@@ -10,6 +10,7 @@ import { ZEN_BEATS } from "./Anim/zen-storyboard";
 import { REF_BEATS } from "./Anim/ref-storyboard";
 import { FOTO_BEATS } from "./Anim/foto-storyboard";
 import { FLECHA_BEATS } from "./Anim/flecha-storyboard";
+import { TODAVIA_BEATS } from "./Anim/todavia-storyboard";
 import {
   Storyboard,
   storyboardDuration,
@@ -138,6 +139,19 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         durationInFrames={storyboardDuration(FLECHA_BEATS, FPS)}
         defaultProps={{ beats: FLECHA_BEATS }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Todavia"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={storyboardDuration(TODAVIA_BEATS, FPS)}
+        defaultProps={{ beats: TODAVIA_BEATS, scale: 0.88 }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}
