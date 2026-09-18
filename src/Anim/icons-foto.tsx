@@ -10,29 +10,13 @@ import {
   useDrawFrame,
   useReveal,
 } from "./primitives";
+import { heartPath } from "./shapes";
 import { INK, STROKE_THIN } from "./theme";
 
 /**
  * Metaphors for the "esta foto no alcanza" reel: outline only, one centred
  * subject per beat, authored inside y 250..700 so the caption keeps its band.
  */
-
-/** Heart of exactly `w` across, centred on (cx, cy). */
-const heartPath = (cx: number, cy: number, w: number) => {
-  const h = w * 0.88;
-  const X = (u: number) => cx + (u / 100 - 0.5) * w;
-  const Y = (v: number) => cy + (v / 88 - 0.5) * h;
-  return [
-    `M ${X(50)} ${Y(88)}`,
-    `C ${X(20)} ${Y(68)} ${X(0)} ${Y(46)} ${X(0)} ${Y(28)}`,
-    `C ${X(0)} ${Y(12)} ${X(12)} ${Y(0)} ${X(26)} ${Y(0)}`,
-    `C ${X(36)} ${Y(0)} ${X(45)} ${Y(6)} ${X(50)} ${Y(14)}`,
-    `C ${X(55)} ${Y(6)} ${X(64)} ${Y(0)} ${X(74)} ${Y(0)}`,
-    `C ${X(88)} ${Y(0)} ${X(100)} ${Y(12)} ${X(100)} ${Y(28)}`,
-    `C ${X(100)} ${Y(46)} ${X(80)} ${Y(68)} ${X(50)} ${Y(88)}`,
-    "Z",
-  ].join(" ");
-};
 
 /** A key, handed over — "te doy una herramienta". */
 export const HandKey: React.FC<IconProps> = ({ delay = 0 }) => {

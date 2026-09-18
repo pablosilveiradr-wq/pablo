@@ -39,6 +39,15 @@ import {
   ThoughtSupposing,
 } from "./icons-foto";
 import {
+  ClimbCost,
+  EyeHalf,
+  EyeSeeing,
+  EyeShut,
+  SparedHeart,
+  SwallowedWords,
+  WakeNoWill,
+} from "./icons-nadie";
+import {
   LeftBehind,
   OneWord,
   PhoneCall,
@@ -124,6 +133,13 @@ export const ICONS = {
   leftBehind: LeftBehind,
   oneWord: OneWord,
   useItNow: UseItNow,
+  eyeShut: EyeShut,
+  eyeHalf: EyeHalf,
+  eyeSeeing: EyeSeeing,
+  wakeNoWill: WakeNoWill,
+  swallowedWords: SwallowedWords,
+  sparedHeart: SparedHeart,
+  climbCost: ClimbCost,
   sadPerson: SadPerson,
   scatterDots: ScatterDots,
   bottleGlass: BottleGlass,
