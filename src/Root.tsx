@@ -12,6 +12,7 @@ import { FOTO_BEATS } from "./Anim/foto-storyboard";
 import { FLECHA_BEATS } from "./Anim/flecha-storyboard";
 import { TODAVIA_BEATS } from "./Anim/todavia-storyboard";
 import { NADIE_BEATS } from "./Anim/nadie-storyboard";
+import { PUNTO_BEATS } from "./Anim/punto-storyboard";
 import {
   Storyboard,
   storyboardDuration,
@@ -166,6 +167,19 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         durationInFrames={storyboardDuration(NADIE_BEATS, FPS)}
         defaultProps={{ beats: NADIE_BEATS, scale: 0.88 }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="Punto"
+        component={Storyboard}
+        schema={storyboardSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={storyboardDuration(PUNTO_BEATS, FPS)}
+        defaultProps={{ beats: PUNTO_BEATS, scale: 0.88 }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}

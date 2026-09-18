@@ -39,6 +39,15 @@ import {
   ThoughtSupposing,
 } from "./icons-foto";
 import {
+  ArmBase,
+  ArmInner,
+  ArmPress,
+  ArmTendons,
+  ArmThree,
+  CalmTorso,
+  TightTorso,
+} from "./icons-punto";
+import {
   ClimbCost,
   EyeHalf,
   EyeSeeing,
@@ -140,6 +149,13 @@ export const ICONS = {
   swallowedWords: SwallowedWords,
   sparedHeart: SparedHeart,
   climbCost: ClimbCost,
+  armBase: ArmBase,
+  armThree: ArmThree,
+  armInner: ArmInner,
+  armTendons: ArmTendons,
+  armPress: ArmPress,
+  tightTorso: TightTorso,
+  calmTorso: CalmTorso,
   sadPerson: SadPerson,
   scatterDots: ScatterDots,
   bottleGlass: BottleGlass,

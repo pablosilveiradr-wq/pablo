@@ -1,5 +1,11 @@
 import React from "react";
-import { AbsoluteFill, interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
+import {
+  AbsoluteFill,
+  interpolate,
+  Sequence,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import { z } from "zod";
 import { ICONS, IconName } from "./registry";
 import { BUILD, Canvas, DrawSpeed } from "./primitives";
@@ -17,6 +23,12 @@ export const beatSchema = z.object({
   note: z.string().optional(),
   /** Subtitle burned under the icon, the way the references caption every line. */
   text: z.string().optional(),
+  /**
+   * Beats sharing a scene tag play as one shot: no dip through black between
+   * them, and each one's art stays up once it has drawn. That is how a diagram
+   * gets built a layer at a time instead of being recut on every line.
+   */
+  scene: z.string().optional(),
 });
 
 export type Beat = z.infer<typeof beatSchema>;
@@ -27,15 +39,31 @@ export const storyboardSchema = z.object({
   scale: z.number().optional(),
 });
 
-/** One metaphor, cross-dissolved in and out like the references. */
-const BeatLayer: React.FC<{
-  readonly icon: IconName;
-  readonly text?: string;
-  readonly scale?: number;
-}> = ({ icon, text, scale = 1 }) => {
+type Scene = { start: number; end: number; beats: Beat[] };
+
+/** Runs of consecutive beats carrying the same scene tag collapse into one shot. */
+const toScenes = (beats: Beat[]): Scene[] =>
+  beats.reduce<Scene[]>((out, beat) => {
+    const open = out[out.length - 1];
+    if (open && beat.scene && beat.scene === open.beats[0].scene) {
+      open.beats.push(beat);
+      open.end = beat.end;
+      return out;
+    }
+    out.push({ start: beat.start, end: beat.end, beats: [beat] });
+    return out;
+  }, []);
+
+/** The clock a beat of `frames` needs so its drawing lands about two thirds in. */
+const drawSpeed = (frames: number) => Math.min(4.4, BUILD / (frames * 0.68));
+
+/** One shot: a single metaphor, or a diagram several beats build up together. */
+const SceneLayer: React.FC<{
+  readonly scene: Scene;
+  readonly scale: number;
+}> = ({ scene, scale }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const Icon = ICONS[icon];
+  const { durationInFrames, fps } = useVideoConfig();
 
   const opacity =
     interpolate(frame, [0, CROSSFADE], [0, 1], {
@@ -49,53 +77,72 @@ const BeatLayer: React.FC<{
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
     );
 
-  // A slow push-in over the beat, so a held icon is never a frozen frame.
+  // A slow push-in over the shot, so a held icon is never a frozen frame.
   const push = interpolate(frame, [0, durationInFrames], [1, 1.045], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Land the drawing about two thirds in, so every beat still gets a held pose.
-  // The ceiling is what a one-second beat needs to finish drawing at all.
-  const speed = Math.min(4.4, BUILD / (durationInFrames * 0.68));
+  const offset = (beat: Beat) => Math.round((beat.start - scene.start) * fps);
 
   return (
     <AbsoluteFill style={{ opacity }}>
       <AbsoluteFill style={{ transform: `scale(${push})` }}>
-        <DrawSpeed value={speed}>
-          <Canvas lifted={Boolean(text)} scale={scale}>
-            <Icon />
-          </Canvas>
-        </DrawSpeed>
+        <Canvas lifted={scene.beats.some((b) => b.text)} scale={scale}>
+          {scene.beats.map((beat, i) => {
+            const Icon = ICONS[beat.icon as IconName];
+            const from = offset(beat);
+            return (
+              <Sequence
+                key={i}
+                from={from}
+                durationInFrames={durationInFrames - from}
+                layout="none"
+              >
+                <DrawSpeed
+                  value={drawSpeed(Math.round((beat.end - beat.start) * fps))}
+                >
+                  <Icon />
+                </DrawSpeed>
+              </Sequence>
+            );
+          })}
+        </Canvas>
       </AbsoluteFill>
-      {text ? <Caption text={text} /> : null}
+      {scene.beats.map((beat, i) =>
+        beat.text ? (
+          <Sequence
+            key={i}
+            from={offset(beat)}
+            durationInFrames={Math.round((beat.end - beat.start) * fps)}
+            layout="none"
+          >
+            <Caption text={beat.text} />
+          </Sequence>
+        ) : null,
+      )}
     </AbsoluteFill>
   );
 };
 
 export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
   beats,
-  scale,
+  scale = 1,
 }) => {
   const { fps } = useVideoConfig();
+  const scenes = toScenes(beats.filter((b) => ICONS[b.icon as IconName]));
 
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
-      {beats.map((beat, i) => {
-        const icon = beat.icon as IconName;
-        if (!ICONS[icon]) {
-          return null;
-        }
-        const from = Math.round(beat.start * fps);
-        // Beats never overlap: each one dips out before the next draws on, so
-        // two sets of line work can never share the frame.
-        const duration = Math.round((beat.end - beat.start) * fps);
+      {scenes.map((scene, i) => {
+        const from = Math.round(scene.start * fps);
+        const duration = Math.round((scene.end - scene.start) * fps);
         if (duration <= 0) {
           return null;
         }
         return (
           <Sequence key={i} from={from} durationInFrames={duration}>
-            <BeatLayer icon={icon} text={beat.text} scale={scale} />
+            <SceneLayer scene={scene} scale={scale} />
           </Sequence>
         );
       })}
