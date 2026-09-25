@@ -27,6 +27,14 @@ import {
   librarySheetSchema,
 } from "./Anim/LibrarySheet";
 import { CATALOG } from "./Anim/traced/catalog";
+import {
+  CLIP,
+  LibraryClip,
+  LibraryReel,
+  libraryClipSchema,
+  libraryReelSchema,
+} from "./Anim/LibraryClip";
+import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -187,6 +195,29 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{ beats: PUNTO_BEATS, scale: 0.88 }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="LibraryClip"
+        component={LibraryClip}
+        schema={libraryClipSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={CLIP}
+        defaultProps={{ id: "pensamiento" }}
+      />
+      <Composition
+        id="LibraryReel"
+        component={LibraryReel}
+        schema={libraryReelSchema}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={CLIP}
+        defaultProps={{ ids: LIBRARY_CATALOG.map((x) => x.id) }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.max(1, props.ids.length) * CLIP,
         })}
       />
       <Composition

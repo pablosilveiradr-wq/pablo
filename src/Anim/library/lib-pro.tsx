@@ -3,7 +3,7 @@ import { useCurrentFrame } from "remotion";
 import { Dot, IconProps, useReveal } from "../primitives";
 import { INK, STROKE_THIN } from "../theme";
 import { Ln } from "./kit";
-import { vendorIcon } from "./vendorIcon";
+import { TimedIcon, vendorIcon } from "./vendorIcon";
 
 /**
  * The few pieces no icon set has, drawn to the same rules as the vendored
@@ -67,3 +67,6 @@ export const BoxBreath: React.FC<IconProps> = ({ delay = 0 }) => {
     </>
   );
 };
+
+/** The square lands by ~46 build frames; the dot then circulates forever. */
+(BoxBreath as TimedIcon).buildEnd = 56;

@@ -4,6 +4,7 @@
   python3 scripts/library.py fit              measure every drawn icon, write fit.ts
   python3 scripts/library.py sheets OUT_DIR   numbered approval sheets, 25 per page
   python3 scripts/library.py list             print the catalog with status
+  python3 scripts/library.py split REEL OUT   cut a LibraryReel render into NNN_slug.mp4
 
 Fit renders each icon unfitted, finds the bounding box of its ink, and solves
 the scale and offset that land it centred at a shared optical size. That is
@@ -138,6 +139,23 @@ def sheets(out_dir, only=None):
     return paths
 
 
+CLIP_SECONDS = 3.0  # LibraryClip's CLIP (90 frames) at 30 fps
+
+
+def split(reel, out_dir):
+    """One file per icon, named by catalog number, from a full LibraryReel."""
+    os.makedirs(out_dir, exist_ok=True)
+    todo = [e for e in entries() if e["drawn"]]
+    for i, e in enumerate(todo):
+        out = os.path.join(out_dir, f"{e['n']:03d}_{e['id']}.mp4")
+        subprocess.run(
+            ["ffmpeg", "-loglevel", "error", "-y", "-ss", f"{i * CLIP_SECONDS:.3f}", "-i", reel,
+             "-t", f"{CLIP_SECONDS:.3f}", "-an", "-c:v", "libx264", "-crf", "16",
+             "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", out],
+            check=True)
+    print(f"{len(todo)} clips -> {out_dir}")
+
+
 def listing():
     for e in entries():
         print(f"{e['n']:03d} {'✓' if e['drawn'] else '·'} {e['id']:28s} {e['name']}")
@@ -153,5 +171,7 @@ if __name__ == "__main__":
             a, b = (int(x) for x in sys.argv[3].split("-"))
             only = set(range(a, b + 1))
         sheets(sys.argv[2], only)
+    elif cmd == "split":
+        split(sys.argv[2], sys.argv[3])
     else:
         listing()

@@ -68,7 +68,7 @@ export const CATALOG: LibEntry[] = [
     e("alivio", "Alivio", v("lucide/cloud-sun")),
     e("agobio", "Agobio", combo([{ key: "lucide/user-round", s: 0.55 }, { key: "tabler/arrows-minimize", s: 1.05 }])),
     e("vacio", "Vacío", v("tabler/mood-empty")),
-    e("gratitud", "Gratitud", v("lucide/hand-heart")),
+    e("gratitud", "Gratitud", combo([{ key: "lucide/heart", s: 0.9, dx: -30, dy: 25 }, { key: "lucide/sparkles", s: 0.42, dx: 185, dy: -175 }])),
     e("compasion", "Compasión", v("lucide/heart-handshake")),
   ]),
   ...cat("Cuerpo", [

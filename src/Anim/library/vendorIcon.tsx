@@ -3,6 +3,12 @@ import { DrawPath, Dot, Frame, IconProps } from "../primitives";
 import { STROKE } from "../theme";
 import { VENDOR } from "./vendor";
 
+/** An icon that knows the build frame its drawing finishes on. */
+export type TimedIcon = React.FC<IconProps> & { buildEnd?: number };
+
+/** Build frames the last dot of a glyph needs after its strokes. */
+const DOT_TAIL = 16;
+
 /** Longest a vendored glyph takes to draw on, in build frames. */
 const BUDGET = 92;
 
@@ -38,7 +44,7 @@ export const vendorIcon = (key: string, breath = 0.012, weight = 1) => {
     throw new Error(`Unknown vendored glyph "${key}" — run scripts/import_icons.py`);
   }
   const plan = schedule(glyph.lens);
-  const Glyph: React.FC<IconProps> = ({ delay = 0 }) => (
+  const Glyph: TimedIcon = ({ delay = 0 }) => (
     <Frame breath={breath}>
       {glyph.paths.map((d, i) => (
         <DrawPath
@@ -54,6 +60,9 @@ export const vendorIcon = (key: string, breath = 0.012, weight = 1) => {
       ))}
     </Frame>
   );
+  Glyph.buildEnd = glyph.dots.length
+    ? Math.max(plan.end, plan.end * 0.8 + glyph.dots.length * 3 + DOT_TAIL)
+    : plan.end;
   return Glyph;
 };
 
@@ -76,10 +85,10 @@ type Part = {
 export const combo = (parts: readonly Part[], breath = 0.012) => {
   // A part drawn at scale s gets a 1/s stroke, so every part of the icon
   // carries the same line weight however small it sits.
-  const glyphs = parts.map(
+  const glyphs: TimedIcon[] = parts.map(
     (p) => p.C ?? vendorIcon(p.key ?? "", 0, 1 / (p.s ?? 1)),
   );
-  const Combo: React.FC<IconProps> = ({ delay = 0 }) => (
+  const Combo: TimedIcon = ({ delay = 0 }) => (
     <Frame breath={breath}>
       {parts.map((p, i) => {
         const G = glyphs[i];
@@ -90,6 +99,9 @@ export const combo = (parts: readonly Part[], breath = 0.012) => {
         );
       })}
     </Frame>
+  );
+  Combo.buildEnd = Math.max(
+    ...parts.map((p, i) => (p.at ?? i * 34) + (glyphs[i].buildEnd ?? 60)),
   );
   return Combo;
 };

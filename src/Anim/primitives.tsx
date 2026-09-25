@@ -80,7 +80,9 @@ export const Canvas: React.FC<{
   readonly scale?: number;
   /** Off only for measuring, where the halo would inflate the ink's bounds. */
   readonly glow?: boolean;
-}> = ({ children, lifted = false, scale = 1, glow = true }) => {
+  /** Strength of the halo; clips flash it when a drawing lands. */
+  readonly glowOpacity?: number;
+}> = ({ children, lifted = false, scale = 1, glow = true, glowOpacity = 0.3 }) => {
   const { width, height } = useVideoConfig();
   const lift = lifted && height / width < 1.2 ? -55 : 0;
   return (
@@ -108,7 +110,7 @@ export const Canvas: React.FC<{
         }}
       >
         {glow ? (
-          <g filter={`url(#${GLOW_ID})`} opacity={0.3}>
+          <g filter={`url(#${GLOW_ID})`} opacity={glowOpacity}>
             {children}
           </g>
         ) : null}
