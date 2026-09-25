@@ -20,7 +20,7 @@ Pegá este archivo al principio de cualquier chat nuevo, junto con el guion del 
 
 **Cómo se mueve cada clip (ágil):**
 1. **0–0,3 s**: el icono entra con un pequeño rebote (escala de 55 % a 100 % con sobrepaso y un giro leve) y se va dibujando a mano, rápido.
-2. **~0,3–0,7 s**: termina de dibujarse (los compuestos, un poco después). Justo ahí da un "golpe": destello de brillo, un pulso de escala y un aro suave que se expande y desaparece.
+2. **~0,3–0,7 s**: termina de dibujarse (los compuestos, un poco después). Justo ahí da un "golpe": destello de brillo y un pulso de escala.
 3. **Hasta los 3 s**: queda flotando y respirando despacio. El editor corta donde quiera; si hace falta más tiempo, se congela el último cuadro o se alarga el clip.
 
 ---

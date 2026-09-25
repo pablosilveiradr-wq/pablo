@@ -11,7 +11,7 @@ import { z } from "zod";
 import { ICONS, IconName } from "./registry";
 import { TimedIcon } from "./library/vendorIcon";
 import { Canvas, DrawSpeed } from "./primitives";
-import { BG, CENTER, STROKE_THIN } from "./theme";
+import { BG, CENTER } from "./theme";
 
 /** Length of one exported clip: pop, draw, flash, then a breathing hold. */
 export const CLIP = 90;
@@ -24,8 +24,8 @@ export const libraryClipSchema = z.object({ id: z.string() });
 
 /**
  * One library icon animated for editing: it springs in with a little
- * overshoot while it draws fast, flashes its glow and sends out a soft ring
- * the moment the drawing lands, then floats and breathes until the cut.
+ * overshoot while it draws fast, flashes its glow the moment the drawing
+ * lands, then floats and breathes until the cut.
  */
 export const LibraryClip: React.FC<z.infer<typeof libraryClipSchema>> = ({ id }) => {
   const frame = useCurrentFrame();
@@ -39,7 +39,7 @@ export const LibraryClip: React.FC<z.infer<typeof libraryClipSchema>> = ({ id })
   const pop = spring({ frame, fps, config: { damping: 10, stiffness: 170, mass: 0.7 } });
   const enter = interpolate(frame, [0, 3], [0, 1], { extrapolateRight: "clamp" });
 
-  // The landing: a quick thump, a glow flash and a ring, all keyed to `end`.
+  // The landing: a quick thump and a glow flash, both keyed to `end`.
   const land = frame - end;
   const thump = spring({
     frame: land,
@@ -48,10 +48,6 @@ export const LibraryClip: React.FC<z.infer<typeof libraryClipSchema>> = ({ id })
   });
   const bump = land < 0 ? 0 : Math.sin(Math.min(thump, 1) * Math.PI) * 0.05;
   const flash = interpolate(land, [0, 3, 22], [0, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const ringT = interpolate(land, [0, 24], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -67,15 +63,6 @@ export const LibraryClip: React.FC<z.infer<typeof libraryClipSchema>> = ({ id })
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
       <Canvas scale={0.88} glowOpacity={0.3 + 0.55 * flash}>
-        {land >= 0 && ringT < 1 ? (
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={250 + 110 * Math.sqrt(ringT)}
-            strokeWidth={STROKE_THIN}
-            opacity={0.32 * (1 - ringT)}
-          />
-        ) : null}
         <g
           opacity={enter}
           style={{
