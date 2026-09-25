@@ -38,7 +38,7 @@ export const FIT: Record<string, { s: number; dx: number; dy: number }> = {
   "alivio": { s: 1.088, dx: 1.0, dy: 1.0 },
   "agobio": { s: 1.149, dx: 1.1, dy: 1.1 },
   "vacio": { s: 1.203, dx: 1.2, dy: 1.2 },
-  "gratitud": { s: 1.144, dx: 1.1, dy: 1.1 },
+  "gratitud": { s: 0.899, dx: -30.2, dy: 36.2 },
   "compasion": { s: 1.179, dx: 1.1, dy: -10.2 },
   "pecho-apretado": { s: 0.878, dx: 0.8, dy: 0.8 },
   "cuerpo-que-se-suelta": { s: 0.807, dx: 0.8, dy: 0.8 },
