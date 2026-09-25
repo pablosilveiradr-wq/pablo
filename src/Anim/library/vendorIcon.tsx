@@ -1,0 +1,87 @@
+import React from "react";
+import { DrawPath, Dot, Frame, IconProps } from "../primitives";
+import { VENDOR } from "./vendor";
+
+/** Longest a vendored glyph takes to draw on, in build frames. */
+const BUDGET = 92;
+
+/**
+ * Draw schedule for a glyph: each stroke's duration follows its length, and
+ * the next one starts a little before it ends, so the icon draws as one
+ * continuous gesture. Squeezed to BUDGET if the glyph has a lot of strokes.
+ */
+const schedule = (lens: readonly number[]) => {
+  const durs = lens.map((l) => Math.max(12, Math.min(38, 8 + l / 24)));
+  const starts: number[] = [];
+  let t = 0;
+  for (const d of durs) {
+    starts.push(t);
+    t += d * 0.55;
+  }
+  const end = Math.max(...starts.map((s, i) => s + durs[i]), 1);
+  const k = end > BUDGET ? BUDGET / end : 1;
+  return {
+    starts: starts.map((s) => s * k),
+    durs: durs.map((d) => d * k),
+    end: end * k,
+  };
+};
+
+/**
+ * A professional line glyph (Lucide / Tabler geometry) drawn in the house
+ * style: hairline stroke, glow, nib, and a slow breath once it has landed.
+ */
+export const vendorIcon = (key: string, breath = 0.012) => {
+  const glyph = VENDOR[key];
+  if (!glyph) {
+    throw new Error(`Unknown vendored glyph "${key}" — run scripts/import_icons.py`);
+  }
+  const plan = schedule(glyph.lens);
+  const Glyph: React.FC<IconProps> = ({ delay = 0 }) => (
+    <Frame breath={breath}>
+      {glyph.paths.map((d, i) => (
+        <DrawPath
+          key={i}
+          d={d}
+          delay={delay + plan.starts[i]}
+          duration={plan.durs[i]}
+        />
+      ))}
+      {glyph.dots.map(([x, y], i) => (
+        <Dot key={`d${i}`} cx={x} cy={y} r={9} delay={delay + plan.end * 0.8 + i * 3} />
+      ))}
+    </Frame>
+  );
+  return Glyph;
+};
+
+type Part = {
+  readonly key: string;
+  /** Scale, and offset in canvas units, applied about the canvas centre. */
+  readonly s?: number;
+  readonly dx?: number;
+  readonly dy?: number;
+  /** Build frame this part starts drawing at; defaults to one after another. */
+  readonly at?: number;
+};
+
+/**
+ * Several vendored glyphs arranged into one icon — how metaphors get built
+ * out of professional parts instead of freehand strokes.
+ */
+export const combo = (parts: readonly Part[], breath = 0.012) => {
+  const glyphs = parts.map((p) => vendorIcon(p.key, 0));
+  const Combo: React.FC<IconProps> = ({ delay = 0 }) => (
+    <Frame breath={breath}>
+      {parts.map((p, i) => {
+        const G = glyphs[i];
+        return (
+          <Frame key={i} scale={p.s ?? 1} dx={p.dx ?? 0} dy={p.dy ?? 0}>
+            <G delay={delay + (p.at ?? i * 34)} />
+          </Frame>
+        );
+      })}
+    </Frame>
+  );
+  return Combo;
+};

@@ -47,7 +47,9 @@ def entries():
     src = open(CATALOG, encoding="utf-8").read()
     body = src[src.index("export const CATALOG"):]
     out = []
-    for m in re.finditer(r'e\(\s*"([^"]+)",\s*"([^"]+)"(?:,\s*([\w.]+))?\s*,?\s*\)', body):
+    # Only whether a third argument follows matters, not what it is.
+    entry = r'e\(\s*"([^"]+)",\s*"([^"]+)"\s*(,\s*[^)\s])?'
+    for m in re.finditer(entry, body):
         out.append({"n": len(out) + 1, "id": m.group(1), "name": m.group(2), "drawn": bool(m.group(3))})
     return out
 

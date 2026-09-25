@@ -2,6 +2,8 @@ import React from "react";
 import { Frame, IconProps } from "../primitives";
 import { CATALOG, LibEntry } from "./catalog";
 import { FIT } from "./fit";
+import { VENDOR } from "./vendor";
+import { vendorIcon } from "./vendorIcon";
 
 type Drawn = LibEntry & { C: React.FC<IconProps> };
 
@@ -35,3 +37,10 @@ export const LIBRARY_ICONS: Record<string, React.FC<IconProps>> =
 /** The same icons unfitted, for measuring. */
 export const LIBRARY_RAW: Record<string, React.FC<IconProps>> =
   Object.fromEntries(drawn.map((x) => [x.id, x.C]));
+
+/**
+ * Every vendored glyph under "v:<set>/<name>", whether or not the catalog
+ * uses it yet — for previewing candidates and for one-off storyboard beats.
+ */
+export const VENDOR_ICONS: Record<string, React.FC<IconProps>> =
+  Object.fromEntries(Object.keys(VENDOR).map((k) => [`v:${k}`, vendorIcon(k)]));
