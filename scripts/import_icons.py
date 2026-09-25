@@ -123,8 +123,13 @@ def bez(p0, p1, p2, p3, n=12):
 
 
 def path_to_abs(d):
-    """Returns (canvas path string, sampled grid points) for an SVG path."""
+    """Returns one (canvas path string, sampled grid points) per subpath.
+
+    Subpaths are split so each is judged on its own: "M6 12h.01M18 12h.01"
+    is two dots, not one 12-unit stroke with invisible ends.
+    """
     sc = Scan(d)
+    subs = []
     out, pts = [], []
     cx = cy = sx = sy = 0.0
     last_c = last_q = None
@@ -151,6 +156,8 @@ def path_to_abs(d):
             if C == "M":
                 cx, cy = sc.num() + ox, sc.num() + oy
                 sx, sy = cx, cy
+                out, pts = [], []
+                subs.append((out, pts))
                 out.append(f"M {fmt(X(cx))} {fmt(X(cy))}")
                 pts.append((cx, cy))
                 C = "L"  # implicit lineto after the first pair
@@ -199,7 +206,7 @@ def path_to_abs(d):
                 last_c = last_q = None
             else:
                 raise ValueError(f"unsupported path command {c} in {d}")
-    return " ".join(out), pts
+    return [(" ".join(o), p) for o, p in subs if len(p) > 0]
 
 
 def circle_path(cx, cy, rx, ry=None):
@@ -252,16 +259,28 @@ def convert(svg_file):
             d = "M " + " L ".join(f"{a} {b}" for a, b in pairs) + (" Z" if tag == "polygon" else "")
         else:
             continue
-        canvas, pts = path_to_abs(d)
+        # Zero-length subpaths ("M6 12h.01") are dots wherever they sit; the
+        # rest of the path stays one stroke so its joins keep drawing together.
+        keep = []
+        for canvas, pts in path_to_abs(d):
+            xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+            if max(max(xs) - min(xs), max(ys) - min(ys)) < DOT_EXTENT:
+                dots.append((X((max(xs) + min(xs)) / 2), X((max(ys) + min(ys)) / 2)))
+            else:
+                keep.append((canvas, pts))
+        if not keep:
+            continue
+        canvas = " ".join(c for c, _ in keep)
+        pts = [p for _, ps in keep for p in ps]
         xs, ys = [p[0] for p in pts], [p[1] for p in pts]
         extent = max(max(xs) - min(xs), max(ys) - min(ys))
         straight = canvas.count(" L ") == 1 and not re.search(r"[CQA] ", canvas)
         # Only axis-aligned ticks: short diagonals are rays and rungs, not eyes.
         axis = min(max(xs) - min(xs), max(ys) - min(ys)) < 0.05
-        if extent < DOT_EXTENT or (filled and extent < 3) or (straight and axis and extent <= TICK):
+        if (filled and extent < 3) or (straight and axis and extent <= TICK):
             dots.append((X((max(xs) + min(xs)) / 2), X((max(ys) + min(ys)) / 2)))
             continue
-        length = sum(math.dist(pts[i], pts[i + 1]) for i in range(len(pts) - 1)) * S
+        length = sum(math.dist(ps[i], ps[i + 1]) for _, ps in keep for i in range(len(ps) - 1)) * S
         paths.append(canvas)
         lens.append(round(length))
     return paths, lens, dots

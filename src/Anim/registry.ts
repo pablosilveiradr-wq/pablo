@@ -172,7 +172,7 @@ export const ICONS = {
   photoLens: PhotoLens,
   thoughtSupposing: ThoughtSupposing,
   oneFrame: OneFrame,
-  iceberg: Iceberg,
+  icebergHeart: Iceberg,
   linkPair: LinkPair,
   speechFit: SpeechFit,
   photoGap: PhotoGap,

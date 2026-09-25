@@ -41,7 +41,7 @@ export const FOTO_BEATS: Beat[] = [
     end: 14.55,
   },
   {
-    icon: "iceberg",
+    icon: "icebergHeart",
     start: 14.55,
     end: 16.55,
   },
