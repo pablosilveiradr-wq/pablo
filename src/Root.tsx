@@ -21,6 +21,11 @@ import {
 import { FPS } from "./Anim/theme";
 import { TracedPreview } from "./Anim/TracedPreview";
 import { IconPreview, iconPreviewSchema } from "./Anim/IconPreview";
+import {
+  LibrarySheet,
+  librarySheetHeight,
+  librarySheetSchema,
+} from "./Anim/LibrarySheet";
 import { CATALOG } from "./Anim/traced/catalog";
 
 // Each <Composition> is an entry in the sidebar!
@@ -182,6 +187,22 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{ beats: PUNTO_BEATS, scale: 0.88 }}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
+        })}
+      />
+      <Composition
+        id="LibrarySheet"
+        component={LibrarySheet}
+        schema={librarySheetSchema}
+        width={2000}
+        height={2000}
+        fps={FPS}
+        durationInFrames={240}
+        defaultProps={{ items: [], cols: 5 }}
+        calculateMetadata={({ props }) => ({
+          height: Math.max(
+            400,
+            librarySheetHeight(props.items.length, props.cols, 2000),
+          ),
         })}
       />
       <Composition

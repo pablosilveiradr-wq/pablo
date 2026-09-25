@@ -1,4 +1,5 @@
 import type React from "react";
+import { LIBRARY_ICONS } from "./library";
 import type { IconProps } from "./primitives";
 import {
   AnchorBreath,
@@ -98,6 +99,7 @@ import {
 
 /** Every metaphor available to a storyboard. Add one line to extend it. */
 export const ICONS = {
+  ...LIBRARY_ICONS,
   anchorBreath: AnchorBreath,
   phoneFeed: PhoneFeed,
   thoughtCloud: ThoughtCloud,

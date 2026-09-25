@@ -71,7 +71,9 @@ export const Canvas: React.FC<{
   readonly lifted?: boolean;
   /** Per-reel multiplier on the shared icon size. */
   readonly scale?: number;
-}> = ({ children, lifted = false, scale = 1 }) => {
+  /** Off only for measuring, where the halo would inflate the ink's bounds. */
+  readonly glow?: boolean;
+}> = ({ children, lifted = false, scale = 1, glow = true }) => {
   const { width, height } = useVideoConfig();
   const lift = lifted && height / width < 1.2 ? -55 : 0;
   return (
@@ -98,9 +100,11 @@ export const Canvas: React.FC<{
           transformBox: "view-box",
         }}
       >
-        <g filter={`url(#${GLOW_ID})`} opacity={0.3}>
-          {children}
-        </g>
+        {glow ? (
+          <g filter={`url(#${GLOW_ID})`} opacity={0.3}>
+            {children}
+          </g>
+        ) : null}
         {children}
       </g>
     </svg>
