@@ -1,5 +1,5 @@
 import React from "react";
-import { Frame, IconProps } from "../primitives";
+import { Frame, IconProps, StrokeScale } from "../primitives";
 import { CATALOG, LibEntry } from "./catalog";
 import { FIT } from "./fit";
 import { VENDOR } from "./vendor";
@@ -21,7 +21,9 @@ const fitted = (id: string, C: React.FC<IconProps>) => {
     }
     return (
       <Frame scale={f.s} dx={f.dx} dy={f.dy}>
-        <C {...props} />
+        <StrokeScale value={1 / f.s}>
+          <C {...props} />
+        </StrokeScale>
       </Frame>
     );
   };

@@ -1,5 +1,6 @@
 import React from "react";
 import { DrawPath, Dot, Frame, IconProps } from "../primitives";
+import { STROKE } from "../theme";
 import { VENDOR } from "./vendor";
 
 /** Longest a vendored glyph takes to draw on, in build frames. */
@@ -31,7 +32,7 @@ const schedule = (lens: readonly number[]) => {
  * A professional line glyph (Lucide / Tabler geometry) drawn in the house
  * style: hairline stroke, glow, nib, and a slow breath once it has landed.
  */
-export const vendorIcon = (key: string, breath = 0.012) => {
+export const vendorIcon = (key: string, breath = 0.012, weight = 1) => {
   const glyph = VENDOR[key];
   if (!glyph) {
     throw new Error(`Unknown vendored glyph "${key}" — run scripts/import_icons.py`);
@@ -45,10 +46,11 @@ export const vendorIcon = (key: string, breath = 0.012) => {
           d={d}
           delay={delay + plan.starts[i]}
           duration={plan.durs[i]}
+          strokeWidth={STROKE * weight}
         />
       ))}
       {glyph.dots.map(([x, y], i) => (
-        <Dot key={`d${i}`} cx={x} cy={y} r={9} delay={delay + plan.end * 0.8 + i * 3} />
+        <Dot key={`d${i}`} cx={x} cy={y} r={9 * weight} delay={delay + plan.end * 0.8 + i * 3} />
       ))}
     </Frame>
   );
@@ -56,7 +58,9 @@ export const vendorIcon = (key: string, breath = 0.012) => {
 };
 
 type Part = {
-  readonly key: string;
+  /** A vendored glyph, or `C` for a piece drawn in the kit. */
+  readonly key?: string;
+  readonly C?: React.FC<IconProps>;
   /** Scale, and offset in canvas units, applied about the canvas centre. */
   readonly s?: number;
   readonly dx?: number;
@@ -70,7 +74,11 @@ type Part = {
  * out of professional parts instead of freehand strokes.
  */
 export const combo = (parts: readonly Part[], breath = 0.012) => {
-  const glyphs = parts.map((p) => vendorIcon(p.key, 0));
+  // A part drawn at scale s gets a 1/s stroke, so every part of the icon
+  // carries the same line weight however small it sits.
+  const glyphs = parts.map(
+    (p) => p.C ?? vendorIcon(p.key ?? "", 0, 1 / (p.s ?? 1)),
+  );
   const Combo: React.FC<IconProps> = ({ delay = 0 }) => (
     <Frame breath={breath}>
       {parts.map((p, i) => {

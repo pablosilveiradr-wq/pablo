@@ -20,6 +20,13 @@ export const BUILD = 120;
 const SpeedContext = React.createContext(1);
 export const DrawSpeed = SpeedContext.Provider;
 
+/**
+ * Multiplies every drawn stroke's width. A wrapper that scales an icon sets it
+ * to 1/scale, so resizing an icon never changes its line weight on screen.
+ */
+const StrokeScaleContext = React.createContext(1);
+export const StrokeScale = StrokeScaleContext.Provider;
+
 /** Frame counter on the beat's build clock — idle loops keep the real one. */
 export const useDrawFrame = () =>
   useCurrentFrame() * React.useContext(SpeedContext);
@@ -129,6 +136,7 @@ export const DrawPath: React.FC<{
   occlude = false,
 }) => {
   const p = useReveal(delay, duration);
+  const width = strokeWidth * React.useContext(StrokeScaleContext);
   if (p <= 0) {
     return null;
   }
@@ -147,7 +155,7 @@ export const DrawPath: React.FC<{
       <path
         d={d}
         pathLength={1}
-        strokeWidth={strokeWidth}
+        strokeWidth={width}
         strokeDasharray={1}
         strokeDashoffset={1 - p}
         opacity={opacity}
@@ -156,7 +164,7 @@ export const DrawPath: React.FC<{
         <path
           d={d}
           pathLength={1}
-          strokeWidth={strokeWidth * 1.6}
+          strokeWidth={width * 1.6}
           strokeDasharray={`${nib} ${1 - nib}`}
           strokeDashoffset={nib - p}
           filter={`url(#${GLOW_ID})`}
