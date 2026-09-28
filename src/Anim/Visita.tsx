@@ -455,15 +455,28 @@ const Presente: React.FC<SceneProps> = ({ turn }) => {
   );
 };
 
-/** Scene windows, in seconds; `turn` is where its "pero" lands. */
-const SCENES: { start: number; end: number; turn: number; C: React.FC<SceneProps> }[] = [
-  { start: 0, end: 6.95, turn: 5.0, C: Pasado },
-  { start: 6.95, end: 10.95, turn: 9.05, C: Escuela },
-  { start: 10.95, end: 15.9, turn: 13.5, C: Casa },
-  { start: 15.9, end: 21.3, turn: 18.75, C: Cafe },
-  { start: 21.3, end: 26.3, turn: 23.75, C: Calles },
-  { start: 26.3, end: 31.25, turn: 28.75, C: Edificios },
-  { start: 31.25, end: VISITA_SECONDS, turn: 33.8, C: Presente },
+/** The drawing for each scene, in order. */
+const SCENE_ART: React.FC<SceneProps>[] = [Pasado, Escuela, Casa, Cafe, Calles, Edificios, Presente];
+
+export type VisitaScene = { start: number; end: number; turn: number };
+export type VisitaChunk = { text: string; start: number; end: number };
+export type VisitaProps = {
+  /** Scene windows in seconds; `turn` is where its "pero" lands. */
+  readonly scenes?: VisitaScene[];
+  /** Caption chunks in seconds; a leading `*` makes it the line's landing word. */
+  readonly chunks?: VisitaChunk[];
+  readonly seconds?: number;
+};
+
+/** Timing of the reference video, used until a voice-over sets its own. */
+const DEFAULT_SCENES: VisitaScene[] = [
+  { start: 0, end: 6.95, turn: 5.0 },
+  { start: 6.95, end: 10.95, turn: 9.05 },
+  { start: 10.95, end: 15.9, turn: 13.5 },
+  { start: 15.9, end: 21.3, turn: 18.75 },
+  { start: 21.3, end: 26.3, turn: 23.75 },
+  { start: 26.3, end: 31.25, turn: 28.75 },
+  { start: 31.25, end: VISITA_SECONDS, turn: 33.8 },
 ];
 
 const FADE = 8;
@@ -516,7 +529,7 @@ const Chunk: React.FC<{ text: string }> = ({ text }) => {
 };
 
 /** Chunk timings: each line's time split by chunk length. */
-export const visitaChunks = () =>
+export const visitaChunks = (): VisitaChunk[] =>
   VISITA_LINES.flatMap((line) => {
     const w = line.chunks.map((c) => c.replace("*", "").length + 4);
     const total = w.reduce((a, b) => a + b, 0);
@@ -528,16 +541,16 @@ export const visitaChunks = () =>
     });
   });
 
-export const Visita: React.FC = () => {
+export const Visita: React.FC<VisitaProps> = ({ scenes = DEFAULT_SCENES, chunks }) => {
   const { fps } = useVideoConfig();
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
-      {SCENES.map((s, i) => (
+      {scenes.map((s, i) => (
         <Sequence key={i} from={Math.round(s.start * fps)} durationInFrames={Math.round((s.end - s.start) * fps)}>
-          <Shot turn={Math.round((s.turn - s.start) * fps)} C={s.C} last={i === SCENES.length - 1} />
+          <Shot turn={Math.round((s.turn - s.start) * fps)} C={SCENE_ART[i]} last={i === scenes.length - 1} />
         </Sequence>
       ))}
-      {visitaChunks().map((c, i) => (
+      {(chunks ?? visitaChunks()).map((c, i) => (
         <Sequence key={`c${i}`} from={Math.round(c.start * fps)} durationInFrames={Math.max(1, Math.round((c.end - c.start) * fps))}>
           <Chunk text={c.text} />
         </Sequence>
