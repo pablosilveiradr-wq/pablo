@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useVideoConfig } from "remotion";
 import { z } from "zod";
-import { ICONS, IconName } from "./registry";
+import { resolveIcon } from "./registry";
 import { LIBRARY_RAW } from "./library";
 import { Canvas } from "./primitives";
 import { BG } from "./theme";
@@ -28,7 +28,7 @@ export const LibrarySheet: React.FC<z.infer<typeof librarySheetSchema>> = ({
     <AbsoluteFill style={{ backgroundColor: BG }}>
       <div style={{ display: "flex", flexWrap: "wrap", width }}>
         {items.map((item, i) => {
-          const Icon = raw ? LIBRARY_RAW[item.id] : ICONS[item.id as IconName];
+          const Icon = raw ? LIBRARY_RAW[item.id] : resolveIcon(item.id);
           return (
             <div
               key={i}

@@ -26,6 +26,8 @@ export const DrawSpeed = SpeedContext.Provider;
  */
 const StrokeScaleContext = React.createContext(1);
 export const StrokeScale = StrokeScaleContext.Provider;
+/** The stroke multiplier in force here, so nested scalers can compound it. */
+export const useStrokeScale = () => React.useContext(StrokeScaleContext);
 
 /** Frame counter on the beat's build clock — idle loops keep the real one. */
 export const useDrawFrame = () =>
