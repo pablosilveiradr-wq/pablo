@@ -141,7 +141,7 @@ const Pasado: React.FC<SceneProps> = ({ turn }) => {
   const Fy = 450 - 30 * drift + (L.y - 420) * go;
   const Sy = 450 - 20 * go;
 
-  const lightIn = interpolate(f, [34, 52], [0, 1], clamp);
+  const lightIn = interpolate(f, [12, 28], [0, 1], clamp);
   const flicker = 1 + Math.sin(f / 7) * 0.06;
   const dot = interpolate(f, [turn + 4, turn + 22], [1, 0], clamp);
   const halo = lightIn * interpolate(f, [turn + 4, turn + 40], [1, 0.18], clamp);
@@ -163,7 +163,7 @@ const Pasado: React.FC<SceneProps> = ({ turn }) => {
           />
         ))}
         {/* the light at the end */}
-        {dot > 0 ? <Dot cx={L.x} cy={L.y} r={16 * dot * flicker} delay={34} /> : null}
+        {dot > 0 ? <Dot cx={L.x} cy={L.y} r={16 * dot * flicker} delay={12} /> : null}
         {/* ...and what is left of it: an empty ring */}
         <DrawPath d={circlePath(L.x, L.y, 70)} delay={turn + 8} duration={22} strokeWidth={STROKE_THIN} />
         <Enter at={turn + 24} dur={20}>
