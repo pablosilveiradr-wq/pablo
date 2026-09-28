@@ -35,6 +35,7 @@ import {
   libraryReelSchema,
 } from "./Anim/LibraryClip";
 import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
+import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -196,6 +197,14 @@ export const RemotionRoot: React.FC = () => {
         calculateMetadata={({ props }) => ({
           durationInFrames: storyboardDuration(props.beats, FPS),
         })}
+      />
+      <Composition
+        id="Presente"
+        component={Presente}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={PRESENTE_FRAMES}
       />
       <Composition
         id="LibraryClip"
