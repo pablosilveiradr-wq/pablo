@@ -9,3 +9,6 @@ whisper.cpp
 
 # Remotion bundle output (npm run build)
 build
+
+# Temporales del trazador
+.trace-tmp

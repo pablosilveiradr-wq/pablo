@@ -1,12 +1,39 @@
 import React from "react";
-import { Easing, interpolate, useCurrentFrame } from "remotion";
-import { CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
+import { Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { BG, CANVAS, CENTER, ICON_SCALE, INK, STROKE, STROKE_THIN } from "./theme";
 
 const EASE = Easing.inOut(Easing.cubic);
 
+/** Halo that makes the ink read as light on black rather than flat paint. */
+export const GLOW_ID = "inkGlow";
+
+/** Every icon takes the same prop: when, in frames, it starts building. */
+export type IconProps = { readonly delay?: number };
+
+/**
+ * Icons are authored against a nominal build of BUILD frames; a beat then
+ * stretches or squeezes that clock so the drawing always lands inside its own
+ * time window instead of being cut off mid-stroke.
+ */
+export const BUILD = 120;
+
+const SpeedContext = React.createContext(1);
+export const DrawSpeed = SpeedContext.Provider;
+
+/**
+ * Multiplies every drawn stroke's width. A wrapper that scales an icon sets it
+ * to 1/scale, so resizing an icon never changes its line weight on screen.
+ */
+const StrokeScaleContext = React.createContext(1);
+export const StrokeScale = StrokeScaleContext.Provider;
+
+/** Frame counter on the beat's build clock — idle loops keep the real one. */
+export const useDrawFrame = () =>
+  useCurrentFrame() * React.useContext(SpeedContext);
+
 /** 0 -> 1 reveal ramp, clamped on both ends. */
 export const useReveal = (delay = 0, duration = 22) => {
-  const frame = useCurrentFrame();
+  const frame = useDrawFrame();
   return interpolate(frame - delay, [0, duration], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -20,31 +47,78 @@ export const useBreath = (amount = 0.02, period = 110) => {
   return 1 + Math.sin((frame / period) * Math.PI * 2) * amount;
 };
 
-export const Canvas: React.FC<{ readonly children: React.ReactNode }> = ({
-  children,
-}) => (
-  <svg
-    viewBox={`0 0 ${CANVAS} ${CANVAS}`}
-    width="100%"
-    height="100%"
-    style={{ position: "absolute", inset: 0 }}
-    fill="none"
-    stroke={INK}
-    strokeWidth={STROKE}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+/**
+ * Every icon is authored at whatever size its geometry wanted, then framed
+ * here: scaled and recentred so all of them carry the same optical weight.
+ */
+export const Frame: React.FC<{
+  readonly scale?: number;
+  readonly dx?: number;
+  readonly dy?: number;
+  readonly breath?: number;
+  readonly children: React.ReactNode;
+}> = ({ scale = 1, dx = 0, dy = 0, breath = 0, children }) => {
+  const b = useBreath(breath);
+  return (
     <g
       style={{
-        transform: `scale(${ICON_SCALE})`,
+        transform: `translate(${dx}px, ${dy}px) scale(${scale * (breath ? b : 1)})`,
         transformOrigin: `${CENTER}px ${CENTER}px`,
         transformBox: "view-box",
       }}
     >
       {children}
     </g>
-  </svg>
-);
+  );
+};
+
+export const Canvas: React.FC<{
+  readonly children: React.ReactNode;
+  /** Ride higher, for when a caption is claiming the bottom band. */
+  readonly lifted?: boolean;
+  /** Per-reel multiplier on the shared icon size. */
+  readonly scale?: number;
+  /** Off only for measuring, where the halo would inflate the ink's bounds. */
+  readonly glow?: boolean;
+  /** Strength of the halo; clips flash it when a drawing lands. */
+  readonly glowOpacity?: number;
+}> = ({ children, lifted = false, scale = 1, glow = true, glowOpacity = 0.3 }) => {
+  const { width, height } = useVideoConfig();
+  const lift = lifted && height / width < 1.2 ? -55 : 0;
+  return (
+    <svg
+      viewBox={`0 0 ${CANVAS} ${CANVAS}`}
+      width="100%"
+      height="100%"
+      style={{ position: "absolute", inset: 0 }}
+      fill="none"
+      stroke={INK}
+      strokeWidth={STROKE}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <defs>
+        <filter id={GLOW_ID} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+      </defs>
+      <g
+        style={{
+          transform: `translateY(${lift}px) scale(${ICON_SCALE * scale})`,
+          transformOrigin: `${CENTER}px ${CENTER}px`,
+          transformBox: "view-box",
+        }}
+      >
+        {glow ? (
+          <g filter={`url(#${GLOW_ID})`} opacity={glowOpacity}>
+            {children}
+          </g>
+        ) : null}
+        {children}
+      </g>
+    </svg>
+  );
+};
 
 /** A path that draws itself on, the way every outline in the references does. */
 export const DrawPath: React.FC<{
@@ -53,20 +127,53 @@ export const DrawPath: React.FC<{
   readonly duration?: number;
   readonly strokeWidth?: number;
   readonly opacity?: number;
-}> = ({ d, delay = 0, duration = 26, strokeWidth = STROKE, opacity = 1 }) => {
+  /** Paint the background through the shape first, so lines behind it stop. */
+  readonly occlude?: boolean;
+}> = ({
+  d,
+  delay = 0,
+  duration = 26,
+  strokeWidth = STROKE,
+  opacity = 1,
+  occlude = false,
+}) => {
   const p = useReveal(delay, duration);
+  const width = strokeWidth * React.useContext(StrokeScaleContext);
   if (p <= 0) {
     return null;
   }
+  // A short bright dash pinned to the head of the reveal: the nib doing the work.
+  const nib = 0.04;
   return (
-    <path
-      d={d}
-      pathLength={1}
-      strokeWidth={strokeWidth}
-      strokeDasharray={1}
-      strokeDashoffset={1 - p}
-      opacity={opacity}
-    />
+    <>
+      {occlude ? (
+        <path
+          d={d}
+          fill={BG}
+          stroke="none"
+          opacity={Math.min(1, p / 0.35) * opacity}
+        />
+      ) : null}
+      <path
+        d={d}
+        pathLength={1}
+        strokeWidth={width}
+        strokeDasharray={1}
+        strokeDashoffset={1 - p}
+        opacity={opacity}
+      />
+      {p > nib && p < 0.99 ? (
+        <path
+          d={d}
+          pathLength={1}
+          strokeWidth={width * 1.6}
+          strokeDasharray={`${nib} ${1 - nib}`}
+          strokeDashoffset={nib - p}
+          filter={`url(#${GLOW_ID})`}
+          opacity={opacity * 0.85}
+        />
+      ) : null}
+    </>
   );
 };
 
@@ -140,7 +247,7 @@ export const DashedRing: React.FC<{
   duration = 34,
   opacity = 0.55,
 }) => {
-  const frame = useCurrentFrame();
+  const frame = useDrawFrame();
   const per = duration / count;
   return (
     <g opacity={opacity}>

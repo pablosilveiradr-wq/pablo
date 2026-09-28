@@ -7,32 +7,17 @@ import {
   DashedRing,
   Dot,
   DrawPath,
+  Frame,
+  IconProps,
   Person,
   Ticks,
   useBreath,
   Waves,
 } from "./primitives";
+import { cloudPath } from "./shapes";
 import { CENTER, STROKE_THIN } from "./theme";
 
-export type IconProps = { readonly delay?: number };
-
 const C = CENTER;
-
-/** Scalloped blob used for thought bubbles. */
-const cloudPath = (cx: number, cy: number, rx: number, ry: number, lobes = 11) => {
-  const pts = new Array(lobes).fill(0).map((_, i) => {
-    const a = (i / lobes) * Math.PI * 2 - Math.PI / 2;
-    return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry] as const;
-  });
-  let d = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i <= lobes; i++) {
-    const [px, py] = pts[i % lobes];
-    const [qx, qy] = pts[i - 1];
-    const r = Math.hypot(px - qx, py - qy) * 0.75;
-    d += ` A ${r} ${r} 0 0 1 ${px} ${py}`;
-  }
-  return d;
-};
 
 /** Anchoring: a still centre held by everything converging on it. */
 export const AnchorBreath: React.FC<IconProps> = ({ delay = 0 }) => {
@@ -184,7 +169,7 @@ export const FeetGround: React.FC<IconProps> = ({ delay = 0 }) => {
   };
 
   return (
-    <g>
+    <Frame scale={0.95} dy={38}>
       {foot(C - 160, 0)}
       {foot(C + 40, 1)}
       <DrawPath d={`M ${C - 330} ${GROUND} L ${C + 330} ${GROUND}`} delay={delay + 44} duration={22} />
@@ -197,7 +182,7 @@ export const FeetGround: React.FC<IconProps> = ({ delay = 0 }) => {
           />
         </Appear>
       ))}
-    </g>
+    </Frame>
   );
 };
 
@@ -236,7 +221,7 @@ export const PressureKnot: React.FC<IconProps> = ({ delay = 0 }) => {
   const frame = useCurrentFrame();
   const squeeze = interpolate(Math.sin((frame / 80) * Math.PI * 2), [-1, 1], [0, 26]);
   return (
-    <g>
+    <Frame scale={0.75}>
       {[0, 60, 120].map((rot, i) => (
         <Appear key={i} delay={delay + i * 10} duration={20}>
           <ellipse
@@ -265,7 +250,7 @@ export const PressureKnot: React.FC<IconProps> = ({ delay = 0 }) => {
           </Appear>
         </g>
       ))}
-    </g>
+    </Frame>
   );
 };
 
@@ -278,7 +263,7 @@ export const HeartSettle: React.FC<IconProps> = ({ delay = 0 }) => {
     extrapolateRight: "clamp",
   });
   return (
-    <g>
+    <Frame scale={1}>
       <g style={{ transform: `scale(${beat})`, transformOrigin: `${C}px ${C}px`, transformBox: "view-box" }}>
         <DrawPath
           d={`M ${C} ${C + 150} C ${C - 210} ${C + 20} ${C - 185} ${C - 145} ${C - 86} ${C - 145} C ${C - 32} ${C - 145} ${C} ${C - 96} ${C} ${C - 56} C ${C} ${C - 96} ${C + 32} ${C - 145} ${C + 86} ${C - 145} C ${C + 185} ${C - 145} ${C + 210} ${C + 20} ${C} ${C + 150} Z`}
@@ -294,7 +279,7 @@ export const HeartSettle: React.FC<IconProps> = ({ delay = 0 }) => {
         />
       </Appear>
       <Dot cx={C + 330 - travel * 300} cy={C - 40 + travel * 60} r={9} delay={delay + 44} opacity={1 - travel * 0.2} />
-    </g>
+    </Frame>
   );
 };
 
@@ -321,18 +306,3 @@ export const ScreenPair: React.FC<IconProps> = ({ delay = 0 }) => {
     </g>
   );
 };
-
-export const ICONS = {
-  anchorBreath: AnchorBreath,
-  phoneFeed: PhoneFeed,
-  thoughtCloud: ThoughtCloud,
-  eyeOpen: EyeOpen,
-  bellRing: BellRing,
-  feetGround: FeetGround,
-  timelineTicks: TimelineTicks,
-  pressureKnot: PressureKnot,
-  heartSettle: HeartSettle,
-  screenPair: ScreenPair,
-} satisfies Record<string, React.FC<IconProps>>;
-
-export type IconName = keyof typeof ICONS;

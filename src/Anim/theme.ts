@@ -22,5 +22,6 @@ export const ICON_SCALE = 1.28;
 
 export const FPS = 30;
 
-// Cross-dissolve length between beats, in frames.
-export const CROSSFADE = 14;
+// Fade in/out at each end of a beat, in frames. Beats do not overlap, so this
+// is a quick dip through black rather than a dissolve between two icons.
+export const CROSSFADE = 9;
