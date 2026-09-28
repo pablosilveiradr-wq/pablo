@@ -36,6 +36,7 @@ import {
 } from "./Anim/LibraryClip";
 import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
 import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
+import { VISITA_FRAMES, Visita } from "./Anim/Visita";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -205,6 +206,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={PRESENTE_FRAMES}
+      />
+      <Composition
+        id="Visita"
+        component={Visita}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={VISITA_FRAMES}
       />
       <Composition
         id="LibraryClip"
