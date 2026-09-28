@@ -102,6 +102,42 @@ const Weight: React.FC<{
   );
 };
 
+/**
+ * As the face rises, short lines stream downward beneath it: the trail that
+ * makes the lift read as a lift.
+ */
+const RISE_LINES = [
+  { x: 500, len: 46, at: 0 },
+  { x: 540, len: 74, at: 2 },
+  { x: 580, len: 46, at: 1 },
+  { x: 470, len: 26, at: 5 },
+  { x: 610, len: 26, at: 4 },
+];
+
+const RiseLines: React.FC<{ readonly frame: number }> = ({ frame }) => (
+  <>
+    {RISE_LINES.map((l) => {
+      const t = frame - FREE - l.at;
+      if (t < 0 || t > 26) {
+        return null;
+      }
+      const y = FACE.y + FACE.r + 18 + interpolate(t, [0, 26], [0, 90]);
+      const o = interpolate(t, [0, 4, 26], [0, 0.85, 0], clamp);
+      const k = interpolate(t, [0, 8, 26], [0.3, 1, 0.6], clamp);
+      return (
+        <path
+          key={l.x}
+          d={`M ${l.x} ${y} L ${l.x} ${y + l.len * k}`}
+          stroke={INK}
+          strokeWidth={STROKE_THIN}
+          strokeLinecap="round"
+          opacity={o}
+        />
+      );
+    })}
+  </>
+);
+
 export const Presente: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -114,9 +150,9 @@ export const Presente: React.FC = () => {
   // Mouth: frown, then a wobble as the weights go, then a smile.
   const toWavy = interpolate(frame, [76, 92], [0, 1], clamp);
   const toSmile = spring({ frame: frame - FREE, fps, config: { damping: 12, stiffness: 120 } });
-  const c1 = 462 + (508 - 462) * toWavy + (524 - 508) * toSmile;
-  const c2 = 462 + (470 - 462) * toWavy + (524 - 470) * toSmile;
-  const mouth = `M 506 488 C 522 ${c1} 558 ${c2} 574 488`;
+  const c1 = 458 + (498 - 458) * toWavy + (504 - 498) * toSmile;
+  const c2 = 458 + (464 - 458) * toWavy + (504 - 464) * toSmile;
+  const mouth = `M 512 478 C 525 ${c1} 555 ${c2} 568 478`;
 
   // Lighter now: the face lifts with a little bounce and lights up.
   const lift = spring({ frame: frame - FREE, fps, config: { damping: 9, stiffness: 90 } }) * 46;
@@ -182,6 +218,7 @@ export const Presente: React.FC = () => {
               <DrawPath d="M 504 438 a 9 9 0 1 0 18 0 a 9 9 0 1 0 -18 0" delay={18} duration={8} strokeWidth={STROKE_THIN} />
               <DrawPath d="M 558 438 a 9 9 0 1 0 18 0 a 9 9 0 1 0 -18 0" delay={18} duration={8} strokeWidth={STROKE_THIN} />
               <DrawPath d={mouth} delay={20} duration={10} strokeWidth={STROKE_THIN} />
+              <RiseLines frame={frame} />
               {WEIGHTS.map((w, i) => (
                 <Weight key={w.word} w={w} frame={frame} sway={ballSway(i)} />
               ))}
