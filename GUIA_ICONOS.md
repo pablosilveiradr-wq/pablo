@@ -16,6 +16,7 @@ Pegá este archivo al principio de cualquier chat nuevo, junto con el guion del 
 | Audio | **Ninguno**: la voz la pone Pablo en la edición |
 | Duración de cada clip | 3 s (90 cuadros) |
 | Nombre de archivo | `NNN_slug.mp4`, por ejemplo `061_herramienta.mp4` |
+| Dónde están | Guardados en el repositorio `pablosilveiradr-wq/pablo`, carpeta **`iconos/`** (los 400 clips, más `000_indice_001-200.png` y `000_indice_201-400.png`) |
 | Estilo | Línea blanca fina con un leve brillo; geometría de Lucide / Tabler, trazo uniforme en todos |
 
 **Cómo se mueve cada clip (ágil):**
@@ -515,6 +516,7 @@ Cómo pedirlo: `ICONO APARTE: <qué se ve> — <qué frase acompaña> — <si es
 ## 5. Notas técnicas (para sesiones de Claude Code en el repo)
 
 - Repositorio `pablosilveiradr-wq/pablo`; proyecto Remotion.
+- Los 400 clips ya renderizados están en `iconos/NNN_slug.mp4`: para editar un video se usan directo, sin volver a renderizar. Solo hace falta renderizar para iconos nuevos o si cambia la animación (`LibraryReel` + `python3 scripts/library.py split`).
 - Catálogo: `src/Anim/library/catalog.ts` (el orden define la numeración). Los glifos vienen de `src/Anim/library/vendor/{lucide,tabler,house}/*.svg`, y `python3 scripts/import_icons.py build` los convierte a `vendor.ts`.
 - Centrado y tamaño automáticos: `python3 scripts/library.py fit`. Hojas de aprobación: `python3 scripts/library.py sheets <carpeta> [a-b]`.
 - Clip de un icono: composición `LibraryClip` (prop `id`); todos juntos: `LibraryReel` (prop `ids`), 90 cuadros por icono, en orden.
