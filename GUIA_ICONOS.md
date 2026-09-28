@@ -7,7 +7,7 @@ Pegá este archivo al principio de cualquier chat nuevo, junto con el guion del 
 
 ## 1. Qué es la librería
 
-200 iconos de línea, numerados del 001 al 200, cada uno exportado como clip animado propio.
+400 iconos de línea, numerados del 001 al 400, cada uno exportado como clip animado propio (la segunda tanda, 201–400, sigue la misma numeración).
 
 | Dato | Valor |
 |---|---|
@@ -274,6 +274,226 @@ Formato: **número · nombre**: qué se ve → cuándo usarlo.
 - **198 · Universidad**: birrete → universidad, académico.
 - **199 · Maestro**: pizarra de presentación → enseñar, clase.
 - **200 · Le preguntaron a un maestro**: persona meditando con signo de pregunta → anécdotas tipo "le preguntaron a un maestro zen…".
+
+### Mente II (201–220)
+- **201 · Mente en blanco**: cuadrado punteado vacío → quedarse en blanco.
+- **202 · Enredo mental**: persona con un garabato → pensamientos enredados.
+- **203 · Bloqueo**: señal de stop con cruz → bloquearse, no poder avanzar.
+- **204 · Perspectiva / otro ángulo**: anteojos → ver las cosas de otra forma.
+- **205 · Creencia / frase que te repetís**: comillas → lo que te dijeron, una creencia.
+- **206 · Imaginar lo peor**: persona con nube de tormenta → catastrofizar.
+- **207 · Atención**: ojo dentro de un marco → poner la atención.
+- **208 · Memoria**: fotos apiladas → recuerdos.
+- **209 · Aprender**: libro con tilde → aprender algo nuevo.
+- **210 · Mente abierta**: caja abierta → abrirse a algo.
+- **211 · Intuición**: varita con destellos → intuición.
+- **212 · Filtro**: embudo → filtrar lo que te entra.
+- **213 · Película mental**: claqueta → armarte una película en la cabeza.
+- **214 · Voz / hablarte**: micrófono → cómo te hablás.
+- **215 · Pensamiento amable**: globo con corazón → hablarte con cariño.
+- **216 · No querer ver**: ojo tachado → negar, evitar.
+- **217 · Obstáculo**: valla → algo que se interpone.
+- **218 · Opciones**: camino que se divide → elegir.
+- **219 · Claridad / buscar**: lupa en un marco → buscar claridad.
+- **220 · Mente dispersa**: órbitas → la cabeza en mil cosas.
+
+### Emociones II (221–240)
+- **221 · Frustración**: cara frustrada.
+- **222 · Sorpresa**: cara sorprendida.
+- **223 · Llorar**: cara con lágrima.
+- **224 · Agotamiento**: cara agotada.
+- **225 · Paz**: símbolo de paz.
+- **226 · Nostalgia**: foto con corazón → extrañar.
+- **227 · Desconfianza / celos**: cara de costado, poco convencida.
+- **228 · Orgullo**: medalla → estar orgulloso de vos.
+- **229 · Inseguridad**: cara insegura.
+- **230 · Ternura / cariño**: cara con corazón.
+- **231 · Explotar**: bomba → estallar.
+- **232 · Desgano**: cara sin ganas.
+- **233 · Rechazo / no me gusta**: pulgar abajo.
+- **234 · Risa**: cara riéndose.
+- **235 · Dar amor**: corazón con + → dar más amor.
+- **236 · Amor propio**: persona con corazón → quererte.
+- **237 · Duelo / pérdida**: corazón tachado.
+- **238 · Guardarte las cosas**: caja cerrada → contener, no decir.
+- **239 · Corazón cerrado**: candado con corazón → no dejar entrar a nadie.
+- **240 · Sensibilidad**: antena → percibir todo.
+
+### Cuerpo II (241–260)
+- **241 · Fuerza / músculo**: brazo flexionado.
+- **242 · Huesos**: hueso.
+- **243 · Mandíbula apretada**: diente → apretar los dientes, bruxismo.
+- **244 · Pastillas / medicación**: pastilla.
+- **245 · Médico / consulta**: estetoscopio.
+- **246 · Hospital / guardia**: edificio de hospital.
+- **247 · Análisis / vacuna**: jeringa.
+- **248 · Gota / sangre**: una gota.
+- **249 · Ejercicio**: mancuerna.
+- **250 · Postura / pararte derecho**: persona con los brazos abiertos → postura, abrir el cuerpo.
+- **251 · Bici / moverse**: bicicleta.
+- **252 · Nadar / pileta**: escalera de pileta sobre el agua.
+- **253 · Música / bailar**: nota musical.
+- **254 · Fiebre / temperatura**: termómetro.
+- **255 · Botiquín / primeros auxilios**: botiquín → primeros auxilios emocionales.
+- **256 · Cabeza saturada**: persona con un engranaje → la cabeza que no para.
+- **257 · No escuchar / aislarse**: oreja tachada.
+- **258 · Garganta / voz**: micrófono de voz → nudo en la garganta, cantar.
+- **259 · Huella / lo que te marcó**: huella digital.
+- **260 · Descanso**: cama doble.
+
+### Autocuidado (261–280)
+- **261 · Vaso para llevar / bebida**: vaso con tapa y sorbete.
+- **262 · Comer sano**: manzana.
+- **263 · Verduras**: ensalada.
+- **264 · Baño de inmersión**: bañera.
+- **265 · Cuidar una planta**: planta en maceta.
+- **266 · Perro / mascota**: perro.
+- **267 · Gato**: gato.
+- **268 · Pintar / crear**: paleta de pintor.
+- **269 · Guitarra / tocar**: guitarra.
+- **270 · Podcast**: micrófono con ondas.
+- **271 · Hábito / repetir**: flechas que se repiten.
+- **272 · Agenda**: calendario con días.
+- **273 · Apagar / desconectar**: botón de encendido.
+- **274 · Sin celular**: teléfono tachado.
+- **275 · Sin internet**: wifi tachado.
+- **276 · Regalo / darte un gusto**: regalo.
+- **277 · Salir afuera**: árboles.
+- **278 · Cocinar**: olla.
+- **279 · Ordenar / limpiar**: cepillo de limpieza.
+- **280 · Siesta / sillón**: sillón.
+
+### Vínculos II (281–300)
+- **281 · Llamada perdida**: teléfono con una cruz.
+- **282 · Amistad / acuerdo**: apretón de manos.
+- **283 · Bebé / hijos**: bebé.
+- **284 · Infancia**: juguete → tu niño interior.
+- **285 · Carta**: sobre → escribirle a alguien.
+- **286 · Te dejaron en visto**: doble tilde.
+- **287 · Escribiendo…**: globo con tres puntos.
+- **288 · Gritar**: megáfono.
+- **289 · Silencio**: parlante tachado.
+- **290 · Pedir perdón**: mensaje con corazón.
+- **291 · Red de apoyo**: nodos conectados.
+- **292 · El mundo / los demás**: globo terráqueo.
+- **293 · Ser juzgado / que te miren**: cara dentro de un marco.
+- **294 · Máscara / aparentar**: antifaz.
+- **295 · Actuar un papel**: máscaras de teatro.
+- **296 · Ego / ser el centro**: corona.
+- **297 · Valor / lo valioso**: diamante.
+- **298 · Mudanza**: camión.
+- **299 · Irse / despedida**: flecha saliendo por una puerta.
+- **300 · Volver / reencuentro**: flecha entrando por una puerta.
+
+### Trabajo y estudio (301–320)
+- **301 · Trabajo / oficina**: maletín.
+- **302 · Bandeja llena**: bandeja de entrada.
+- **303 · Fecha límite**: calendario con reloj.
+- **304 · Multitarea**: capas apiladas → mil cosas a la vez.
+- **305 · Quemado / burnout**: llama tachada.
+- **306 · Examen**: planilla con tilde.
+- **307 · Estudiar**: libro abierto con texto.
+- **308 · Productividad**: cohete.
+- **309 · Postergar**: calendario con flecha → dejar para después.
+- **310 · Perfeccionismo**: regla → medir todo.
+- **311 · Error / equivocarse**: círculo con cruz.
+- **312 · Éxito / trofeo**: trofeo.
+- **313 · Plan**: planilla con lista.
+- **314 · Horas de pantalla**: monitor.
+- **315 · Teclado / mails**: teclado.
+- **316 · Mochila / lo que cargás**: mochila.
+- **317 · Firma / compromiso**: firma.
+- **318 · Horas de más**: reloj con +.
+- **319 · No llegar a todo**: cronómetro tachado.
+- **320 · Recordatorio**: nota adhesiva.
+
+### Metáforas (321–340)
+- **321 · Globo / soltar**: globo → liviandad.
+- **322 · Recorrido / etapas**: puntos unidos por un camino.
+- **323 · Timón / tomar el control**: timón de barco.
+- **324 · Burbuja**: burbujas → estar en tu mundo.
+- **325 · Semáforo**: frenar, esperar, avanzar.
+- **326 · Reparar**: llave inglesa.
+- **327 · Construir**: martillo.
+- **328 · Caja de herramientas**: caja de herramientas.
+- **329 · Atraer / imán**: imán.
+- **330 · Paraguas / protección**: paraguas.
+- **331 · Escudo / defensa**: escudo.
+- **332 · Rueda que no para**: remolino.
+- **333 · Altibajos**: curva que sube y baja.
+- **334 · Equilibrio**: yin yang.
+- **335 · Infinito / para siempre**: símbolo de infinito.
+- **336 · Linterna / buscar luz**: linterna.
+- **337 · Encender la luz**: lámpara.
+- **338 · Mapa**: mapa plegado.
+- **339 · Navegar / velero**: velero.
+- **340 · Salvavidas / pedir ayuda**: salvavidas.
+
+### Naturaleza II (341–360)
+- **341 · Arcoíris**: después de la tormenta.
+- **342 · Nube pasajera**: nube → pensamientos que pasan.
+- **343 · Estrella**: estrella.
+- **344 · Tornado**: torbellino.
+- **345 · Frío / invierno**: nube con nieve.
+- **346 · Cactus / resistir**: cactus.
+- **347 · Vacaciones / palmera**: palmera.
+- **348 · Bosque / pino**: pino.
+- **349 · Pez / fluir**: pez.
+- **350 · Tortuga / ir lento**: tortuga.
+- **351 · Huellas**: huella de animal → seguir el rastro.
+- **352 · Suerte / trébol**: trébol.
+- **353 · Rayo / de golpe**: rayo.
+- **354 · Fogata**: encuentro, calor.
+- **355 · Planeta**: planeta tierra.
+- **356 · Montaña nevada**: montañas con nieve.
+- **357 · Playa**: sombrilla en la playa.
+- **358 · Chispa**: destello.
+- **359 · Cielo estrellado**: estrellas.
+- **360 · Noche nublada**: luna con nube.
+
+### Día a día II (361–380)
+- **361 · Supermercado**: carrito.
+- **362 · Compras**: bolsa de compras.
+- **363 · Tarjeta / gastar**: tarjeta.
+- **364 · Ahorro**: chanchito.
+- **365 · Colectivo**: colectivo.
+- **366 · Tren**: tren.
+- **367 · Viaje / valija**: valija.
+- **368 · Puerta cerrada**: puerta cerrada.
+- **369 · Tele / serie**: televisor.
+- **370 · Videojuegos**: joystick.
+- **371 · Comida rápida**: pizza.
+- **372 · Cerveza**: chopp.
+- **373 · Fumar**: cigarrillo.
+- **374 · Cumpleaños**: torta.
+- **375 · Audio / mensaje de voz**: mensaje de voz.
+- **376 · Selfie**: cámara selfie.
+- **377 · Tocar la pantalla / scrollear**: dedo que toca.
+- **378 · Cargar el celular / recargarse**: batería cargando.
+- **379 · Las 3 de la mañana**: reloj marcando las 3.
+- **380 · Vestirse / ropa**: remera.
+
+### Crecimiento y ciencia (381–400)
+- **381 · Subir de nivel**: doble flecha arriba.
+- **382 · Logro / insignia**: insignia con tilde.
+- **383 · Celebrar**: cotillón.
+- **384 · Paso a paso**: lista numerada.
+- **385 · Porcentaje**: signo de porcentaje.
+- **386 · Datos / barras**: gráfico de barras.
+- **387 · Hormonas / cortisol**: matraz redondo.
+- **388 · Tubo de ensayo**: tubo de ensayo.
+- **389 · Observar**: binoculares.
+- **390 · Mecanismo / cómo funciona**: engranaje.
+- **391 · Proceso**: diagrama de pasos.
+- **392 · Constancia / 21 días**: calendario con rango.
+- **393 · Hito**: banderín.
+- **394 · Conexiones nuevas**: red de nodos → neuroplasticidad.
+- **395 · Señal / frecuencia**: antena emitiendo.
+- **396 · Regla / enseñanza antigua**: pergamino.
+- **397 · Libro recomendado**: libro cerrado.
+- **398 · Mente y corazón**: cerebro y corazón → pensar y sentir.
+- **399 · Seguir adelante**: flecha en círculo.
+- **400 · Seguime / activá la campana**: campana con + → llamado a la acción.
 
 ---
 
