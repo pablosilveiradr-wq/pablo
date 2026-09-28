@@ -11,6 +11,7 @@ import { ICONS, IconName } from "./registry";
 import { BUILD, Canvas, DrawSpeed } from "./primitives";
 import { Caption } from "./Caption";
 import { BG, CROSSFADE } from "./theme";
+import { LibraryClip } from "./LibraryClip";
 
 export const beatSchema = z.object({
   /** Which metaphor carries this line. */
@@ -37,6 +38,11 @@ export const storyboardSchema = z.object({
   beats: z.array(beatSchema),
   /** Multiplier on the shared icon size, when a reel wants to sit smaller. */
   scale: z.number().optional(),
+  /**
+   * "clip": each beat plays the library clip motion (pop, fast draw, flash,
+   * breathing hold) instead of the slow storyboard draw. Scenes don't apply.
+   */
+  motion: z.enum(["draw", "clip"]).optional(),
 });
 
 type Scene = { start: number; end: number; beats: Beat[] };
@@ -125,11 +131,46 @@ const SceneLayer: React.FC<{
   );
 };
 
+/** A library clip that fades out into the next beat. */
+const ClipBeat: React.FC<{ readonly icon: string }> = ({ icon }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const opacity = interpolate(
+    frame,
+    [durationInFrames - CROSSFADE, durationInFrames],
+    [1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+  return (
+    <AbsoluteFill style={{ opacity }}>
+      <LibraryClip id={icon} />
+    </AbsoluteFill>
+  );
+};
+
 export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
   beats,
   scale = 1,
+  motion = "draw",
 }) => {
   const { fps } = useVideoConfig();
+  if (motion === "clip") {
+    return (
+      <AbsoluteFill style={{ backgroundColor: BG }}>
+        {beats
+          .filter((b) => ICONS[b.icon as IconName])
+          .map((beat, i) => {
+            const from = Math.round(beat.start * fps);
+            const duration = Math.round(beat.end * fps) - from;
+            return duration > 0 ? (
+              <Sequence key={i} from={from} durationInFrames={duration}>
+                <ClipBeat icon={beat.icon} />
+              </Sequence>
+            ) : null;
+          })}
+      </AbsoluteFill>
+    );
+  }
   const scenes = toScenes(beats.filter((b) => ICONS[b.icon as IconName]));
 
   return (
