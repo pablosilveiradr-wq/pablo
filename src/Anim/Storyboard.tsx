@@ -7,7 +7,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { z } from "zod";
-import { ICONS, IconName } from "./registry";
+import { resolveIcon } from "./registry";
 import { BUILD, Canvas, DrawSpeed } from "./primitives";
 import { Caption } from "./Caption";
 import { BG, CROSSFADE } from "./theme";
@@ -90,8 +90,11 @@ const SceneLayer: React.FC<{
       <AbsoluteFill style={{ transform: `scale(${push})` }}>
         <Canvas lifted={scene.beats.some((b) => b.text)} scale={scale}>
           {scene.beats.map((beat, i) => {
-            const Icon = ICONS[beat.icon as IconName];
+            const Icon = resolveIcon(beat.icon);
             const from = offset(beat);
+            if (!Icon) {
+              return null;
+            }
             return (
               <Sequence
                 key={i}
@@ -130,7 +133,7 @@ export const Storyboard: React.FC<z.infer<typeof storyboardSchema>> = ({
   scale = 1,
 }) => {
   const { fps } = useVideoConfig();
-  const scenes = toScenes(beats.filter((b) => ICONS[b.icon as IconName]));
+  const scenes = toScenes(beats.filter((b) => resolveIcon(b.icon)));
 
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>

@@ -230,7 +230,7 @@ def f(el, k, default=0.0):
     return float(v) if v is not None else default
 
 
-def convert(svg_file):
+def convert(svg_file, ticks=True):
     root = ET.parse(svg_file).getroot()
     paths, lens, dots = [], [], []
     for el in root.iter():
@@ -277,7 +277,8 @@ def convert(svg_file):
         straight = canvas.count(" L ") == 1 and not re.search(r"[CQA] ", canvas)
         # Only axis-aligned ticks: short diagonals are rays and rungs, not eyes.
         axis = min(max(xs) - min(xs), max(ys) - min(ys)) < 0.05
-        if (filled and extent < 3) or (straight and axis and extent <= TICK):
+        # Our own drawings mean their short strokes; only vendored eyes are ticks.
+        if (filled and extent < 3) or (ticks and straight and axis and extent <= TICK):
             dots.append((X((max(xs) + min(xs)) / 2), X((max(ys) + min(ys)) / 2)))
             continue
         length = sum(math.dist(ps[i], ps[i + 1]) for _, ps in keep for i in range(len(ps) - 1)) * S
@@ -296,7 +297,7 @@ def build():
             if not fn.endswith(".svg"):
                 continue
             key = f"{set_name}/{fn[:-4]}"
-            paths, lens, dots = convert(os.path.join(folder, fn))
+            paths, lens, dots = convert(os.path.join(folder, fn), ticks=set_name != "house")
             # Silhouette first, details after: the draw-on reads as sketching.
             order = sorted(range(len(paths)), key=lambda i: -lens[i])
             entries.append((key, [paths[i] for i in order], [lens[i] for i in order], dots))

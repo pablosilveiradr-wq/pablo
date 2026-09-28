@@ -8,7 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { z } from "zod";
-import { ICONS, IconName } from "./registry";
+import { resolveIcon } from "./registry";
 import { TimedIcon } from "./library/vendorIcon";
 import { Canvas, DrawSpeed } from "./primitives";
 import { BG, CENTER } from "./theme";
@@ -30,7 +30,7 @@ export const libraryClipSchema = z.object({ id: z.string() });
 export const LibraryClip: React.FC<z.infer<typeof libraryClipSchema>> = ({ id }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const Icon = ICONS[id as IconName] as TimedIcon | undefined;
+  const Icon = resolveIcon(id) as TimedIcon | undefined;
   if (!Icon) {
     throw new Error(`Unknown icon "${id}"`);
   }

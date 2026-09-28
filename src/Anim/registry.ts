@@ -1,5 +1,7 @@
 import type React from "react";
 import { LIBRARY_ICONS, VENDOR_ICONS } from "./library";
+import { BODY_ICONS } from "./body";
+import { touch } from "./body/touch";
 import type { IconProps } from "./primitives";
 import {
   AnchorBreath,
@@ -101,6 +103,7 @@ import {
 export const ICONS = {
   ...LIBRARY_ICONS,
   ...VENDOR_ICONS,
+  ...BODY_ICONS,
   anchorBreath: AnchorBreath,
   phoneFeed: PhoneFeed,
   thoughtCloud: ThoughtCloud,
@@ -183,3 +186,27 @@ export const ICONS = {
 } satisfies Record<string, React.FC<IconProps>>;
 
 export type IconName = keyof typeof ICONS;
+
+const touchCache: Record<string, React.FC<IconProps>> = {};
+
+/**
+ * Looks an icon up by name. Besides every key in ICONS it understands
+ * "touch:<base>@<landmark>" and "touch:<base>@<landmark>+lens", which draw a
+ * body base with a pulsing press point (and a magnifier) on that landmark.
+ */
+export const resolveIcon = (name: string): React.FC<IconProps> | undefined => {
+  const direct = (ICONS as Record<string, React.FC<IconProps>>)[name];
+  if (direct) {
+    return direct;
+  }
+  const m = /^touch:(.+)@([^+]+)(\+lens)?$/.exec(name);
+  if (!m) {
+    return undefined;
+  }
+  const base = BODY_ICONS[m[1]];
+  if (!base) {
+    return undefined;
+  }
+  touchCache[name] ??= touch(base, m[2], { lens: Boolean(m[3]) });
+  return touchCache[name];
+};
