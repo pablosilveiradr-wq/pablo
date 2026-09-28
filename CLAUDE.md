@@ -9,6 +9,13 @@ Proyecto Remotion que produce las animaciones de iconos de línea para los reels
 - **`GUIA_ICONOS.md`**: catálogo completo (número, qué muestra, cuándo usarlo) y reglas para pasar un guion a iconos. Leelo antes de elegir iconos.
 - Fuente: `src/Anim/library/catalog.ts` (el orden fija la numeración: nunca reordenar, solo agregar al final), glifos en `src/Anim/library/vendor/{lucide,tabler,house}/*.svg`.
 
+## Partes del cuerpo: marcar dónde va cada ejercicio
+
+- 100 bases simples del cuerpo (C001–C100) en `iconos-cuerpo/CNNN_slug.mp4`; lista y puntos en la sección 4 de `GUIA_ICONOS.md`.
+- Estilo: solo círculos, semicírculos y cápsulas en la grilla 24 de los iconos, **sin caras, manos sin dedos**. Pablo rechazó el dibujo anatómico "a mano": no volver a eso.
+- Se generan con `python3 scripts/body_icons.py` (dibujo + puntos con nombre) y `python3 scripts/import_icons.py build`.
+- En un storyboard: `icon: "touch:c:<slug>@<punto>"` marca el punto con un pulso; `+lens` agrega la lupa con el detalle (p. ej. `touch:c:antebrazo-interno@tres-dedos+lens`). La base sola es `c:<slug>`.
+
 ## Preferencias fijas de Pablo (no negociables)
 
 - **1:1, 1080×1080**, iconos a escala **0.88** ("un poco más chicos").

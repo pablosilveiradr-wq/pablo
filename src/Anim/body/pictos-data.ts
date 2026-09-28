@@ -1235,18 +1235,22 @@ export const BODY_PICTOS: readonly BodyPicto[] = [
   }
  },
  {
-  "id": "mano-sobre-mano",
-  "name": "Una mano sobre la otra",
+  "id": "frotar-manos",
+  "name": "Frotar las manos",
   "cat": "Manos",
-  "key": "house/cuerpo-mano-sobre-mano",
+  "key": "house/cuerpo-frotar-manos",
   "points": {
-   "centro": [
-    14.5,
-    10.5
+   "palmas": [
+    12,
+    12
    ],
-   "mano-abajo": [
-    8,
-    15
+   "mano-izquierda": [
+    8.4,
+    12
+   ],
+   "mano-derecha": [
+    15.6,
+    12
    ]
   }
  },

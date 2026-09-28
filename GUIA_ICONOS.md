@@ -35,7 +35,8 @@ Pegá este archivo al principio de cualquier chat nuevo, junto con el guion del 
 5. **No repetir el mismo icono en golpes seguidos** salvo que sea una anáfora a propósito (regla 3).
 6. **Cierre:** "Te veo en la próxima píldora" → **116 Saludo**.
 7. **Datos y estudios:** "un estudio dice…" → 181; "la ciencia lo confirma" → 182; porcentajes → 192.
-8. **Si no hay un icono que encaje bien, no forzar.** Se marca como **ICONO APARTE** con una descripción de lo que tiene que mostrar (ver sección 4).
+8. **Cuando el guion dice dónde tocar, presionar o apoyar** ("presioná entre las cejas", "medí tres dedos desde la muñeca"), va una **parte del cuerpo C001–C100 con su punto marcado** (sección 4), con lupa si el lugar es chico.
+9. **Si no hay un icono que encaje bien, no forzar.** Se marca como **ICONO APARTE** con una descripción de lo que tiene que mostrar (ver sección 4).
 
 ### Formato de respuesta que tiene que devolver el chat
 
@@ -498,7 +499,131 @@ Formato: **número · nombre**: qué se ve → cuándo usarlo.
 
 ---
 
-## 4. Iconos aparte (a medida para un video)
+## 4. Partes del cuerpo (C001–C100): para marcar dónde va cada ejercicio
+
+100 dibujos simples del cuerpo (círculos, semicírculos y cápsulas, sin caras ni dedos, mismo estilo que los iconos). Cada uno tiene **puntos con nombre** donde se puede marcar el lugar del ejercicio: aparece un punto que pulsa con anillos y, si hace falta, una **lupa** con el detalle, unida por una línea.
+
+- Clips animados (sin marcador): `iconos-cuerpo/CNNN_slug.mp4`, índice en `iconos-cuerpo/000_indice.png`.
+- Para pedir el marcador en un video: **"C033 Antebrazo interno, punto tres-dedos, con lupa"**. En el código es `touch:c:antebrazo-interno@tres-dedos+lens` (sin `+lens`, solo el punto).
+
+
+### Cabeza y cuello
+- **C001 · Cabeza de frente** (`cabeza-frente`): `coronilla`, `frente`, `entrecejo`, `sien-izquierda`, `sien-derecha`, `mejilla-derecha`, `debajo-nariz`, `menton`, `mandibula-derecha`, `delante-oreja-derecha`, `cuello-derecho`, `clavicula-derecha`, `pecho`
+- **C002 · Cara (primer plano)** (`cara`): `coronilla`, `frente`, `entrecejo`, `sien-izquierda`, `sien-derecha`, `debajo-ojo-izquierdo`, `debajo-ojo-derecho`, `pomulo-derecho`, `debajo-nariz`, `menton`, `mandibula-derecha`, `delante-oreja-derecha`
+- **C003 · Cabeza de perfil** (`cabeza-perfil`): `coronilla`, `frente`, `sien`, `delante-oreja`, `detras-oreja`, `base-craneo`, `nuca`, `mandibula`
+- **C004 · Cabeza de atrás / nuca** (`cabeza-atras`): `coronilla`, `base-craneo-izquierda`, `base-craneo-derecha`, `nuca`, `trapecio-izquierdo`, `trapecio-derecho`, `entre-omoplatos`
+- **C005 · Coronilla (desde arriba)** (`coronilla`): `coronilla`, `frente`, `nuca`
+- **C006 · Oreja** (`oreja`): `lobulo`, `punta-oreja`, `borde-oreja`, `concha`, `fosa-triangular`, `trago`
+- **C007 · Ojos y cejas** (`ojos`): `entrecejo`, `ceja-izquierda`, `ceja-derecha`, `debajo-ojo-izquierdo`, `debajo-ojo-derecho`, `lagrimal-izquierdo`, `lagrimal-derecho`
+- **C008 · Ojo cerrado** (`ojo-cerrado`): `parpado`, `sien`, `lagrimal`
+- **C009 · Nariz** (`nariz`): `punta-nariz`, `costado-nariz-izquierdo`, `costado-nariz-derecho`, `puente`, `debajo-nariz`
+- **C010 · Boca / labios** (`boca`): `comisura-izquierda`, `comisura-derecha`, `labio-superior`, `debajo-labio`
+- **C011 · Cuello y clavículas** (`cuello`): `garganta`, `hueco-clavicula`, `debajo-clavicula-izquierda`, `debajo-clavicula-derecha`, `cuello-costado-derecho`
+- **C012 · Hombros y trapecio (atrás)** (`hombros-atras`): `trapecio-izquierdo`, `trapecio-derecho`, `base-cuello`, `entre-omoplatos`, `hombro-derecho`
+- **C013 · Cabeza inclinada (estirar el cuello)** (`cabeza-inclinada`): `cuello-costado-izquierdo`, `trapecio-izquierdo`, `sien-derecha`
+- **C014 · Mano en la frente** (`mano-en-la-frente`): `frente`, `entrecejo`
+
+### Torso
+- **C015 · Torso de frente** (`torso-frente`): `hueco-clavicula`, `debajo-clavicula-derecha`, `esternon`, `boca-estomago`, `ombligo`, `bajo-vientre`, `costado-derecho`
+- **C016 · Espalda** (`espalda`): `entre-omoplatos`, `omoplato-derecho`, `media-espalda`, `lumbar`, `cintura-derecha`
+- **C017 · Pecho** (`pecho`): `esternon`, `pecho-izquierdo`, `pecho-derecho`, `debajo-clavicula-derecha`
+- **C018 · Panza / abdomen** (`panza`): `ombligo`, `boca-estomago`, `bajo-vientre`, `costado-derecho`
+- **C019 · Costillas** (`costillas`): `esternon`, `costillas-derechas`, `costillas-izquierdas`, `debajo-costillas`
+- **C020 · Columna** (`columna`): `cervical`, `dorsal`, `lumbar`, `sacro`
+- **C021 · Espalda baja / lumbar** (`espalda-baja`): `lumbar`, `sacro`, `rinon-derecho`, `rinon-izquierdo`, `cadera-derecha`
+- **C022 · Omóplatos** (`omoplatos`): `entre-omoplatos`, `omoplato-izquierdo`, `omoplato-derecho`, `debajo-omoplato`
+- **C023 · Clavículas** (`clavicula`): `hueco-clavicula`, `debajo-clavicula-izquierda`, `debajo-clavicula-derecha`, `clavicula-derecha`
+- **C024 · Cadera / pelvis** (`cadera`): `cadera-derecha`, `cadera-izquierda`, `centro-pelvis`, `ingle-derecha`
+- **C025 · Diafragma** (`diafragma`): `diafragma`, `boca-estomago`, `costado-derecho`
+- **C026 · Estómago** (`estomago`): `estomago`, `boca-estomago`
+- **C027 · Pulmones** (`pulmones`): `pulmon-izquierdo`, `pulmon-derecho`, `centro-pecho`
+- **C028 · Corazón** (`corazon`): `corazon`
+
+### Brazos
+- **C029 · Brazo** (`brazo`): `hombro`, `biceps`, `codo`, `antebrazo`, `muneca`
+- **C030 · Brazo doblado** (`brazo-doblado`): `hombro`, `biceps`, `codo`, `antebrazo`, `muneca`
+- **C031 · Codo** (`codo`): `codo-punta`, `codo-pliegue`, `biceps`, `antebrazo`
+- **C032 · Antebrazo interno** (`antebrazo-interno`): `centro-palma`, `muneca-centro`, `muneca-menique`, `muneca-pulgar`, `tres-dedos`, `antebrazo-medio`, `codo-pliegue`
+- **C033 · Antebrazo externo** (`antebrazo-externo`): `dorso-mano`, `muneca-dorso`, `tres-dedos-dorso`, `antebrazo-medio`, `codo`
+- **C034 · Muñeca** (`muneca`): `muneca-centro`, `muneca-menique`, `muneca-pulgar`, `entre-tendones`, `centro-palma`
+- **C035 · Hombros** (`hombros`): `hombro-izquierdo`, `hombro-derecho`, `trapecio-derecho`, `base-cuello`
+- **C036 · Axila / costado (brazo arriba)** (`axila`): `axila`, `costado-derecho`, `brazo-arriba`
+- **C037 · Brazo extendido** (`brazo-extendido`): `hombro`, `biceps`, `codo`, `antebrazo`, `muneca`
+
+### Manos
+- **C038 · Palma de la mano** (`mano-palma`): `centro-palma`, `base-dedos`, `base-pulgar`, `muneca-centro`, `muneca-menique`, `muneca-pulgar`, `borde-mano`, `yema-pulgar`, `tres-dedos`
+- **C039 · Dorso de la mano** (`mano-dorso`): `dorso-centro`, `entre-pulgar-indice`, `nudillos`, `muneca-dorso`, `borde-mano`
+- **C040 · Canto de la mano** (`mano-canto`): `canto`, `punta-dedos`, `muneca`
+- **C041 · Puño** (`puno`): `nudillos`, `puno-centro`, `muneca`
+- **C042 · Mano señalando** (`senalar`): `yema-indice`, `nudillo`, `dorso`
+- **C043 · Pulgar arriba** (`pulgar`): `yema-pulgar`, `base-pulgar`, `nudillos`
+- **C044 · Entre pulgar e índice** (`entre-pulgar-indice`): `entre-pulgar-indice`, `base-pulgar`, `dorso`
+- **C045 · Yema del dedo** (`yema`): `yema`, `falange`
+- **C046 · Manos juntas** (`manos-juntas`): `palmas`, `puntas`, `munecas`
+- **C047 · Frotar las manos** (`frotar-manos`): `palmas`, `mano-izquierda`, `mano-derecha`
+- **C048 · Medir tres dedos** (`tres-dedos`): `pliegue-muneca`, `tres-dedos`, `entre-tendones`
+- **C049 · Mano abierta (con dedos)** (`mano-abierta`): `centro-palma`, `yema-mayor`, `base-pulgar`
+- **C050 · Presionar la palma con el pulgar** (`presionar-palma`): `centro-palma`
+- **C051 · Tomar el pulso en la muñeca** (`pulso-muneca`): `pulso`, `muneca-centro`
+
+### Piernas
+- **C052 · Pierna de frente** (`pierna`): `muslo`, `rodilla`, `debajo-rodilla`, `espinilla`, `tobillo`
+- **C053 · Pierna de perfil** (`pierna-perfil`): `muslo`, `rodilla`, `pantorrilla`, `tobillo`
+- **C054 · Rodilla** (`rodilla`): `rodilla`, `debajo-rodilla`, `costado-rodilla`, `encima-rodilla`
+- **C055 · Pantorrilla (atrás)** (`pantorrilla`): `corva`, `pantorrilla`, `talon-de-aquiles`
+- **C056 · Muslo** (`muslo`): `muslo-frente`, `muslo-costado`, `encima-rodilla`
+- **C057 · Tobillo** (`tobillo`): `tobillo-externo`, `tobillo-interno`, `talon`, `empeine`
+- **C058 · Detrás de la rodilla** (`corva`): `corva`, `pantorrilla`, `muslo-atras`
+- **C059 · Glúteos / cadera** (`gluteos`): `gluteo-derecho`, `gluteo-izquierdo`, `sacro`, `cadera-derecha`
+- **C060 · Pierna sentada** (`pierna-sentada`): `muslo`, `rodilla`, `pantorrilla`, `tobillo`
+- **C061 · Piernas** (`piernas`): `rodilla-derecha`, `rodilla-izquierda`, `muslo-derecho`, `tobillo-derecho`
+
+### Pies
+- **C062 · Planta del pie** (`planta`): `planta-tercio`, `dedo-gordo`, `base-dedos`, `arco`, `talon`
+- **C063 · Empeine (pie desde arriba)** (`empeine`): `empeine`, `entre-dedo-1-y-2`, `tobillo`, `dedo-gordo`
+- **C064 · Pie de perfil (interno)** (`pie-perfil`): `arco`, `talon`, `tobillo-interno`, `dedo-gordo`, `empeine`
+- **C065 · Pie de perfil (externo)** (`pie-perfil-externo`): `tobillo-externo`, `talon`, `borde-externo`, `dedo-chico`
+- **C066 · Dedos del pie** (`dedos-pie`): `dedo-gordo`, `entre-dedo-1-y-2`, `dedo-chico`
+- **C067 · Talón** (`talon`): `talon`, `tendon-de-aquiles`, `tobillo-interno`
+- **C068 · Huellas** (`huellas`): `pie-izquierdo`, `pie-derecho`
+- **C069 · Pie apoyado en el suelo** (`pie-en-el-suelo`): `planta`, `talon`, `empeine`, `suelo`
+- **C070 · Ambos pies** (`pies`): `planta-izquierda`, `planta-derecha`, `talon-derecho`
+- **C071 · Tobillo y pie de frente** (`tobillo-frente`): `tobillo-interno`, `tobillo-externo`, `empeine`, `dedos`
+- **C072 · Masaje en la planta** (`masaje-planta`): `planta-tercio`, `talon`
+
+### Cuerpo y posturas
+- **C073 · Cuerpo de frente** (`cuerpo-frente`): `cabeza`, `pecho`, `panza`, `hombro-derecho`, `mano-derecha`, `rodilla-derecha`, `pie-derecho`
+- **C074 · Cuerpo de espalda** (`cuerpo-espalda`): `nuca`, `entre-omoplatos`, `lumbar`, `corva-derecha`, `talon-derecho`
+- **C075 · Cuerpo de perfil** (`cuerpo-perfil`): `cabeza`, `pecho`, `espalda`, `panza`, `rodilla`
+- **C076 · Sentado** (`sentado`): `cabeza`, `espalda`, `panza`, `rodilla`, `pie`
+- **C077 · Sentado en una silla** (`sentado-silla`): `espalda`, `panza`, `pies`, `rodilla`
+- **C078 · Sentado meditando** (`meditando`): `cabeza`, `pecho`, `panza`, `manos`
+- **C079 · Acostado boca arriba** (`acostado`): `cabeza`, `pecho`, `panza`, `rodillas`
+- **C080 · Acostado con la mano en la panza** (`acostado-mano-panza`): `panza`, `pecho`
+- **C081 · Acostado de costado** (`acostado-costado`): `cabeza`, `costado`, `cadera`
+- **C082 · Brazos abiertos** (`brazos-abiertos`): `pecho`, `panza`, `mano-derecha`, `mano-izquierda`
+- **C083 · Brazos arriba (estirar)** (`brazos-arriba`): `pecho`, `costado-derecho`, `manos`
+- **C084 · Caminando** (`caminando`): `pecho`, `pie-derecho`, `pie-izquierdo`
+- **C085 · Mano en el pecho** (`mano-en-pecho`): `pecho`, `cabeza`
+- **C086 · Manos en la panza** (`manos-en-panza`): `panza`, `pecho`
+- **C087 · Una mano en el pecho y otra en la panza** (`pecho-y-panza`): `pecho`, `panza`
+- **C088 · Abrazo mariposa** (`abrazo-mariposa`): `pecho`, `hombro-derecho`, `hombro-izquierdo`
+- **C089 · Manos en las sienes** (`manos-en-sienes`): `sien-derecha`, `sien-izquierda`, `frente`
+- **C090 · Presionar la sien con un dedo** (`presionar-sien`): `sien-derecha`
+- **C091 · Presionar el entrecejo** (`presionar-entrecejo`): `entrecejo`, `frente`
+- **C092 · Tirar de los lóbulos** (`tirar-lobulos`): `lobulo-derecho`, `lobulo-izquierdo`
+- **C093 · Masaje en la mandíbula** (`masaje-mandibula`): `mandibula-derecha`, `mandibula-izquierda`, `atm-derecha`
+- **C094 · Manos tapando los ojos** (`manos-en-la-cara`): `ojos`, `frente`
+- **C095 · Masaje en la nuca** (`masaje-nuca`): `nuca`, `base-craneo`
+- **C096 · Mano en la coronilla** (`tocar-coronilla`): `coronilla`
+- **C097 · Golpecitos en la clavícula** (`golpecitos-clavicula`): `clavicula-derecha`, `clavicula-izquierda`
+- **C098 · Subir los hombros** (`hombros-arriba`): `hombro-derecho`, `hombro-izquierdo`, `trapecio`
+- **C099 · Respirar (pecho que se expande)** (`respirar`): `pecho`, `panza`
+- **C100 · Escaneo corporal** (`escaneo-corporal`): `cabeza`, `pecho`, `panza`
+
+---
+
+## 5. Iconos aparte (a medida para un video)
 
 Cuando una frase necesita algo muy específico (un gesto del cuerpo, un objeto puntual, una secuencia), se pide **aparte**. Reglas de estilo para que combine con la librería:
 
@@ -513,7 +638,7 @@ Cómo pedirlo: `ICONO APARTE: <qué se ve> — <qué frase acompaña> — <si es
 
 ---
 
-## 5. Notas técnicas (para sesiones de Claude Code en el repo)
+## 6. Notas técnicas (para sesiones de Claude Code en el repo)
 
 - Repositorio `pablosilveiradr-wq/pablo`; proyecto Remotion.
 - Los 400 clips ya renderizados están en `iconos/NNN_slug.mp4`: para editar un video se usan directo, sin volver a renderizar. Solo hace falta renderizar para iconos nuevos o si cambia la animación (`LibraryReel` + `python3 scripts/library.py split`).

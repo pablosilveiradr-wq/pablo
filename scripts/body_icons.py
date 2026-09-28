@@ -160,17 +160,17 @@ add(H, "mano-en-la-frente", "Mano en la frente", [ring(12, 12, 6.5, [(-128, -52)
     {"frente": (12, 6.6), "entrecejo": (12, 9.4)})
 
 T = "Torso"
-TORSO = p("M9 3.5h6l4.5 2.5v7l-1 9.5h-13l-1-9.5v-7z")
-add(T, "torso-frente", "Torso de frente", [TORSO, half(12, 3.5, 1.6, "down")],
+TORSO = [p("M9 3.5h6l4.5 2.5v7l-1 9.5h-13l-1-9.5v-7z"), ln(10, 1.2, 10, 3.5), ln(14, 1.2, 14, 3.5)]
+add(T, "torso-frente", "Torso de frente", [*TORSO],
     {"hueco-clavicula": (12, 5.8), "debajo-clavicula-derecha": (15.4, 7.2), "esternon": (12, 9.4), "boca-estomago": (12, 12.6),
      "ombligo": (12, 16.4), "bajo-vientre": (12, 19.6), "costado-derecho": (17.6, 13.4)})
-add(T, "espalda", "Espalda", [TORSO, ln(12, 4.5, 12, 21.5)],
+add(T, "espalda", "Espalda", [*TORSO, ln(12, 4.5, 12, 21.5)],
     {"entre-omoplatos": (12, 9), "omoplato-derecho": (15.4, 8.6), "media-espalda": (12, 13), "lumbar": (12, 17.8), "cintura-derecha": (16.4, 16.4)})
 add(T, "pecho", "Pecho", [p("M3 5q9-3 18 0v14"), p("M3 5v14"), arc(5, 12, 11.2, 12, 4, 0), arc(12.8, 12, 19, 12, 4, 0), ln(12, 4, 12, 17)],
     {"esternon": (12, 10), "pecho-izquierdo": (8, 9.6), "pecho-derecho": (16, 9.6), "debajo-clavicula-derecha": (16, 5.8)})
 add(T, "panza", "Panza / abdomen", [p("M4 3v8q0 6 3 10h10q3-4 3-10v-8"), c(12, 12, 0.9), p("M8 20q4 1.5 8 0")],
     {"ombligo": (12, 12), "boca-estomago": (12, 6), "bajo-vientre": (12, 16.4), "costado-derecho": (18.4, 9)})
-add(T, "costillas", "Costillas", [TORSO, ln(12, 4.5, 12, 11), p("M12 7q-3 .5-5 2.5"), p("M12 7q3 .5 5 2.5"), p("M12 9.5q-3 .5-5 2.5"), p("M12 9.5q3 .5 5 2.5"),
+add(T, "costillas", "Costillas", [*TORSO, ln(12, 4.5, 12, 11), p("M12 7q-3 .5-5 2.5"), p("M12 7q3 .5 5 2.5"), p("M12 9.5q-3 .5-5 2.5"), p("M12 9.5q3 .5 5 2.5"),
     p("M12 12q-3 .5-5 2.5"), p("M12 12q3 .5 5 2.5")],
     {"esternon": (12, 8), "costillas-derechas": (16.4, 11.6), "costillas-izquierdas": (7.6, 11.6), "debajo-costillas": (12, 15.4)})
 add(T, "columna", "Columna", [rr(10, 2.5, 4, 2.6, 1), rr(10, 6.3, 4, 2.6, 1), rr(10, 10.1, 4, 2.6, 1), rr(10, 13.9, 4, 2.6, 1), rr(10, 17.7, 4, 2.6, 1),
@@ -184,7 +184,7 @@ add(T, "clavicula", "Clavículas", [ln(9.5, 3, 9.5, 8), ln(14.5, 3, 14.5, 8), p(
     {"hueco-clavicula": (12, 10.6), "debajo-clavicula-izquierda": (6.6, 13), "debajo-clavicula-derecha": (17.4, 13), "clavicula-derecha": (17.4, 9.8)})
 add(T, "cadera", "Cadera / pelvis", [p("M4 5q0 6 4 9l4 3l4-3q4-3 4-9"), p("M4 5q8 3 16 0"), c(8.5, 15, 1.4), c(15.5, 15, 1.4)],
     {"cadera-derecha": (18.4, 8), "cadera-izquierda": (5.6, 8), "centro-pelvis": (12, 11), "ingle-derecha": (15.5, 17.6)})
-add(T, "diafragma", "Diafragma", [TORSO, p("M5.5 13q6.5-7 13 0")],
+add(T, "diafragma", "Diafragma", [*TORSO, p("M5.5 13q6.5-7 13 0")],
     {"diafragma": (12, 10.6), "boca-estomago": (12, 12.6), "costado-derecho": (17.6, 12.4)})
 add(T, "estomago", "Estómago", [p("M9 3v4c-3 1-5 4-5 7.5a6 6 0 0 0 11 3.2c1.4-2.2 3.5-2 4-4.7c.4-2-1-3.5-3-3.5c-2 0-3 1.5-4 1.5c-1 0-1.5-1-1.5-2v-6")],
     {"estomago": (9.6, 14.6), "boca-estomago": (11, 9.4)})
@@ -239,8 +239,9 @@ add(M, "yema", "Yema del dedo", [p("M7 22V9a5 5 0 0 1 10 0v13"), p("M9.5 9a2.5 2
     {"yema": (12, 7.6), "falange": (12, 16)})
 add(M, "manos-juntas", "Manos juntas", [p("M11.4 21V9a3 3 0 0 0-6 0v7l-2 5"), p("M12.6 21V9a3 3 0 0 1 6 0v7l2 5")],
     {"palmas": (12, 12), "puntas": (12, 7), "munecas": (12, 19)})
-add(M, "mano-sobre-mano", "Una mano sobre la otra", [rr(4, 9, 11, 9, 3.5), rr(9, 6, 11, 9, 3.5)],
-    {"centro": (14.5, 10.5), "mano-abajo": (8, 15)})
+add(M, "frotar-manos", "Frotar las manos", [*mitten(8.4, 7, 19, 6, "left", 3.6), *mitten(15.6, 7, 19, 6, "right", 3.6),
+    p("M9 3.4q3-2 6 0"), p("M10 1.2q2-1.2 4 0")],
+    {"palmas": (12, 12), "mano-izquierda": (8.4, 12), "mano-derecha": (15.6, 12)})
 add(M, "tres-dedos", "Medir tres dedos", [ln(8, 2, 8, 22), ln(16, 2, 16, 22), ln(8, 5.8, 16, 5.8), cap(12, 8, 2.2, 10, 90), cap(12, 10.6, 2.2, 10, 90),
     cap(12, 13.2, 2.2, 10, 90)],
     {"pliegue-muneca": (12, 5.8), "tres-dedos": (12, 15.8), "entre-tendones": (12, 15.8)})
