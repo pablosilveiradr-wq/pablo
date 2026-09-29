@@ -13,7 +13,7 @@ import { BG, FPS, INK, STROKE, STROKE_THIN } from "./theme";
  * on a pin: you are here. Spanish captions word by word, pure black, no audio.
  */
 
-const FONT = "Montserrat, 'DejaVu Sans', sans-serif";
+export const FONT = "Montserrat, 'DejaVu Sans', sans-serif";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /** Spoken lines, in seconds. `*` marks the chunk that lands the line. */
@@ -500,7 +500,7 @@ const Shot: React.FC<{ turn: number; C: React.FC<SceneProps>; last: boolean }> =
 };
 
 /** One caption chunk: pops in, holds, cuts to the next. */
-const Chunk: React.FC<{ text: string }> = ({ text }) => {
+export const Chunk: React.FC<{ text: string }> = ({ text }) => {
   const f = useF();
   const strong = text.startsWith("*");
   const p = interpolate(f, [0, 5], [0, 1], clamp);
