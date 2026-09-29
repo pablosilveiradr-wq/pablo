@@ -1,0 +1,242 @@
+{
+ "scenes": [
+  {
+   "start": 0,
+   "turn": 1.97,
+   "end": 3.91
+  },
+  {
+   "start": 3.91,
+   "turn": 5.78,
+   "end": 7.56
+  },
+  {
+   "start": 7.56,
+   "turn": 10.49,
+   "end": 12.69
+  },
+  {
+   "start": 12.69,
+   "turn": 14.84,
+   "end": 17.52
+  },
+  {
+   "start": 17.52,
+   "turn": 19.47,
+   "end": 21.43
+  },
+  {
+   "start": 21.43,
+   "turn": 23.74,
+   "end": 25.84
+  },
+  {
+   "start": 25.84,
+   "turn": 28.83,
+   "end": 32.889
+  }
+ ],
+ "chunks": [
+  {
+   "text": "Podés",
+   "start": 0.4,
+   "end": 0.7
+  },
+  {
+   "text": "volver",
+   "start": 0.7,
+   "end": 0.9
+  },
+  {
+   "text": "al pasado,",
+   "start": 0.9,
+   "end": 1.82
+  },
+  {
+   "text": "pero ahora",
+   "start": 1.82,
+   "end": 2.18
+  },
+  {
+   "text": "*está vacío.",
+   "start": 2.18,
+   "end": 3.31
+  },
+  {
+   "text": "Tu vieja",
+   "start": 4.33,
+   "end": 4.69
+  },
+  {
+   "text": "escuela",
+   "start": 4.69,
+   "end": 4.99
+  },
+  {
+   "text": "sigue ahí,",
+   "start": 4.99,
+   "end": 5.63
+  },
+  {
+   "text": "pero tus",
+   "start": 5.63,
+   "end": 5.89
+  },
+  {
+   "text": "amigos",
+   "start": 5.89,
+   "end": 6.17
+  },
+  {
+   "text": "*no.",
+   "start": 6.17,
+   "end": 6.96
+  },
+  {
+   "text": "La casa",
+   "start": 7.98,
+   "end": 8.54
+  },
+  {
+   "text": "de tu infancia",
+   "start": 8.54,
+   "end": 9.26
+  },
+  {
+   "text": "sigue en pie,",
+   "start": 9.26,
+   "end": 10.34
+  },
+  {
+   "text": "pero tu familia",
+   "start": 10.34,
+   "end": 10.82
+  },
+  {
+   "text": "*ya no",
+   "start": 10.82,
+   "end": 11.2
+  },
+  {
+   "text": "vive ahí.",
+   "start": 11.2,
+   "end": 12.09
+  },
+  {
+   "text": "El café",
+   "start": 13.11,
+   "end": 13.47
+  },
+  {
+   "text": "que amabas",
+   "start": 13.47,
+   "end": 13.87
+  },
+  {
+   "text": "sigue abierto,",
+   "start": 13.87,
+   "end": 14.69
+  },
+  {
+   "text": "pero el que",
+   "start": 14.69,
+   "end": 14.97
+  },
+  {
+   "text": "sabía",
+   "start": 14.97,
+   "end": 15.31
+  },
+  {
+   "text": "tu pedido",
+   "start": 15.31,
+   "end": 15.81
+  },
+  {
+   "text": "*ya no está.",
+   "start": 15.81,
+   "end": 16.92
+  },
+  {
+   "text": "Las calles",
+   "start": 17.94,
+   "end": 18.5
+  },
+  {
+   "text": "son las mismas,",
+   "start": 18.5,
+   "end": 19.32
+  },
+  {
+   "text": "pero",
+   "start": 19.32,
+   "end": 19.4
+  },
+  {
+   "text": "las caras",
+   "start": 19.4,
+   "end": 20.02
+  },
+  {
+   "text": "*no.",
+   "start": 20.02,
+   "end": 20.83
+  },
+  {
+   "text": "Los edificios",
+   "start": 21.85,
+   "end": 22.69
+  },
+  {
+   "text": "no cambiaron,",
+   "start": 22.69,
+   "end": 23.59
+  },
+  {
+   "text": "pero",
+   "start": 23.59,
+   "end": 23.65
+  },
+  {
+   "text": "la energía",
+   "start": 23.65,
+   "end": 24.21
+  },
+  {
+   "text": "*sí.",
+   "start": 24.21,
+   "end": 25.24
+  },
+  {
+   "text": "El pasado",
+   "start": 26.26,
+   "end": 26.78
+  },
+  {
+   "text": "es un lugar",
+   "start": 26.78,
+   "end": 27.42
+  },
+  {
+   "text": "para visitar,",
+   "start": 27.42,
+   "end": 28.68
+  },
+  {
+   "text": "pero la vida",
+   "start": 28.68,
+   "end": 29.1
+  },
+  {
+   "text": "pasa",
+   "start": 29.1,
+   "end": 29.92
+  },
+  {
+   "text": "*en el presente.",
+   "start": 29.92,
+   "end": 30.939
+  }
+ ],
+ "seconds": 32.889
+}

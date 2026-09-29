@@ -279,8 +279,8 @@ const Cafe: React.FC<SceneProps> = ({ turn }) => {
         <DrawPath d="M 668 610 V 556 A 62 62 0 0 1 792 556 V 610" delay={18} duration={14} strokeWidth={STROKE_THIN * 1.2} />
       </Leave>
       <Leave at={turn + 2} dur={14} rise={14}>
-        <DrawPath d="M 546 316 H 714 A 18 18 0 0 1 732 334 V 368 A 18 18 0 0 1 714 386 H 700 L 712 408 L 680 386 H 546 A 18 18 0 0 1 528 368 V 334 A 18 18 0 0 1 546 316 Z" delay={32} duration={16} strokeWidth={STROKE_THIN} />
-        <Enter at={42}>
+        <DrawPath d="M 546 316 H 714 A 18 18 0 0 1 732 334 V 368 A 18 18 0 0 1 714 386 H 700 L 712 408 L 680 386 H 546 A 18 18 0 0 1 528 368 V 334 A 18 18 0 0 1 546 316 Z" delay={22} duration={14} strokeWidth={STROKE_THIN} />
+        <Enter at={30}>
           <text x={630} y={351} fill={INK} stroke="none" fontFamily={FONT} fontWeight={500} fontSize={24} textAnchor="middle" dominantBaseline="central">
             ¿Lo de siempre?
           </text>
