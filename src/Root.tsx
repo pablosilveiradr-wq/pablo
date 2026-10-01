@@ -38,6 +38,7 @@ import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
 import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
 import { VISITA_FRAMES, Visita, VisitaProps } from "./Anim/Visita";
 import { PASAJERO_FRAMES, Pasajero } from "./Anim/Pasajero";
+import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
 // Each <Composition> is an entry in the sidebar!
@@ -220,6 +221,14 @@ export const RemotionRoot: React.FC = () => {
         calculateMetadata={({ props }) => ({
           durationInFrames: (props as DiscutirProps).seconds ? Math.round(((props as DiscutirProps).seconds as number) * FPS) : DISCUTIR_FRAMES,
         })}
+      />
+      <Composition
+        id="Metacognicion"
+        component={Metacognicion}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={METACOGNICION_FRAMES}
       />
       <Composition
         id="Pasajero"
