@@ -17,11 +17,80 @@ export const METACOGNICION_FRAMES = Math.round(METACOGNICION_SECONDS * FPS);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const s = (sec: number) => Math.round(sec * FPS);
 
-/** A head in profile looking right: forehead, nose, lips, chin, neck, and the back of the head. */
-const FACE =
-  "M 300 300 C 380 270 450 320 456 400 C 458 420 452 432 456 444 C 470 470 488 488 494 504 C 486 512 470 514 462 516 C 470 524 474 532 466 538 C 460 542 460 546 466 552 C 472 560 468 570 458 576 C 456 590 456 604 444 612 C 430 618 420 622 418 640 L 418 790";
-const BACK = "M 300 300 C 220 330 196 430 232 510 C 256 562 300 590 312 642 L 312 790";
-const EYE = { x: 424, y: 432 };
+/** Smooth path through points (Catmull-Rom as cubic Béziers). */
+const smooth = (pts: number[][]) => {
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C ${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`;
+  }
+  return d;
+};
+
+/** Shift so the two profiles stand a little apart. */
+const DX = -40;
+const at = (pts: number[][]) => pts.map(([x, y]) => [x + DX, y]);
+
+/** A head in profile looking right, real proportions: skull, brow, nose, lips, chin, jaw, neck. */
+const FACE = smooth(
+  at([
+    [360, 262],
+    [430, 284],
+    [476, 328],
+    [490, 380],
+    [494, 404],
+    [488, 422],
+    [500, 446],
+    [516, 468],
+    [526, 482],
+    [518, 492],
+    [498, 496],
+    [502, 508],
+    [500, 520],
+    [494, 526],
+    [500, 536],
+    [494, 550],
+    [486, 556],
+    [494, 574],
+    [488, 596],
+    [470, 606],
+    [448, 612],
+    [440, 632],
+    [442, 700],
+    [450, 790],
+  ]),
+);
+const BACK = smooth(
+  at([
+    [360, 262],
+    [300, 274],
+    [264, 320],
+    [254, 390],
+    [264, 460],
+    [290, 520],
+    [306, 566],
+    [310, 640],
+    [304, 720],
+    [300, 790],
+  ]),
+);
+/** A simple ear, halfway back. */
+const EAR = smooth(
+  at([
+    [372, 432],
+    [390, 422],
+    [404, 440],
+    [402, 476],
+    [392, 498],
+    [378, 500],
+  ]),
+);
+const EYE = { x: 466 + DX, y: 428 };
 
 const Eye: React.FC<{ open: number; delay: number }> = ({ open, delay }) => (
   <>
@@ -40,6 +109,9 @@ const Eye: React.FC<{ open: number; delay: number }> = ({ open, delay }) => (
   </>
 );
 
+const SPX = 340 + DX;
+const SPY = 350;
+
 /** Thoughts spinning inside the head, slowing down once they are being watched. */
 const Thoughts: React.FC<{ calm: number }> = ({ calm }) => {
   const f = useCurrentFrame();
@@ -47,11 +119,11 @@ const Thoughts: React.FC<{ calm: number }> = ({ calm }) => {
   const pts = [];
   for (let t = 0; t <= 1; t += 0.02) {
     const a = t * Math.PI * 4.2;
-    const r = 6 + 44 * t;
-    pts.push(`${(320 + Math.cos(a) * r).toFixed(1)} ${(440 + Math.sin(a) * r).toFixed(1)}`);
+    const r = 5 + 36 * t;
+    pts.push(`${(SPX + Math.cos(a) * r).toFixed(1)} ${(SPY + Math.sin(a) * r).toFixed(1)}`);
   }
   return (
-    <g style={{ transform: `rotate(${spin}deg)`, transformOrigin: "320px 440px", transformBox: "view-box" }} opacity={0.85 - 0.35 * calm}>
+    <g style={{ transform: `rotate(${spin}deg)`, transformOrigin: `${SPX}px ${SPY}px`, transformBox: "view-box" }} opacity={0.85 - 0.35 * calm}>
       <DrawPath d={`M ${pts.join(" L ")}`} delay={10} duration={20} strokeWidth={STROKE_THIN} />
     </g>
   );
@@ -61,6 +133,7 @@ const Head: React.FC<{ eye: number; calm: number; delay: number; thoughts?: bool
   <>
     <DrawPath d={FACE} delay={delay} duration={26} />
     <DrawPath d={BACK} delay={delay + 6} duration={22} />
+    <DrawPath d={EAR} delay={delay + 16} duration={10} strokeWidth={STROKE_THIN * 1.2} />
     <Eye open={eye} delay={delay + 14} />
     {thoughts ? <Thoughts calm={calm} /> : null}
   </>
@@ -90,7 +163,7 @@ export const Metacognicion: React.FC = () => {
 
   // The beam: rays leave the eye toward the other face, widening as they go.
   const rays = [-14, -7, 0, 7, 14].map((dy, i) => {
-    const len = (232 - 26) * (meet > 0 ? 1 : beam);
+    const len = (2 * (540 - EYE.x) - 52) * (meet > 0 ? 1 : beam);
     const x0 = EYE.x + 26;
     const x1 = x0 + len;
     const spread = meet > 0 ? 1 - meet * 0.8 : 1;
