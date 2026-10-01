@@ -1,0 +1,121 @@
+{
+ "scenes": [
+  {
+   "start": 0,
+   "end": 2.9
+  },
+  {
+   "start": 2.9,
+   "end": 6.73
+  },
+  {
+   "start": 6.73,
+   "end": 9.4
+  },
+  {
+   "start": 9.4,
+   "end": 13.51
+  },
+  {
+   "start": 13.51,
+   "end": 14.63
+  },
+  {
+   "start": 14.63,
+   "end": 18.85
+  }
+ ],
+ "chunks": [
+  {
+   "text": "Es increíble",
+   "start": 0.38,
+   "end": 1.34
+  },
+  {
+   "text": "lo tranquila",
+   "start": 1.34,
+   "end": 2.14
+  },
+  {
+   "text": "que se vuelve la vida",
+   "start": 2.14,
+   "end": 3.08
+  },
+  {
+   "text": "cuando decidís",
+   "start": 3.08,
+   "end": 4.02
+  },
+  {
+   "text": "que ya no tenés",
+   "start": 4.02,
+   "end": 4.82
+  },
+  {
+   "text": "energía",
+   "start": 4.82,
+   "end": 5.24
+  },
+  {
+   "text": "para discutir",
+   "start": 5.24,
+   "end": 6.73
+  },
+  {
+   "text": "y estás en paz",
+   "start": 6.91,
+   "end": 7.53
+  },
+  {
+   "text": "con que",
+   "start": 7.53,
+   "end": 7.97
+  },
+  {
+   "text": "*no te entiendan.",
+   "start": 7.97,
+   "end": 9.14
+  },
+  {
+   "text": "Porque cada uno",
+   "start": 9.58,
+   "end": 10.52
+  },
+  {
+   "text": "entiende",
+   "start": 10.52,
+   "end": 10.98
+  },
+  {
+   "text": "desde su propio",
+   "start": 10.98,
+   "end": 11.8
+  },
+  {
+   "text": "nivel de percepción,",
+   "start": 11.8,
+   "end": 13.33
+  },
+  {
+   "text": "y ninguna",
+   "start": 13.69,
+   "end": 14.11
+  },
+  {
+   "text": "discusión",
+   "start": 14.11,
+   "end": 14.81
+  },
+  {
+   "text": "vale más que",
+   "start": 14.81,
+   "end": 15.63
+  },
+  {
+   "text": "*tu salud mental.",
+   "start": 15.63,
+   "end": 16.72
+  }
+ ],
+ "seconds": 18.85
+}
