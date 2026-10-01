@@ -13,6 +13,7 @@ Proyecto Remotion que produce las animaciones de iconos de línea para los reels
 
 - 100 bases simples del cuerpo (C001–C100) en `iconos-cuerpo/CNNN_slug.mp4`; lista y puntos en la sección 4 de `GUIA_ICONOS.md`.
 - Estilo: solo círculos, semicírculos y cápsulas en la grilla 24 de los iconos, **sin caras, manos sin dedos**. Pablo rechazó el dibujo anatómico "a mano": no volver a eso.
+- Cabezas de perfil: como en los sets de iconos (cráneo = círculo, nariz = triángulo, cara recta hasta el mentón, mandíbula y cuello rectos; ojo = arco cerrado o punto). Ver `HC`/`FACE` en `src/Anim/Metacognicion.tsx`. Un perfil "realista" con curvas le pareció espantoso.
 - Se generan con `python3 scripts/body_icons.py` (dibujo + puntos con nombre) y `python3 scripts/import_icons.py build`.
 - En un storyboard: `icon: "touch:c:<slug>@<punto>"` marca el punto con un pulso; `+lens` agrega la lupa con el detalle (p. ej. `touch:c:antebrazo-interno@tres-dedos+lens`). La base sola es `c:<slug>`.
 

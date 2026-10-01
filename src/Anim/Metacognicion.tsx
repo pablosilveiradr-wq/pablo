@@ -17,100 +17,29 @@ export const METACOGNICION_FRAMES = Math.round(METACOGNICION_SECONDS * FPS);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const s = (sec: number) => Math.round(sec * FPS);
 
-/** Smooth path through points (Catmull-Rom as cubic Béziers). */
-const smooth = (pts: number[][]) => {
-  let d = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[Math.max(0, i - 1)];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[Math.min(pts.length - 1, i + 2)];
-    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
-    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
-    d += ` C ${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`;
-  }
-  return d;
-};
-
-/** Shift so the two profiles stand a little apart. */
-const DX = -40;
-const at = (pts: number[][]) => pts.map(([x, y]) => [x + DX, y]);
-
-/** A head in profile looking right, real proportions: skull, brow, nose, lips, chin, jaw, neck. */
-const FACE = smooth(
-  at([
-    [360, 262],
-    [430, 284],
-    [476, 328],
-    [490, 380],
-    [494, 404],
-    [488, 422],
-    [500, 446],
-    [516, 468],
-    [526, 482],
-    [518, 492],
-    [498, 496],
-    [502, 508],
-    [500, 520],
-    [494, 526],
-    [500, 536],
-    [494, 550],
-    [486, 556],
-    [494, 574],
-    [488, 596],
-    [470, 606],
-    [448, 612],
-    [440, 632],
-    [442, 700],
-    [450, 790],
-  ]),
-);
-const BACK = smooth(
-  at([
-    [360, 262],
-    [300, 274],
-    [264, 320],
-    [254, 390],
-    [264, 460],
-    [290, 520],
-    [306, 566],
-    [310, 640],
-    [304, 720],
-    [300, 790],
-  ]),
-);
-/** A simple ear, halfway back. */
-const EAR = smooth(
-  at([
-    [372, 432],
-    [390, 422],
-    [404, 440],
-    [402, 476],
-    [392, 498],
-    [378, 500],
-  ]),
-);
-const EYE = { x: 466 + DX, y: 428 };
+/**
+ * The head in profile the way the icon sets draw it (looking right): the skull
+ * is a circle, the nose a triangle, the face a straight line down to the chin,
+ * then the jaw back to the neck. Same geometry as the rest of the library.
+ */
+const HC = { x: 321, y: 380, r: 130 };
+const P = (kx: number, ky: number) => `${(HC.x + HC.r * kx).toFixed(1)} ${(HC.y + HC.r * ky).toFixed(1)}`;
+const FACE = `M ${P(-0.42, 2.0)} L ${P(-0.5, 0.866)} A ${HC.r} ${HC.r} 0 1 1 ${P(1, 0)} L ${P(1.3, 0.55)} L ${P(1.06, 0.62)} L ${P(1.06, 1.16)} L ${P(0.62, 1.36)} L ${P(0.62, 2.0)}`;
+const EYE = { x: HC.x + HC.r * 0.7, y: HC.y + HC.r * 0.2 };
 
 const Eye: React.FC<{ open: number; delay: number }> = ({ open, delay }) => (
   <>
-    {/* closed: a lid line with three lashes */}
+    {/* closed: a short arc, like the library's closed eyes */}
     <g opacity={1 - open}>
-      <DrawPath d={`M ${EYE.x - 22} ${EYE.y - 2} Q ${EYE.x} ${EYE.y + 12} ${EYE.x + 22} ${EYE.y - 2}`} delay={delay} duration={8} strokeWidth={STROKE_THIN * 1.2} />
-      <DrawPath d={`M ${EYE.x - 12} ${EYE.y + 6} l -4 10 M ${EYE.x} ${EYE.y + 8} l 0 11 M ${EYE.x + 12} ${EYE.y + 6} l 4 10`} delay={delay + 6} duration={6} strokeWidth={STROKE_THIN} />
+      <DrawPath d={`M ${EYE.x - 16} ${EYE.y - 4} Q ${EYE.x} ${EYE.y + 10} ${EYE.x + 16} ${EYE.y - 4}`} delay={delay} duration={8} strokeWidth={STROKE_THIN * 1.3} />
     </g>
-    {/* open: an almond with the pupil looking ahead */}
-    {open > 0 ? (
-      <g style={{ transform: `scaleY(${0.15 + 0.85 * open})`, transformOrigin: `${EYE.x}px ${EYE.y}px`, transformBox: "view-box" }}>
-        <path d={`M ${EYE.x - 22} ${EYE.y} Q ${EYE.x - 2} ${EYE.y - 22} ${EYE.x + 24} ${EYE.y - 2} Q ${EYE.x} ${EYE.y + 16} ${EYE.x - 22} ${EYE.y} Z`} strokeWidth={STROKE_THIN * 1.2} />
-        <circle cx={EYE.x + 9} cy={EYE.y - 3} r={7} fill={INK} stroke="none" />
-      </g>
-    ) : null}
+    {/* open: a dot */}
+    {open > 0 ? <circle cx={EYE.x} cy={EYE.y} r={11 * open} fill={INK} stroke="none" /> : null}
   </>
 );
 
-const SPX = 340 + DX;
-const SPY = 350;
+const SPX = HC.x - 14;
+const SPY = HC.y - 6;
 
 /** Thoughts spinning inside the head, slowing down once they are being watched. */
 const Thoughts: React.FC<{ calm: number }> = ({ calm }) => {
@@ -119,7 +48,7 @@ const Thoughts: React.FC<{ calm: number }> = ({ calm }) => {
   const pts = [];
   for (let t = 0; t <= 1; t += 0.02) {
     const a = t * Math.PI * 4.2;
-    const r = 5 + 36 * t;
+    const r = 4 + 44 * t;
     pts.push(`${(SPX + Math.cos(a) * r).toFixed(1)} ${(SPY + Math.sin(a) * r).toFixed(1)}`);
   }
   return (
@@ -131,9 +60,7 @@ const Thoughts: React.FC<{ calm: number }> = ({ calm }) => {
 
 const Head: React.FC<{ eye: number; calm: number; delay: number; thoughts?: boolean }> = ({ eye, calm, delay, thoughts = true }) => (
   <>
-    <DrawPath d={FACE} delay={delay} duration={26} />
-    <DrawPath d={BACK} delay={delay + 6} duration={22} />
-    <DrawPath d={EAR} delay={delay + 16} duration={10} strokeWidth={STROKE_THIN * 1.2} />
+    <DrawPath d={FACE} delay={delay} duration={30} />
     <Eye open={eye} delay={delay + 14} />
     {thoughts ? <Thoughts calm={calm} /> : null}
   </>
@@ -151,10 +78,10 @@ export const Metacognicion: React.FC = () => {
   const calm = interpolate(f, [s(4.2), s(6)], [0, 1], clamp);
 
   // Camera: close on the eye, then back to show both faces.
-  const zoom = 1.9 - 0.98 * pull;
-  const sy = 650 - 95 * pull;
+  const zoom = 1.9 - 0.82 * pull;
+  const sy = 650 - 80 * pull;
   const fx = EYE.x + (540 - EYE.x) * pull;
-  const fy = EYE.y + (530 - EYE.y) * pull;
+  const fy = EYE.y + (448 - EYE.y) * pull;
   const glow = 0.3 + 0.5 * interpolate(f, [s(4.2), s(4.6), s(6.5)], [0, 1, 0.3], clamp);
 
   const topIn = interpolate(f, [s(0.2), s(0.8)], [0, 1], clamp);
@@ -163,8 +90,8 @@ export const Metacognicion: React.FC = () => {
 
   // The beam: rays leave the eye toward the other face, widening as they go.
   const rays = [-14, -7, 0, 7, 14].map((dy, i) => {
-    const len = (2 * (540 - EYE.x) - 52) * (meet > 0 ? 1 : beam);
-    const x0 = EYE.x + 26;
+    const len = (2 * (540 - EYE.x) - 96) * (meet > 0 ? 1 : beam);
+    const x0 = EYE.x + 48;
     const x1 = x0 + len;
     const spread = meet > 0 ? 1 - meet * 0.8 : 1;
     return (
