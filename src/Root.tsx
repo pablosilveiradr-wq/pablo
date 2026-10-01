@@ -38,6 +38,7 @@ import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
 import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
 import { VISITA_FRAMES, Visita, VisitaProps } from "./Anim/Visita";
 import { PASAJERO_FRAMES, Pasajero } from "./Anim/Pasajero";
+import { TRIANGULAR_FRAMES, Triangular } from "./Anim/Triangular";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -229,6 +230,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={METACOGNICION_FRAMES}
+      />
+      <Composition
+        id="Triangular"
+        component={Triangular}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={TRIANGULAR_FRAMES}
       />
       <Composition
         id="Pasajero"
