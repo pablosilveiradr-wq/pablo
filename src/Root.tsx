@@ -38,6 +38,7 @@ import { CATALOG as LIBRARY_CATALOG } from "./Anim/library/catalog";
 import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
 import { VISITA_FRAMES, Visita, VisitaProps } from "./Anim/Visita";
 import { PASAJERO_FRAMES, Pasajero } from "./Anim/Pasajero";
+import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -207,6 +208,18 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={PRESENTE_FRAMES}
+      />
+      <Composition
+        id="Discutir"
+        component={Discutir}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={DISCUTIR_FRAMES}
+        defaultProps={{} as DiscutirProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as DiscutirProps).seconds ? Math.round(((props as DiscutirProps).seconds as number) * FPS) : DISCUTIR_FRAMES,
+        })}
       />
       <Composition
         id="Pasajero"
