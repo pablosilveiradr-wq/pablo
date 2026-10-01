@@ -3,7 +3,7 @@
 
   python3 scripts/sfx_metacognicion.py OUT.wav
 
-No samples: filtered noise, sine partials and a soft pad, so there is nothing
+No samples: filtered noise and sine partials, so there is nothing
 to license. Cue times follow src/Anim/Metacognicion.tsx.
 """
 import math
@@ -76,42 +76,6 @@ def whoosh(seconds, f0, f1, q=1.3, attack=0.35, release=0.6):
     return [v * e[i] for i, v in enumerate(x)]
 
 
-def pad(seconds, freqs, attack=0.25, release=0.35):
-    """Soft sustained chord: detuned sines, slow swell."""
-    n = int(seconds * SR)
-    e = env(n, attack, release, 1.5)
-    out = []
-    for i in range(n):
-        t = i / SR
-        v = sum(math.sin(2 * math.pi * f * t) + 0.5 * math.sin(2 * math.pi * f * 1.003 * t) for f in freqs)
-        out.append(v * e[i])
-    return norm(out)
-
-
-def swirl(seconds, calm_at):
-    """Air turning round: band-passed noise whose pitch wobbles, slowing and fading at `calm_at`."""
-    n = int(seconds * SR)
-    x = noise(n)
-    y = [0.0] * n
-    x1 = x2 = y1 = y2 = 0.0
-    phase = 0.0
-    for i in range(n):
-        t = i / SR
-        calm = min(1.0, max(0.0, (t - calm_at) / 1.6))
-        rate = 1.6 - 1.2 * calm
-        phase += 2 * math.pi * rate / SR
-        f = 700 + 380 * math.sin(phase)
-        w = 2 * math.pi * f / SR
-        alpha = math.sin(w) / (2 * 2.5)
-        a0, a1, a2 = 1 + alpha, -2 * math.cos(w), 1 - alpha
-        v = (alpha * x[i] - alpha * x2 - a1 * y1 - a2 * y2) / a0
-        x2, x1, y2, y1 = x1, x[i], y1, v
-        y[i] = v * (1 - 0.9 * calm)
-    y = norm(y)
-    e = env(n, 0.12, 0.1, 1.5)
-    return [v * e[i] for i, v in enumerate(y)]
-
-
 def blink(freq=1400):
     """Eye opening: a soft rounded tick with a tiny tone."""
     n = int(0.18 * SR)
@@ -149,11 +113,10 @@ def chime(base, seconds):
 
 
 # Cues (seconds), from Metacognicion.tsx
-EYE1, BEAM, PULL, HEAD2, EYE2, MEET, CALM = 1.4, 1.8, 2.4, 2.7, 3.9, 4.2, 4.2
+EYE1, BEAM, PULL, HEAD2, EYE2, MEET = 1.4, 1.8, 2.4, 2.7, 3.9, 4.2
+# Only discrete cues: no continuous bed under the picture (Pablo disliked it).
 
-add(0.0, pad(DUR, [110.0, 164.8, 220.0], attack=0.18, release=0.25), 0.16)  # A2 E3 A3 bed
 add(0.0, whoosh(1.4, 260, 900, attack=0.4, release=0.5), 0.35)              # the head drawing in
-add(0.4, swirl(DUR - 0.9, CALM - 0.4), 0.22, pan=-0.25)                     # thoughts turning
 add(EYE1, blink(1500), 0.16, pan=-0.2)
 add(BEAM, shimmer(1.4, 2300), 0.18, pan=-0.1)
 add(BEAM, whoosh(0.9, 600, 4200, q=1.6, attack=0.5, release=0.5), 0.28)
