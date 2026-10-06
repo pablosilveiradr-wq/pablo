@@ -39,6 +39,7 @@ import { PRESENTE_FRAMES, Presente } from "./Anim/Presente";
 import { VISITA_FRAMES, Visita, VisitaProps } from "./Anim/Visita";
 import { PASAJERO_FRAMES, Pasajero } from "./Anim/Pasajero";
 import { TRIANGULAR_FRAMES, Triangular } from "./Anim/Triangular";
+import { INVISIBLE_FRAMES, Invisible, InvisibleProps } from "./Anim/Invisible";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -230,6 +231,18 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={METACOGNICION_FRAMES}
+      />
+      <Composition
+        id="Invisible"
+        component={Invisible}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={INVISIBLE_FRAMES}
+        defaultProps={{} as InvisibleProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as InvisibleProps).seconds ? Math.round(((props as InvisibleProps).seconds as number) * FPS) : INVISIBLE_FRAMES,
+        })}
       />
       <Composition
         id="Triangular"
