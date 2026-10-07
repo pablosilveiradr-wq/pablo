@@ -26,6 +26,7 @@ Proyecto Remotion que produce las animaciones de iconos de línea para los reels
 - Líneas que conectan exactamente (nada flotando ni despegado); manos sin dedos dibujados salvo los glifos de la librería.
 - Animación de los clips: rebote de entrada, trazado rápido, destello de brillo al terminar, respiración suave. **Sin aro** (lo pidió sacar).
 - Antes de producir iconos nuevos en cantidad, mandar hojas de aprobación (fotos) y esperar su OK.
+- **Con voz (ElevenLabs con su clon, o grabada): el video SIEMPRE se adapta al audio**, nunca al revés. Acelerar un poco para que sea dinámico: recortar silencios entre palabras a ~0,28 s (`scripts/voz/tighten.py`) y `atempo=1.08` (mantiene el tono). Cada palabra del texto aparece cuando se dice (`scripts/voz/align_props.py` → props `scenes`/`lines` con `words`). Ver `Pausa`/`Invisible`.
 
 ## Flujos de trabajo
 
