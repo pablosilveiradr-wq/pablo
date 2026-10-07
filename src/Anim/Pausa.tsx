@@ -243,11 +243,11 @@ const Respiro: React.FC = () => {
 
 const Eleccion: React.FC = () => {
   const { f, dur } = useScene();
-  const pick = interpolate(f, [dur * 0.35, dur * 0.5], [0, 1], clamp);
+  const pick = interpolate(f, [Math.min(10, dur * 0.35), Math.min(16, dur * 0.5)], [0, 1], clamp);
   return (
     <>
-      <DrawPath d={circlePath(CX - 100, CY, 30)} duration={8} strokeWidth={STROKE_THIN * 1.3} />
-      <DrawPath d={circlePath(CX + 100, CY, 30)} delay={3} duration={8} strokeWidth={STROKE_THIN * 1.3} />
+      <DrawPath d={circlePath(CX - 100, CY, 30)} duration={6} strokeWidth={STROKE_THIN * 1.3} />
+      <DrawPath d={circlePath(CX + 100, CY, 30)} delay={2} duration={6} strokeWidth={STROKE_THIN * 1.3} />
       {pick > 0 ? <circle cx={CX + 100} cy={CY} r={14 * pick} fill={INK} stroke="none" /> : null}
       <Glow cx={CX + 100} cy={CY} r={100} o={pick} id="elGlow" />
     </>
