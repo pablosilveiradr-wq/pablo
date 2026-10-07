@@ -13,19 +13,19 @@ import { FONT } from "./Visita";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-const useScene = () => {
+export const useScene = () => {
   const f = useCurrentFrame();
   const { durationInFrames, fps } = useVideoConfig();
   return { f, p: Math.min(1, f / durationInFrames), dur: durationInFrames, fps };
 };
 
 /** Deterministic pseudo-random in [0,1). */
-const rnd = (i: number) => {
+export const rnd = (i: number) => {
   const x = Math.sin(i * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
 };
 
-const Glow: React.FC<{ cx: number; cy: number; r: number; o: number; id: string }> = ({ cx, cy, r, o, id }) =>
+export const Glow: React.FC<{ cx: number; cy: number; r: number; o: number; id: string }> = ({ cx, cy, r, o, id }) =>
   o > 0 ? (
     <>
       <defs>
@@ -39,7 +39,7 @@ const Glow: React.FC<{ cx: number; cy: number; r: number; o: number; id: string 
     </>
   ) : null;
 
-const poly = (pts: number[][], close = true) =>
+export const poly = (pts: number[][], close = true) =>
   `M ${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L ")}${close ? " Z" : ""}`;
 
 const CX = 540;
@@ -602,7 +602,7 @@ const DEFAULT_LINES: InvisibleLine[] = S.flatMap(([, end], si) => {
 /* -------------------------------------------------------------- render */
 
 /** One line of text, its words fading in one after another. */
-const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolean; times?: number[] }> = ({ text, rows, row, dark, times }) => {
+export const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolean; times?: number[] }> = ({ text, rows, row, dark, times }) => {
   const f = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const words = text.split(" ");
@@ -639,7 +639,7 @@ const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolea
   );
 };
 
-const Shot: React.FC<{ C: React.FC; last: boolean }> = ({ C, last }) => {
+export const Shot: React.FC<{ C: React.FC; last: boolean }> = ({ C, last }) => {
   const { f, dur } = useScene();
   const o = interpolate(f, [0, 3], [0, 1], clamp) * interpolate(f, [dur - (last ? 20 : 3), dur], [1, 0], clamp);
   return (

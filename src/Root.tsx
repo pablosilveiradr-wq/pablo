@@ -40,6 +40,7 @@ import { VISITA_FRAMES, Visita, VisitaProps } from "./Anim/Visita";
 import { PASAJERO_FRAMES, Pasajero } from "./Anim/Pasajero";
 import { TRIANGULAR_FRAMES, Triangular } from "./Anim/Triangular";
 import { INVISIBLE_FRAMES, Invisible, InvisibleProps } from "./Anim/Invisible";
+import { PAUSA_FRAMES, Pausa, PausaProps } from "./Anim/Pausa";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -231,6 +232,18 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={METACOGNICION_FRAMES}
+      />
+      <Composition
+        id="Pausa"
+        component={Pausa}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={PAUSA_FRAMES}
+        defaultProps={{} as PausaProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as PausaProps).seconds ? Math.round(((props as PausaProps).seconds as number) * FPS) : PAUSA_FRAMES,
+        })}
       />
       <Composition
         id="Invisible"
