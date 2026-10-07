@@ -543,7 +543,15 @@ const Visible: React.FC = () => {
 /* ------------------------------------------------------------- timing */
 
 export type InvisibleScene = { start: number; end: number; dark?: boolean };
-export type InvisibleLine = { text: string; start: number; end: number; scene: number; row: number };
+export type InvisibleLine = {
+  text: string;
+  start: number;
+  end: number;
+  scene: number;
+  row: number;
+  /** When each word is spoken, in seconds from the line start: words appear on the voice. */
+  words?: number[];
+};
 export type InvisibleProps = { scenes?: InvisibleScene[]; lines?: InvisibleLine[]; seconds?: number };
 
 const ART: React.FC[] = [
@@ -594,12 +602,14 @@ const DEFAULT_LINES: InvisibleLine[] = S.flatMap(([, end], si) => {
 /* -------------------------------------------------------------- render */
 
 /** One line of text, its words fading in one after another. */
-const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolean }> = ({ text, rows, row, dark }) => {
+const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolean; times?: number[] }> = ({ text, rows, row, dark, times }) => {
   const f = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const words = text.split(" ");
   const step = Math.min(5, 26 / words.length);
-  const out = interpolate(f, [durationInFrames - 6, durationInFrames], [1, 0], clamp);
+  const { fps } = useVideoConfig();
+  const at = (i: number) => (times && times[i] !== undefined ? times[i] * fps : i * step);
+  const out = interpolate(f, [durationInFrames - 3, durationInFrames], [1, 0], clamp);
   // In the bright-disc scene the text sits inside the disc, in black.
   const top = dark ? 383 + (row - (rows - 1) / 2) * 50 : 850 + row * 56 - (rows - 1) * 28;
   return (
@@ -620,7 +630,7 @@ const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolea
       }}
     >
       {words.map((w, i) => (
-        <span key={i} style={{ opacity: interpolate(f, [i * step, i * step + 8], [0, 1], clamp) }}>
+        <span key={i} style={{ opacity: interpolate(f, [at(i), at(i) + 6], [0, 1], clamp) }}>
           {w}
           {i < words.length - 1 ? " " : ""}
         </span>
@@ -631,7 +641,7 @@ const TextLine: React.FC<{ text: string; rows: number; row: number; dark: boolea
 
 const Shot: React.FC<{ C: React.FC; last: boolean }> = ({ C, last }) => {
   const { f, dur } = useScene();
-  const o = interpolate(f, [0, 6], [0, 1], clamp) * interpolate(f, [dur - (last ? 20 : 6), dur], [1, 0], clamp);
+  const o = interpolate(f, [0, 3], [0, 1], clamp) * interpolate(f, [dur - (last ? 20 : 3), dur], [1, 0], clamp);
   return (
     <AbsoluteFill style={{ opacity: o }}>
       <Canvas scale={0.88} glowOpacity={0.3}>
@@ -656,7 +666,7 @@ export const Invisible: React.FC<InvisibleProps> = ({ scenes = DEFAULT_SCENES, l
         const rows = lines.filter((m) => m.scene === l.scene && m.start < l.end && m.end > l.start).length;
         return (
           <Sequence key={`t${i}`} from={Math.round(l.start * fps)} durationInFrames={Math.max(1, Math.round((l.end - l.start) * fps))}>
-            <TextLine text={l.text} rows={Math.max(rows, l.row + 1)} row={l.row} dark={!!scenes[l.scene]?.dark} />
+            <TextLine text={l.text} rows={Math.max(rows, l.row + 1)} row={l.row} dark={!!scenes[l.scene]?.dark} times={l.words} />
           </Sequence>
         );
       })}
