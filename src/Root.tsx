@@ -42,6 +42,7 @@ import { TRIANGULAR_FRAMES, Triangular } from "./Anim/Triangular";
 import { INVISIBLE_FRAMES, Invisible, InvisibleProps } from "./Anim/Invisible";
 import { PAUSA_FRAMES, Pausa, PausaProps } from "./Anim/Pausa";
 import { SILENCIO_FRAMES, Silencio, SilencioProps } from "./Anim/Silencio";
+import { CUADRADA_FRAMES, Cuadrada } from "./Anim/Cuadrada";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -233,6 +234,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={METACOGNICION_FRAMES}
+      />
+      <Composition
+        id="Cuadrada"
+        component={Cuadrada}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={CUADRADA_FRAMES}
       />
       <Composition
         id="Silencio"
