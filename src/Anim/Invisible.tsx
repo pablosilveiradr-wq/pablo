@@ -639,12 +639,12 @@ export const TextLine: React.FC<{ text: string; rows: number; row: number; dark:
   );
 };
 
-export const Shot: React.FC<{ C: React.FC; last: boolean }> = ({ C, last }) => {
+export const Shot: React.FC<{ C: React.FC; last: boolean; scale?: number }> = ({ C, last, scale = 0.88 }) => {
   const { f, dur } = useScene();
   const o = interpolate(f, [0, 3], [0, 1], clamp) * interpolate(f, [dur - (last ? 20 : 3), dur], [1, 0], clamp);
   return (
     <AbsoluteFill style={{ opacity: o }}>
-      <Canvas scale={0.88} glowOpacity={0.3}>
+      <Canvas scale={scale} glowOpacity={0.3}>
         <DrawSpeed value={1}>
           <C />
         </DrawSpeed>
