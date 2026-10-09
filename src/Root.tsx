@@ -43,6 +43,7 @@ import { INVISIBLE_FRAMES, Invisible, InvisibleProps } from "./Anim/Invisible";
 import { PAUSA_FRAMES, Pausa, PausaProps } from "./Anim/Pausa";
 import { SILENCIO_FRAMES, Silencio, SilencioProps } from "./Anim/Silencio";
 import { CUADRADA_FRAMES, Cuadrada } from "./Anim/Cuadrada";
+import { IMPULSO_FRAMES, Impulso, ImpulsoProps } from "./Anim/Impulso";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -234,6 +235,18 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={FPS}
         durationInFrames={METACOGNICION_FRAMES}
+      />
+      <Composition
+        id="Impulso"
+        component={Impulso}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={IMPULSO_FRAMES}
+        defaultProps={{} as ImpulsoProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as ImpulsoProps).seconds ? Math.round(((props as ImpulsoProps).seconds as number) * FPS) : IMPULSO_FRAMES,
+        })}
       />
       <Composition
         id="Cuadrada"
