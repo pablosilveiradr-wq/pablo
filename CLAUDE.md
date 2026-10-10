@@ -36,6 +36,8 @@ Proyecto Remotion que produce las animaciones de iconos de línea para los reels
 3. Escribir `src/Anim/<nombre>-storyboard.ts` con beats `{ icon, start, end, note?, scene? }` (`icon` = slug de la librería o `"v:set/glifo"`), registrar la composición en `src/Root.tsx` con `scale: 0.88`, 1080×1080.
 4. Renderizar sin audio y verificar con una hoja de contacto antes de entregar.
 
+**Animación para superponer a un video suyo** (le gustó mucho esta forma, ver `Impulso`/`Pies`): 1:1, sin texto ni audio, sobre el tiempo ORIGINAL del video (sin recortar ni acelerar). Transcribir con `scripts/voz/asr.py`, escribir `scripts/voz/<nombre>_spec.json` (primera palabra de cada escena + palabras donde cae cada detalle), `scene_marks.py` → props; escenas con `MarkedReel` + `useMark`. Entregar el mp4 mudo y una copia con su audio solo para chequear la sincronía. Pies: huellas con 5 dedos, el gordo hacia adentro.
+
 **Agregar iconos a la librería**: `python3 scripts/import_icons.py add <iconsets> set:glifo …` → `build` → agregar al final de `catalog.ts` → `python3 scripts/library.py fit` → `sheets <dir> a-b` para aprobar → renderizar `LibraryReel` con esos ids → `python3 scripts/library.py split <reel.mp4> iconos a-b` → actualizar `GUIA_ICONOS.md`.
 
 ## Render
