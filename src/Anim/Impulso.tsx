@@ -32,6 +32,14 @@ export const head = (cx: number, cy: number, r: number) => {
 };
 export const person = (x: number, y: number, k = 1) =>
   `${circlePath(x, y - 34 * k, 22 * k)} M ${x - 40 * k} ${y + 34 * k} A ${40 * k} ${40 * k} 0 0 1 ${x + 40 * k} ${y + 34 * k}`;
+/** Arrowhead at angle e (rad) of a circle drawn clockwise: points along the turn, on the line. */
+export const arcHead = (cx: number, cy: number, R: number, e: number, L = 34, Wd = 24) => {
+  const ex = cx + R * Math.cos(e);
+  const ey = cy + R * Math.sin(e);
+  const [tx, ty] = [-Math.sin(e), Math.cos(e)];
+  const [nx, ny] = [Math.cos(e), Math.sin(e)];
+  return `M ${ex - tx * L + nx * Wd} ${ey - ty * L + ny * Wd} L ${ex} ${ey} L ${ex - tx * L - nx * Wd} ${ey - ty * L - ny * Wd}`;
+};
 export const brain = (x: number, y: number, k = 1) => {
   const P = (dx: number, dy: number) => `${(x + dx * k).toFixed(1)} ${(y + dy * k).toFixed(1)}`;
   return `M ${P(-160, 40)} C ${P(-200, -20)} ${P(-160, -110)} ${P(-90, -120)} C ${P(-70, -170)} ${P(20, -180)} ${P(60, -140)} C ${P(120, -160)} ${P(180, -110)} ${P(170, -50)} C ${P(220, -10)} ${P(190, 70)} ${P(130, 70)} C ${P(110, 110)} ${P(40, 120)} ${P(10, 90)} C ${P(-30, 120)} ${P(-110, 110)} ${P(-120, 75)} C ${P(-150, 80)} ${P(-170, 65)} ${P(-160, 40)} Z M ${P(-90, -120)} C ${P(-60, -80)} ${P(-80, -40)} ${P(-40, -20)} M ${P(60, -140)} C ${P(40, -90)} ${P(80, -60)} ${P(60, -10)} M ${P(-120, 20)} C ${P(-60, 30)} ${P(-30, 0)} ${P(10, 30)} M ${P(170, -50)} C ${P(120, -30)} ${P(110, 20)} ${P(130, 70)}`;
@@ -105,7 +113,7 @@ const Loop: React.FC = () => {
       <path d={brain(CX, CY + 10, 0.8)} strokeWidth={STROKE_THIN} opacity={0.6} />
       <g style={{ transform: `rotate(${ang}deg)`, transformOrigin: `${CX}px ${CY}px`, transformBox: "view-box" }}>
         <path d={`M ${CX + R} ${CY} A ${R} ${R} 0 1 1 ${CX + R * Math.cos(-0.5)} ${CY + R * Math.sin(-0.5)}`} strokeWidth={STROKE * 1.2} />
-        <path d={`M ${CX + R * Math.cos(-0.5) - 26} ${CY + R * Math.sin(-0.5) - 6} L ${CX + R * Math.cos(-0.5)} ${CY + R * Math.sin(-0.5)} L ${CX + R * Math.cos(-0.5) - 2} ${CY + R * Math.sin(-0.5) + 28}`} strokeWidth={STROKE * 1.2} />
+        <path d={arcHead(CX, CY, R, -0.5)} strokeWidth={STROKE * 1.2} />
       </g>
     </>
   );

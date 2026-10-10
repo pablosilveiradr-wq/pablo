@@ -3,7 +3,7 @@ import { interpolate, spring } from "remotion";
 import { circlePath, DrawPath } from "./primitives";
 import { FPS, INK, STROKE, STROKE_THIN } from "./theme";
 import { Glow, poly, rnd, useScene } from "./Invisible";
-import { brain, head, ImpulsoScene, MarkedReel, person, Pildora, ramp, useMark } from "./Impulso";
+import { arcHead, brain, head, ImpulsoScene, MarkedReel, person, Pildora, ramp, useMark } from "./Impulso";
 
 /**
  * "Pies": animation to lay over Pablo's reel on grounding through the soles of
@@ -18,32 +18,35 @@ const CY = 520;
 const W = STROKE_THIN * 1.3;
 const FLOOR = 760;
 
-/* --------------------------------------------- glyphs on the 24 icon grid */
+/* ------------------------------------------------------------------ feet */
 
-const FOOT_SIDE = "M6 4v9q-2 1-2 3q0 2 2 2h13a1.5 1.5 0 0 0 0-3l-7-2-3-3v-6";
-const SOLES = [
-  "M4 9a3.5 3.5 0 0 1 7 0l-1 7a2.5 2.5 0 0 1-5 0q.3-3-1-7z",
-  "M13 9a3.5 3.5 0 0 1 7 0q-1.3 4-1 7a2.5 2.5 0 0 1-5 0z",
-  circlePath(5, 3.4, 1),
-  circlePath(7.6, 3, 0.8),
-  circlePath(19, 3.4, 1),
-  circlePath(16.4, 3, 0.8),
-];
-/** Where each sole meets the ground: ball and heel of both feet (grid units). */
-const CONTACT = [[7.3, 8.6], [7.4, 15.8], [16.7, 8.6], [16.6, 15.8]];
+/** A foot in profile pointing right, standing on y = 0 (px). */
+const FOOT_SIDE =
+  "M 12 -300 V -100 C 12 -70 -14 -56 -14 -30 C -14 -10 0 0 20 0 H 206 C 222 0 234 -8 230 -22 C 226 -36 210 -44 186 -46 C 160 -52 128 -64 104 -92 C 90 -108 86 -130 86 -160 V -300";
+/** Right footprint seen from above (big toe on the left, the inner side), centred near (0, 0) px. */
+const SOLE = "M -70 -132 C -60 -152 -20 -156 10 -150 C 45 -143 70 -128 82 -108 C 96 -70 74 10 62 80 C 56 120 56 160 22 180 C -10 194 -54 184 -58 140 C -62 100 -26 50 -30 0 C -34 -50 -84 -80 -70 -132 Z";
+const TOES = [[-46, -186, 22, 27], [-6, -178, 15, 18], [26, -168, 12, 15], [54, -151, 11, 13], [84, -128, 9, 11]];
+const toe = ([x, y, rx, ry]: number[]) => `M ${x - rx} ${y} A ${rx} ${ry} 0 1 0 ${x + rx} ${y} A ${rx} ${ry} 0 1 0 ${x - rx} ${y} Z`;
+/** Where each sole meets the ground: ball and heel (local px, right foot). */
+const CONTACT = [[8, -112], [0, 138]];
 
-/** A 24-grid glyph placed at (x, y) with k px per unit; strokes keep their weight. */
-const Grid: React.FC<{ x: number; y: number; k: number; children: React.ReactNode }> = ({ x, y, k, children }) => (
-  <g transform={`translate(${x} ${y}) scale(${k})`}>{children}</g>
-);
+/** Both footprints, big toes inwards, centred on (x, y) at scale k. Returns contact points in canvas px. */
+const soleSpots = (x: number, y: number, k: number, gap = 120) =>
+  [-1, 1].flatMap((m) => CONTACT.map(([px, py]) => [x + m * gap * k + m * px * k, y + py * k]));
 
-const Soles: React.FC<{ x: number; y: number; k: number; fill?: number; delay?: number }> = ({ x, y, k, fill = 0, delay = 0 }) => (
-  <Grid x={x} y={y} k={k}>
-    {fill > 0 ? <path d={SOLES[0] + SOLES[1]} fill={INK} stroke="none" opacity={0.16 * fill} /> : null}
-    {SOLES.map((d, i) => (
-      <DrawPath key={i} d={d} delay={delay + (i < 2 ? 0 : 8)} duration={i < 2 ? 18 : 6} strokeWidth={W / k} />
+const Soles: React.FC<{ x: number; y: number; k: number; gap?: number; fill?: number; delay?: number }> = ({ x, y, k, gap = 120, fill = 0, delay = 0 }) => (
+  <>
+    {[-1, 1].map((m) => (
+      // the left print is the right one mirrored, so both big toes face in
+      <g key={m} transform={`translate(${x + m * gap * k} ${y}) scale(${m * k} ${k})`}>
+        {fill > 0 ? <path d={SOLE + TOES.map(toe).join(" ")} fill={INK} stroke="none" opacity={0.16 * fill} /> : null}
+        <DrawPath d={SOLE} delay={delay} duration={20} strokeWidth={W / k} />
+        {TOES.map((t, i) => (
+          <DrawPath key={i} d={toe(t)} delay={delay + 10 + i * 2} duration={6} strokeWidth={W / k} />
+        ))}
+      </g>
     ))}
-  </Grid>
+  </>
 );
 
 const ripple = (f: number, at: number, x: number, y: number, rx: number, key: string) => {
@@ -107,7 +110,7 @@ const Freno: React.FC = () => {
       <path d={brain(CX, CY + 10, 0.8)} strokeWidth={STROKE_THIN} opacity={0.6 + 0.4 * ramp(f, pas, 12)} />
       <g style={{ transform: `rotate(${ang}deg)`, transformOrigin: `${CX}px ${CY}px`, transformBox: "view-box" }}>
         <DrawPath d={`M ${CX + R} ${CY} A ${R} ${R} 0 1 1 ${CX + R * Math.cos(e)} ${CY + R * Math.sin(e)}`} duration={14} strokeWidth={STROKE * 1.2} />
-        <path d={`M ${CX + R * Math.cos(e) - 26} ${CY + R * Math.sin(e) - 6} L ${CX + R * Math.cos(e)} ${CY + R * Math.sin(e)} L ${CX + R * Math.cos(e) - 2} ${CY + R * Math.sin(e) + 28}`} strokeWidth={STROKE * 1.2} opacity={ramp(f, 10, 4)} />
+        <path d={arcHead(CX, CY, R, e)} strokeWidth={STROKE * 1.2} opacity={ramp(f, 10, 4)} />
       </g>
     </>
   );
@@ -184,21 +187,19 @@ const Abajo: React.FC = () => {
 const Piso: React.FC = () => {
   const { f, fps } = useScene();
   const [pie, pis] = [useMark(0), useMark(1)];
-  const k = 18;
+  const k = 0.95;
   const land = spring({ frame: f - (pis - 6), fps, config: { damping: 14, stiffness: 140 } });
   const dy = -90 * (1 - land);
   return (
     <>
       <DrawPath d={`M 160 ${FLOOR} H 920`} duration={12} strokeWidth={W} />
-      {[180, 540].map((x, i) => (
-        <g key={i} transform={`translate(0 ${dy})`}>
-          <Grid x={x} y={FLOOR - 18 * k} k={k}>
-            <DrawPath d={FOOT_SIDE} delay={i * 4} duration={Math.max(10, pie - 4)} strokeWidth={W / k} />
-          </Grid>
+      {[250, 600].map((x, i) => (
+        <g key={i} transform={`translate(${x} ${FLOOR + dy}) scale(${k})`}>
+          <DrawPath d={FOOT_SIDE} delay={i * 4} duration={Math.max(10, pie - 4)} strokeWidth={W / k} />
         </g>
       ))}
-      {ripple(f, pis, 400, FLOOR, 160, "a")}
-      {ripple(f, pis, 760, FLOOR, 160, "b")}
+      {ripple(f, pis, 360, FLOOR, 150, "a")}
+      {ripple(f, pis, 710, FLOOR, 150, "b")}
     </>
   );
 };
@@ -207,9 +208,8 @@ const Piso: React.FC = () => {
 const Plantas: React.FC = () => {
   const { f, dur } = useScene();
   const [ate, pla, toc, t30] = [useMark(0), useMark(1), useMark(2), useMark(3)];
-  const k = 26;
-  const ox = CX - 12 * k;
-  const oy = CY - 10.5 * k;
+  const k = 1.08;
+  const sy = CY + 12;
   const fill = ramp(f, pla, 14);
   const ring = interpolate(f, [t30, dur - 2], [0, 1], clamp);
   const R = 300;
@@ -217,10 +217,8 @@ const Plantas: React.FC = () => {
   return (
     <>
       <Glow cx={CX} cy={CY + 40} r={340} o={0.25 * ramp(f, ate, 12) + 0.35 * fill} id="solGlow" />
-      <Soles x={ox} y={oy} k={k} fill={fill} />
-      {CONTACT.map(([x, y], i) => {
-        const px = ox + x * k;
-        const py = oy + y * k;
+      <Soles x={CX} y={sy} k={k} fill={fill} />
+      {soleSpots(CX, sy, k).map(([px, py], i) => {
         const t = f > toc ? ((f - toc + i * 5) % 30) / 30 : -1;
         return t >= 0 ? (
           <g key={i}>
@@ -266,9 +264,6 @@ const DosCosas: React.FC = () => {
   const [pen, fut, sen, pie] = [useMark(0), useMark(1), useMark(2), useMark(3)];
   const feet = ramp(f, sen - 2, 10);
   const mind = ramp(f, pen - 2, 6) * (1 - 0.75 * feet);
-  const k = 13;
-  const sx = 770 - 12 * k;
-  const sy = CY - 10.5 * k;
   const run = Math.max(0, f - fut) % 24;
   return (
     <>
@@ -283,7 +278,7 @@ const DosCosas: React.FC = () => {
         ) : null}
       </g>
       <g opacity={0.25 + 0.75 * feet}>
-        <Soles x={sx} y={sy} k={k} fill={feet} />
+        <Soles x={770} y={CY + 6} k={0.55} fill={feet} />
       </g>
       <Glow cx={770} cy={CY} r={220} o={feet * (0.6 + 0.4 * ramp(f, pie, 8))} id="dcGlow" />
     </>
