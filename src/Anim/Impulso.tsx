@@ -16,23 +16,23 @@ const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const CX = 540;
 const CY = 520;
 
-const MarksContext = React.createContext<number[]>([]);
+export const MarksContext = React.createContext<number[]>([]);
 /** Frame (scene-local) of the i-th word cue. */
-const useMark = (i: number) => {
+export const useMark = (i: number) => {
   const marks = React.useContext(MarksContext);
   const { fps } = useScene();
   return Math.round((marks[i] ?? 0) * fps);
 };
-const ramp = (f: number, at: number, len = 8) => interpolate(f, [at, at + len], [0, 1], clamp);
+export const ramp = (f: number, at: number, len = 8) => interpolate(f, [at, at + len], [0, 1], clamp);
 
 /** Icon-style head in profile looking right. */
-const head = (cx: number, cy: number, r: number) => {
+export const head = (cx: number, cy: number, r: number) => {
   const P = (kx: number, ky: number) => `${(cx + r * kx).toFixed(1)} ${(cy + r * ky).toFixed(1)}`;
   return `M ${P(-0.42, 2.0)} L ${P(-0.5, 0.866)} A ${r} ${r} 0 1 1 ${P(1, 0)} L ${P(1.3, 0.55)} L ${P(1.06, 0.62)} L ${P(1.06, 1.16)} L ${P(0.62, 1.36)} L ${P(0.62, 2.0)}`;
 };
-const person = (x: number, y: number, k = 1) =>
+export const person = (x: number, y: number, k = 1) =>
   `${circlePath(x, y - 34 * k, 22 * k)} M ${x - 40 * k} ${y + 34 * k} A ${40 * k} ${40 * k} 0 0 1 ${x + 40 * k} ${y + 34 * k}`;
-const brain = (x: number, y: number, k = 1) => {
+export const brain = (x: number, y: number, k = 1) => {
   const P = (dx: number, dy: number) => `${(x + dx * k).toFixed(1)} ${(y + dy * k).toFixed(1)}`;
   return `M ${P(-160, 40)} C ${P(-200, -20)} ${P(-160, -110)} ${P(-90, -120)} C ${P(-70, -170)} ${P(20, -180)} ${P(60, -140)} C ${P(120, -160)} ${P(180, -110)} ${P(170, -50)} C ${P(220, -10)} ${P(190, 70)} ${P(130, 70)} C ${P(110, 110)} ${P(40, 120)} ${P(10, 90)} C ${P(-30, 120)} ${P(-110, 110)} ${P(-120, 75)} C ${P(-150, 80)} ${P(-170, 65)} ${P(-160, 40)} Z M ${P(-90, -120)} C ${P(-60, -80)} ${P(-80, -40)} ${P(-40, -20)} M ${P(60, -140)} C ${P(40, -90)} ${P(80, -60)} ${P(60, -10)} M ${P(-120, 20)} C ${P(-60, 30)} ${P(-30, 0)} ${P(10, 30)} M ${P(170, -50)} C ${P(120, -30)} ${P(110, 20)} ${P(130, 70)}`;
 };
@@ -402,7 +402,7 @@ const Esperar: React.FC = () => {
 };
 
 /** See you in the next pill. */
-const Pildora: React.FC = () => {
+export const Pildora: React.FC = () => {
   const { f, fps } = useScene();
   const m = useMark(0);
   const s = spring({ frame: f - Math.max(0, m - 8), fps, config: { damping: 11, stiffness: 120 } });
@@ -426,17 +426,20 @@ const ART: React.FC[] = [Persona, Quimico, Loop, Pensar, Control, Celular, Trein
 export const IMPULSO_SECONDS = 53.533;
 export const IMPULSO_FRAMES = Math.round(IMPULSO_SECONDS * FPS);
 
-export const Impulso: React.FC<ImpulsoProps> = ({ scenes = [] }) => {
+/** Scenes on the original timeline of a reel, each fed its word cues. */
+export const MarkedReel: React.FC<{ scenes: ImpulsoScene[]; art: React.FC[] }> = ({ scenes, art }) => {
   const { fps } = useVideoConfig();
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
       {scenes.map((s, i) => (
         <Sequence key={i} from={Math.round(s.start * fps)} durationInFrames={Math.max(1, Math.round((s.end - s.start) * fps))}>
           <MarksContext.Provider value={s.marks}>
-            <Shot C={ART[i]} last={i === scenes.length - 1} />
+            <Shot C={art[i]} last={i === scenes.length - 1} />
           </MarksContext.Provider>
         </Sequence>
       ))}
     </AbsoluteFill>
   );
 };
+
+export const Impulso: React.FC<ImpulsoProps> = ({ scenes = [] }) => <MarkedReel scenes={scenes} art={ART} />;
