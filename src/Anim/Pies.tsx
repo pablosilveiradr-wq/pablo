@@ -95,7 +95,7 @@ const Cabeza: React.FC = () => {
 };
 
 /** What's going on and how to stop it: an arrow spinning round the brain, slowing to a halt. */
-const Freno: React.FC = () => {
+export const Freno: React.FC = () => {
   const { f, dur } = useScene();
   const [pas, fre] = [useMark(0), useMark(1)];
   let ang = 0;
@@ -117,7 +117,7 @@ const Freno: React.FC = () => {
 };
 
 /** A part of you stayed switched on: a small point inside the head, lit and pulsing. */
-const Encendida: React.FC = () => {
+export const Encendida: React.FC = () => {
   const { f } = useScene();
   const [sob, par, enc] = [useMark(0), useMark(1), useMark(2)];
   const on = ramp(f, enc - 2, 6);
@@ -125,11 +125,17 @@ const Encendida: React.FC = () => {
   return (
     <>
       <DrawPath d={head(470, 420, 160)} duration={20} />
-      {/* overthinking: faint rings rippling round the skull */}
-      {[0, 1].map((i) => {
-        const t = ((Math.max(0, f - sob) / 30 + i / 2) % 1) * ramp(f, sob, 6);
-        return t > 0 ? <path key={i} d={circlePath(470, 420, 170 + 90 * t)} strokeWidth={STROKE_THIN} opacity={0.35 * (1 - t)} /> : null;
-      })}
+      {/* overthinking: a point racing round an orbit inside the skull */}
+      {f > sob - 2 ? (
+        <g opacity={ramp(f, sob - 2, 6)}>
+          <path d={circlePath(500, 450, 80)} strokeWidth={STROKE_THIN} opacity={0.35} />
+          {(() => {
+            const k = Math.max(0, f - sob);
+            const a = 0.08 * k + 0.004 * k * k;
+            return <circle cx={500 + Math.cos(a) * 80} cy={450 + Math.sin(a) * 80} r={9} fill={INK} stroke="none" />;
+          })()}
+        </g>
+      ) : null}
       <DrawPath d={circlePath(500, 450, 34)} delay={par - 4} duration={10} strokeWidth={W} />
       <Glow cx={500} cy={450} r={150} o={pulse} id="encGlow" />
       {on > 0 ? <circle cx={500} cy={450} r={16 * on} fill={INK} stroke="none" opacity={pulse} /> : null}
@@ -239,20 +245,19 @@ const Plantas: React.FC = () => {
 };
 
 /** What almost nobody tells you: a padlock that opens. */
-const Candado: React.FC = () => {
+export const Candado: React.FC = () => {
   const { f, fps } = useScene();
   const [nad, dic] = [useMark(0), useMark(1)];
   const open = spring({ frame: f - dic, fps, config: { damping: 12, stiffness: 150 } });
   const top = CY - 20;
+  const lift = 46 * open;
   return (
     <>
       <DrawPath d={`M ${CX - 120} ${top} h 240 a 20 20 0 0 1 20 20 v 170 a 20 20 0 0 1 -20 20 h -240 a 20 20 0 0 1 -20 -20 v -170 a 20 20 0 0 1 20 -20 Z`} duration={Math.max(10, nad)} strokeWidth={W} />
-      <DrawPath d={`M ${CX} ${top + 80} v 50`} delay={6} duration={6} strokeWidth={STROKE} />
+      <DrawPath d={`M ${CX} ${top + 90} v 40`} delay={6} duration={6} strokeWidth={STROKE} />
       <DrawPath d={circlePath(CX, top + 76, 14)} delay={6} duration={6} strokeWidth={W} />
-      {/* the shackle lifts off its right leg and swings open */}
-      <g style={{ transform: `translateY(${-50 * open}px) rotate(${-28 * open}deg)`, transformOrigin: `${CX - 80}px ${top}px`, transformBox: "view-box" }}>
-        <DrawPath d={`M ${CX - 80} ${top} V ${top - 70} A 80 80 0 0 1 ${CX + 80} ${top - 70} V ${top}`} delay={4} duration={14} strokeWidth={W} />
-      </g>
+      {/* the shackle rises: the left leg stays in the body, the right one comes free */}
+      <DrawPath d={`M ${CX - 80} ${top} V ${top - 70 - lift} A 80 80 0 0 1 ${CX + 80} ${top - 70 - lift} V ${top - lift}`} delay={4} duration={14} strokeWidth={W} />
       <Glow cx={CX} cy={top + 80} r={260} o={0.6 * open} id="lockGlow" />
     </>
   );
@@ -328,7 +333,7 @@ const Ruido: React.FC = () => {
 };
 
 /** Looking for threats that don't exist: a magnifier searches; the warnings are dashed, then gone. */
-const Amenazas: React.FC = () => {
+export const Amenazas: React.FC = () => {
   const { f } = useScene();
   const [men, bus, ame, exi] = [useMark(0), useMark(1), useMark(2), useMark(3)];
   const s = Math.max(0, f - bus);
@@ -358,7 +363,7 @@ const Amenazas: React.FC = () => {
 };
 
 /** Teach the body how to be safe: a figure, and a shelter that closes over it on "safe". */
-const Salvo: React.FC = () => {
+export const Salvo: React.FC = () => {
   const { f } = useScene();
   const [ens, cue, sal] = [useMark(0), useMark(1), useMark(2)];
   const y = 580;

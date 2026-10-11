@@ -45,6 +45,7 @@ import { SILENCIO_FRAMES, Silencio, SilencioProps } from "./Anim/Silencio";
 import { CUADRADA_FRAMES, Cuadrada } from "./Anim/Cuadrada";
 import { IMPULSO_FRAMES, Impulso, ImpulsoProps } from "./Anim/Impulso";
 import { PIES_FRAMES, Pies, PiesProps } from "./Anim/Pies";
+import { GARGARAS_FRAMES, Gargaras, GargarasProps } from "./Anim/Gargaras";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -259,6 +260,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{} as PiesProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: (props as PiesProps).seconds ? Math.round(((props as PiesProps).seconds as number) * FPS) : PIES_FRAMES,
+        })}
+      />
+      <Composition
+        id="Gargaras"
+        component={Gargaras}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={GARGARAS_FRAMES}
+        defaultProps={{} as GargarasProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as GargarasProps).seconds ? Math.round(((props as GargarasProps).seconds as number) * FPS) : GARGARAS_FRAMES,
         })}
       />
       <Composition
