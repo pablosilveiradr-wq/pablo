@@ -46,6 +46,7 @@ import { CUADRADA_FRAMES, Cuadrada } from "./Anim/Cuadrada";
 import { IMPULSO_FRAMES, Impulso, ImpulsoProps } from "./Anim/Impulso";
 import { PIES_FRAMES, Pies, PiesProps } from "./Anim/Pies";
 import { GARGARAS_FRAMES, Gargaras, GargarasProps } from "./Anim/Gargaras";
+import { EXHALA_FRAMES, Exhala, ExhalaProps } from "./Anim/Exhala";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -272,6 +273,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{} as GargarasProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: (props as GargarasProps).seconds ? Math.round(((props as GargarasProps).seconds as number) * FPS) : GARGARAS_FRAMES,
+        })}
+      />
+      <Composition
+        id="Exhala"
+        component={Exhala}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={EXHALA_FRAMES}
+        defaultProps={{} as ExhalaProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as ExhalaProps).seconds ? Math.round(((props as ExhalaProps).seconds as number) * FPS) : EXHALA_FRAMES,
         })}
       />
       <Composition

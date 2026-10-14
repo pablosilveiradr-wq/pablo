@@ -253,7 +253,7 @@ export const Candado: React.FC = () => {
   const lift = 46 * open;
   return (
     <>
-      <DrawPath d={`M ${CX - 120} ${top} h 240 a 20 20 0 0 1 20 20 v 170 a 20 20 0 0 1 -20 20 h -240 a 20 20 0 0 1 -20 -20 v -170 a 20 20 0 0 1 20 -20 Z`} duration={Math.max(10, nad)} strokeWidth={W} />
+      <DrawPath d={`M ${CX - 120} ${top} h 240 a 20 20 0 0 1 20 20 v 170 a 20 20 0 0 1 -20 20 h -240 a 20 20 0 0 1 -20 -20 v -170 a 20 20 0 0 1 20 -20 Z`} duration={Math.min(12, Math.max(8, nad))} strokeWidth={W} />
       <DrawPath d={`M ${CX} ${top + 90} v 40`} delay={6} duration={6} strokeWidth={STROKE} />
       <DrawPath d={circlePath(CX, top + 76, 14)} delay={6} duration={6} strokeWidth={W} />
       {/* the shackle rises: the left leg stays in the body, the right one comes free */}

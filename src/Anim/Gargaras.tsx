@@ -20,10 +20,10 @@ const W = STROKE_THIN * 1.3;
 
 /* ------------------------------------------------- front-facing bust, icon style */
 
-const HEAD = { x: CX, y: 290, r: 72 };
+export const HEAD = { x: CX, y: 290, r: 72 };
 const NECK_Y = 400;
 /** Head circle, neck meeting it exactly, and a bust capsule closed at the bottom. */
-const bust = () => {
+export const bust = () => {
   const dx = 26;
   const ny = HEAD.y + Math.sqrt(HEAD.r * HEAD.r - dx * dx);
   return [
@@ -43,7 +43,7 @@ const NERVE_BRANCHES = [
 ];
 
 /** Tension: a tight spring across the shoulders, fixed to both sides of the body. */
-const spring = (f: number, amt: number) => {
+export const spring = (f: number, amt: number) => {
   const n = 16;
   const y = 540;
   const pts = new Array(n + 1).fill(0).map((_, i) => {
@@ -55,7 +55,7 @@ const spring = (f: number, amt: number) => {
 };
 
 /** Racing thoughts: a spiral turning fast inside the head. */
-const tangle = (a0: number) => {
+export const tangle = (a0: number) => {
   const pts = new Array(91).fill(0).map((_, i) => {
     const t = (i / 90) * Math.PI * 5;
     const r = 4 + (42 * i) / 90;
