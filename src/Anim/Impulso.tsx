@@ -51,7 +51,7 @@ const bolt = (x: number, y: number, k = 1) => poly([[x + 10 * k, y - 70 * k], [x
 /* ------------------------------------------------------------------ scenes */
 
 /** The person you can't forget: a thought bubble that keeps bringing them back. */
-const Persona: React.FC = () => {
+export const Persona: React.FC = () => {
   const { f } = useScene();
   const m = useMark(0);
   const loop = f > m ? 0.55 + 0.45 * Math.cos(((f - m) / 22) * Math.PI * 2) : 0;

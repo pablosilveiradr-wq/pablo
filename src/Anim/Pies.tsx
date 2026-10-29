@@ -57,7 +57,7 @@ const ripple = (f: number, at: number, x: number, y: number, rx: number, key: st
 /* ------------------------------------------------------------------ scenes */
 
 /** The head won't stop: a dot jumping from thought to thought; the switch won't turn it off. */
-const Cabeza: React.FC = () => {
+export const Cabeza: React.FC = () => {
   const { f } = useScene();
   const [cab, sal, apa] = [useMark(0), useMark(1), useMark(2)];
   const B = [[660, 250, 56], [830, 330, 48], [700, 440, 40]];

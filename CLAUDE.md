@@ -49,3 +49,4 @@ npx remotion render build <Composición> out/x.mp4 --props=props.json \
   --browser-executable=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
 ```
 Usar el ffmpeg del sistema (`/usr/bin/ffmpeg`), no el de Remotion.
+La versión del navegador cambia entre contenedores: buscar el binario con `find /opt/pw-browsers -name "*headless*shell" -type f` (p. ej. `chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell`). En un contenedor nuevo: `npm ci` y un venv con `faster-whisper` para `scripts/voz/asr.py`.

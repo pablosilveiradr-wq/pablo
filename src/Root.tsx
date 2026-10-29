@@ -47,6 +47,7 @@ import { IMPULSO_FRAMES, Impulso, ImpulsoProps } from "./Anim/Impulso";
 import { PIES_FRAMES, Pies, PiesProps } from "./Anim/Pies";
 import { GARGARAS_FRAMES, Gargaras, GargarasProps } from "./Anim/Gargaras";
 import { EXHALA_FRAMES, Exhala, ExhalaProps } from "./Anim/Exhala";
+import { PAPEL_FRAMES, PapelReel, PapelProps } from "./Anim/Papel";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -285,6 +286,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{} as ExhalaProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: (props as ExhalaProps).seconds ? Math.round(((props as ExhalaProps).seconds as number) * FPS) : EXHALA_FRAMES,
+        })}
+      />
+      <Composition
+        id="Papel"
+        component={PapelReel}
+        width={1080}
+        height={1080}
+        fps={FPS}
+        durationInFrames={PAPEL_FRAMES}
+        defaultProps={{} as PapelProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: (props as PapelProps).seconds ? Math.round(((props as PapelProps).seconds as number) * FPS) : PAPEL_FRAMES,
         })}
       />
       <Composition
