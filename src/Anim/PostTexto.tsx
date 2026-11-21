@@ -10,7 +10,7 @@ import { BG, FPS, INK } from "./theme";
  * in the middle, clear of the Reels UI. No audio.
  */
 
-const FAMILY = "Julius Sans One";
+export const FAMILY = "Julius Sans One";
 let fontHandle: number | null = null;
 if (typeof window !== "undefined" && typeof FontFace !== "undefined") {
   fontHandle = delayRender("Loading Julius Sans One");

@@ -49,6 +49,7 @@ import { GARGARAS_FRAMES, Gargaras, GargarasProps } from "./Anim/Gargaras";
 import { EXHALA_FRAMES, Exhala, ExhalaProps } from "./Anim/Exhala";
 import { PAPEL_FRAMES, PapelReel, PapelProps } from "./Anim/Papel";
 import { PostTexto, postTextoFrames, PostTextoProps, SIEMPRE } from "./Anim/PostTexto";
+import { EditReel, EditReelProps } from "./Anim/EditReel";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -311,6 +312,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{} as PostTextoProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: postTextoFrames((props as PostTextoProps).phrases ?? SIEMPRE),
+        })}
+      />
+      <Composition
+        id="EditReel"
+        component={EditReel}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={30 * 10}
+        defaultProps={{} as EditReelProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(((props as EditReelProps).seconds ?? 10) * 30),
         })}
       />
       <Composition
