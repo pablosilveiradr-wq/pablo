@@ -48,6 +48,7 @@ import { PIES_FRAMES, Pies, PiesProps } from "./Anim/Pies";
 import { GARGARAS_FRAMES, Gargaras, GargarasProps } from "./Anim/Gargaras";
 import { EXHALA_FRAMES, Exhala, ExhalaProps } from "./Anim/Exhala";
 import { PAPEL_FRAMES, PapelReel, PapelProps } from "./Anim/Papel";
+import { PostTexto, postTextoFrames, PostTextoProps, SIEMPRE } from "./Anim/PostTexto";
 import { METACOGNICION_FRAMES, Metacognicion } from "./Anim/Metacognicion";
 import { DISCUTIR_FRAMES, Discutir, DiscutirProps } from "./Anim/Discutir";
 
@@ -298,6 +299,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{} as PapelProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: (props as PapelProps).seconds ? Math.round(((props as PapelProps).seconds as number) * FPS) : PAPEL_FRAMES,
+        })}
+      />
+      <Composition
+        id="PostTexto"
+        component={PostTexto}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={postTextoFrames(SIEMPRE)}
+        defaultProps={{} as PostTextoProps}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: postTextoFrames((props as PostTextoProps).phrases ?? SIEMPRE),
         })}
       />
       <Composition
