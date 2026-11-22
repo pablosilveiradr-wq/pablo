@@ -1,0 +1,74 @@
+[
+{
+"icon": "stock/explico_2.jpg",
+"at": "15"
+},
+{
+"icon": "stock/limitado_0.jpg",
+"at": "25"
+},
+{
+"icon": "stock/corteza_1.jpg",
+"at": "31"
+},
+{
+"icon": "stock/concentrarte_3.jpg",
+"at": "34"
+},
+{
+"icon": "stock/pocas_6.jpg",
+"at": "43"
+},
+{
+"icon": "stock/tironea_2.jpg",
+"at": "49"
+},
+{
+"icon": "stock/proba_2.jpg",
+"at": "57"
+},
+{
+"icon": "stock/celular_2.jpg",
+"at": "60"
+},
+{
+"icon": "stock/habitacion_1.jpg",
+"at": "63"
+},
+{
+"icon": "stock/bocaabajo_6.jpg",
+"at": "68"
+},
+{
+"icon": "stock/vista_1.jpg",
+"at": "73"
+},
+{
+"icon": "stock/celular_5.jpg",
+"at": "80"
+},
+{
+"icon": "stock/cerca_0.jpg",
+"at": "83"
+},
+{
+"icon": "stock/peor_0.jpg",
+"at": "92"
+},
+{
+"icon": "stock/ocupada_2.jpg",
+"at": "96"
+},
+{
+"icon": "stock/sacas_2.jpg",
+"at": "106"
+},
+{
+"icon": "stock/lugar_3.jpg",
+"at": "111"
+},
+{
+"icon": "stock/chau_5.jpg",
+"at": "119"
+}
+]

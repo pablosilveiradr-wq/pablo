@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Freeze, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Freeze, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { BG, INK } from "./theme";
 import { FAMILY } from "./PostTexto";
 
@@ -7,17 +7,20 @@ import { FAMILY } from "./PostTexto";
  * "EditReel": Pablo's own talking-head video edited like a hook-first reel.
  * Opens on pure black with the first line centred phrase by phrase (his voice
  * running underneath), then hard-cuts to his face with small centred captions
- * and, under them, a square box playing a line icon from the library for each
- * idea. Captions use the typeface of his posts (Julius Sans One). Everything
+ * and, under them, a box for each idea: a stock photo (4:3) or a line icon from
+ * the library (square). Captions use the typeface of his posts (Julius Sans One). Everything
  * stays inside the Reels safe zone. Keeps his audio.
  */
 
 export type Caption = { text: string; start: number; end: number };
+/** `icon`: a library clip name (square box) or a photo path like "stock/x.jpg" (4:3 box). */
 export type Shot = { icon: string; start: number; end: number };
 export type EditReelProps = { video?: string; hookEnd?: number; captions?: Caption[]; broll?: Shot[]; seconds?: number };
 
 const CAPTION_Y = 945; // centre of the caption: on the collar, under the chin
 const BOX = { x: 325, y: 1005, size: 430 }; // ends at 1435 (< 1920 - 480) and x 755 (< 1080 - 160)
+const PHOTO = { x: 240, y: 990, w: 600, h: 450 }; // 4:3, ends at 1440 and x 840
+const isPhoto = (s: string) => /\.(jpe?g|png|webp)$/i.test(s);
 const MAX_W = 760; // captions stay between x 160 and 920, clear of the right-hand buttons
 /** Julius Sans One with this spacing runs about 0.74 em per character: shrink long lines to fit. */
 const fit = (text: string, size: number) => Math.min(size, MAX_W / (0.74 * text.length));
@@ -82,9 +85,15 @@ export const EditReel: React.FC<EditReelProps> = ({ video = "input/foco.mp4", ho
       ) : null}
       {broll.map((b, i) => (
         <Sequence key={`b${i}`} from={fr(b.start)} durationInFrames={Math.max(1, fr(b.end) - fr(b.start))}>
-          <div style={{ position: "absolute", left: BOX.x, top: BOX.y, width: BOX.size, height: BOX.size, overflow: "hidden" }}>
-            <IconShot icon={b.icon} />
-          </div>
+          {isPhoto(b.icon) ? (
+            <div style={{ position: "absolute", left: PHOTO.x, top: PHOTO.y, width: PHOTO.w, height: PHOTO.h, overflow: "hidden", backgroundColor: BG }}>
+              <Img src={staticFile(b.icon)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+          ) : (
+            <div style={{ position: "absolute", left: BOX.x, top: BOX.y, width: BOX.size, height: BOX.size, overflow: "hidden" }}>
+              <IconShot icon={b.icon} />
+            </div>
+          )}
         </Sequence>
       ))}
       {captions.map((c, i) => (
