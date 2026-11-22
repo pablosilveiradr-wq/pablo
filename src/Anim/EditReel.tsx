@@ -15,18 +15,20 @@ import { FAMILY } from "./PostTexto";
 export type Caption = { text: string; start: number; end: number };
 /** `icon`: a library clip name (square box) or a photo path like "stock/x.jpg" (4:3 box). */
 export type Shot = { icon: string; start: number; end: number };
-export type EditReelProps = { video?: string; hookEnd?: number; captions?: Caption[]; broll?: Shot[]; seconds?: number };
+/** `overlay`: render only the edit (hook, captions, boxes) to lay over his original video in his editor,
+ * on transparency ("alpha", for ProRes 4444) or on chroma green ("green"); his video is never re-encoded. */
+export type EditReelProps = { video?: string; hookEnd?: number; captions?: Caption[]; broll?: Shot[]; seconds?: number; overlay?: "alpha" | "green" };
 
 const CAPTION_Y = 945; // centre of the caption: on the collar, under the chin
 const BOX = { x: 325, y: 1005, size: 430 }; // ends at 1435 (< 1920 - 480) and x 755 (< 1080 - 160)
-const PHOTO = { x: 240, y: 990, w: 600, h: 450 }; // 4:3, ends at 1440 and x 840
+const PHOTO = { x: 300, y: 990, w: 480, h: 360 }; // 4:3, ends at 1350 and x 780
 const isPhoto = (s: string) => /\.(jpe?g|png|webp)$/i.test(s);
 const MAX_W = 760; // captions stay between x 160 and 920, clear of the right-hand buttons
 /** Julius Sans One with this spacing runs about 0.74 em per character: shrink long lines to fit. */
 const fit = (text: string, size: number) => Math.min(size, MAX_W / (0.74 * text.length));
 const ICON_FRAMES = 90; // library clips are 3 s
 
-const Text: React.FC<{ text: string; hook: boolean }> = ({ text, hook }) => (
+const Text: React.FC<{ text: string; hook: boolean; green?: boolean }> = ({ text, hook, green = false }) => (
   <div
     style={{
       position: "absolute",
@@ -45,8 +47,10 @@ const Text: React.FC<{ text: string; hook: boolean }> = ({ text, hook }) => (
       textAlign: "center",
       whiteSpace: "nowrap",
       // over his face the thin letters need a soft shadow to read; on black they don't
-      textShadow: hook ? undefined : "0 0 3px rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6)",
-      WebkitTextStroke: hook ? undefined : "0.6px #F2F2F2",
+      // on chroma green a soft shadow would key out as a green halo: a solid black outline keys clean
+      textShadow: hook || green ? undefined : "0 0 3px rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6)",
+      WebkitTextStroke: hook ? undefined : green ? "5px #000" : "0.6px #F2F2F2",
+      paintOrder: green && !hook ? "stroke fill" : undefined,
     }}
   >
     {text}
@@ -70,13 +74,13 @@ const IconShot: React.FC<{ icon: string }> = ({ icon }) => {
   );
 };
 
-export const EditReel: React.FC<EditReelProps> = ({ video = "input/foco.mp4", hookEnd = 0, captions = [], broll = [] }) => {
+export const EditReel: React.FC<EditReelProps> = ({ video = "input/foco.mp4", hookEnd = 0, captions = [], broll = [], overlay }) => {
   const { fps } = useVideoConfig();
   const fr = (s: number) => Math.round(s * fps);
   const hookFrames = fr(hookEnd);
   return (
-    <AbsoluteFill style={{ backgroundColor: BG }}>
-      <OffthreadVideo src={staticFile(video)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    <AbsoluteFill style={{ backgroundColor: overlay === "alpha" ? "transparent" : overlay === "green" ? "#00FF00" : BG }}>
+      {overlay ? null : <OffthreadVideo src={staticFile(video)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
       {/* the hook: black over the picture, his voice keeps going */}
       {hookFrames > 0 ? (
         <Sequence durationInFrames={hookFrames}>
@@ -98,7 +102,7 @@ export const EditReel: React.FC<EditReelProps> = ({ video = "input/foco.mp4", ho
       ))}
       {captions.map((c, i) => (
         <Sequence key={`c${i}`} from={fr(c.start)} durationInFrames={Math.max(1, fr(c.end) - fr(c.start))}>
-          <Text text={c.text} hook={c.start < hookEnd} />
+          <Text text={c.text} hook={c.start < hookEnd} green={overlay === "green"} />
         </Sequence>
       ))}
     </AbsoluteFill>
